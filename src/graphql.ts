@@ -96,6 +96,9 @@ export async function fetchAndUpdateBalances(store: Store) {
       runInAction(() => {
         if (store.loggedIn) {
           store.loggedIn.balances = balances;
+          // If no currency is selected, default to the first incoming balance
+          store.loggedIn.selectedCurrencyKey =
+            store.loggedIn.selectedCurrencyKey ?? balances[0]?.currencyKey;
         }
       });
     })
