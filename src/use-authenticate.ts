@@ -9,27 +9,35 @@ type AuthState =
   | { status: "error"; error: string }
   | { status: "success" };
 
-const getCasinoBaseUrl = () => {
-  // Try ancestorOrigins first (more reliable for iframes)
-  if (window.location.ancestorOrigins?.length > 0) {
-    return window.location.ancestorOrigins[0];
-  }
+// Try getting parent window URL from different sources in order of preference
+function getCasinoBaseUrl(): string | null {
+  const possibleUrls = [
+    // In dev mode, check #casinoBaseUrl=<url> from URL
+    import.meta.env.DEV
+      ? new URLSearchParams(window.location.hash.slice(1)).get("casinoBaseUrl")
+      : null,
 
-  // Fallback to document.referrer
-  if (document.referrer && URL.canParse(document.referrer)) {
-    const referrerOrigin = new URL(document.referrer).origin;
-    const currentOrigin = URL.canParse(window.location.href)
-      ? new URL(window.location.href).origin
-      : null;
+    // Check ancestor origins, not available in every browser
+    document.location.ancestorOrigins?.[
+      document.location.ancestorOrigins.length - 1
+    ],
 
-    // Only use referrer if it's from a different origin
-    if (currentOrigin && referrerOrigin !== currentOrigin) {
-      return referrerOrigin;
-    }
+    // Check referrer if it's different from current origin
+    document.referrer !== window.location.origin ? document.referrer : null,
+
+    // In dev mode, check session storage
+    import.meta.env.DEV ? sessionStorage.getItem("casinoBaseUrl") : null,
+  ];
+
+  const validUrl = possibleUrls.find((url) => url && URL.canParse(url));
+
+  if (validUrl) {
+    sessionStorage.setItem("casinoBaseUrl", validUrl);
+    return new URL(validUrl).origin;
   }
 
   return null;
-};
+}
 
 // Note: This runs once on initial mount. Doesn't do any retry logic.
 // User will have to reload to try auth again.
