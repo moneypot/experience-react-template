@@ -1,4 +1,12 @@
-import { Container, Row, Col, Alert, Navbar, Nav } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Alert,
+  Navbar,
+  Nav,
+  Button,
+} from "react-bootstrap";
 import { useStore } from "./Store";
 import { useAuthenticate } from "./use-authenticate";
 import { observer } from "mobx-react-lite";
@@ -38,7 +46,7 @@ const App = observer(() => {
         <Navbar>
           {/* <Navbar.Brand>My Casino</Navbar.Brand> */}
           <Nav className="ms-auto">
-            <Nav.Link href="#home" onClick={() => setShowModal(true)}>
+            <Nav.Link as={Button} onClick={() => setShowModal(true)}>
               Withdraw
             </Nav.Link>
           </Nav>
