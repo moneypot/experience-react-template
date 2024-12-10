@@ -31,7 +31,7 @@ const App = observer(() => {
         <WithdrawModal show={showModal} hide={() => setShowModal(false)} />
       )}
 
-      <Container className="p-3">
+      <Container>
         {authResult.status === "error" && (
           <Alert variant="danger">Auth error: {authResult.error}</Alert>
         )}
