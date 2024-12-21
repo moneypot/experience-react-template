@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Form, Modal, Alert, InputGroup, Button } from "react-bootstrap";
 import { useStore } from "../Store";
 import { sendGraphQLRequest, WITHDRAW } from "../graphql";
-import { formatError } from "../util";
+import { formatError, truncateToDisplayScale } from "../util";
 
 type SubmitState =
   | { type: "idle" }
@@ -31,7 +31,13 @@ const WithdrawModal: React.FC<{ show: boolean; hide: () => void }> = observer(
     );
 
     const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setAmount(e.target.value);
+      const truncated = truncateToDisplayScale(
+        e.target.value,
+        selectedCurrency!
+      );
+      if (truncated !== null) {
+        setAmount(truncated);
+      }
     };
 
     const handleCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -52,8 +58,7 @@ const WithdrawModal: React.FC<{ show: boolean; hide: () => void }> = observer(
 
       // Validation
 
-      // Ensure user typed in a decimal string of form "123" or "123.45"
-      if (!/^\d+(\.\d+)?$/.test(amount)) {
+      if (truncateToDisplayScale(amount, selectedCurrency!) === null) {
         setSubmitState({ type: "error", message: "Invalid amount" });
         return;
       }
@@ -64,8 +69,9 @@ const WithdrawModal: React.FC<{ show: boolean; hide: () => void }> = observer(
       }
 
       // Convert display units back into base units
-      const wagerBaseUnits =
-        Number.parseFloat(amount) * selectedCurrency.displayUnitScale;
+      const wagerBaseUnits = Math.floor(
+        Number.parseFloat(amount) * selectedCurrency.displayUnitScale
+      );
 
       if (Number.isNaN(wagerBaseUnits)) {
         setSubmitState({ type: "error", message: "Invalid amount" });
@@ -143,6 +149,7 @@ const WithdrawModal: React.FC<{ show: boolean; hide: () => void }> = observer(
                   type="number"
                   inputMode="decimal"
                   value={amount}
+                  step="0.01"
                   onChange={handleChangeAmount}
                   required
                 />

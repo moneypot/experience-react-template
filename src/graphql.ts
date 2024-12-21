@@ -49,7 +49,7 @@ export const GET_BALANCES = gql(/* GraphQL */ `
 `);
 
 export const WITHDRAW = gql(/* GraphQL */ `
-  mutation Withdraw($amount: Float!, $currencyKey: String!) {
+  mutation Withdraw($amount: Int!, $currencyKey: String!) {
     caasWithdraw(input: { amount: $amount, currency: $currencyKey }) {
       withdrawal {
         id
