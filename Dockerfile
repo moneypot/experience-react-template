@@ -16,23 +16,21 @@ RUN npm run build
 FROM nginx:alpine AS production
 WORKDIR /app
 COPY --from=production-build /app/dist .
-RUN <<EOF cat > /etc/nginx/conf.d/default.conf
-server {
-    listen 4004;
-    root /app;
-
-    # Cache only assets with Vite-style hash in filename
-    location ~ "^/assets/.*-[A-Za-z0-9_-]{8,}\.(js|css)$" {
-        expires 1y;
-    }
-
-    # Never cache any path that might serve index.html
-    location / {
-        add_header Cache-Control "no-store" always;
-        try_files $uri $uri/ /index.html =404;
-    }
-}
-EOF
+RUN echo 'server {                                          \
+    listen 4004;                                            \
+    root /app;                                              \
+                                                            \
+    # Cache only assets with Vite-style hash in filename    \
+    location ~ "^/assets/.*-[A-Za-z0-9_-]{8,}\.(js|css)$" { \
+        expires 1y;                                         \
+    }                                                       \
+                                                            \
+    # Never cache any path that might serve index.html      \
+    location / {                                            \
+        add_header Cache-Control "no-store" always;         \
+        try_files $uri $uri/ /index.html =404;              \
+    }                                                       \
+}' > /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
 
 # Development: Run vite dev server
