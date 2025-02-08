@@ -13,7 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
-const documents = {
+type Documents = {
+    "\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    caasAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionId\n        uname\n        experienceId\n        userId\n      }\n      query {\n        caasCurrentUser {\n          balances {\n            amount\n            currencyKey\n            caasCurrencyByCurrencyKeyAndCasinoId {\n              displayUnitName\n              displayUnitScale\n            }\n          }\n        }\n      }\n    }\n  }\n": typeof types.AuthenticateDocument,
+    "\n  query GetBalances {\n    caasCurrentUser {\n      balances {\n        amount\n        currencyKey\n        caasCurrencyByCurrencyKeyAndCasinoId {\n          key\n          displayUnitScale\n          displayUnitName\n        }\n      }\n    }\n  }\n": typeof types.GetBalancesDocument,
+    "\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    caasWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawal {\n        id\n      }\n    }\n  }\n": typeof types.WithdrawDocument,
+};
+const documents: Documents = {
     "\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    caasAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionId\n        uname\n        experienceId\n        userId\n      }\n      query {\n        caasCurrentUser {\n          balances {\n            amount\n            currencyKey\n            caasCurrencyByCurrencyKeyAndCasinoId {\n              displayUnitName\n              displayUnitScale\n            }\n          }\n        }\n      }\n    }\n  }\n": types.AuthenticateDocument,
     "\n  query GetBalances {\n    caasCurrentUser {\n      balances {\n        amount\n        currencyKey\n        caasCurrencyByCurrencyKeyAndCasinoId {\n          key\n          displayUnitScale\n          displayUnitName\n        }\n      }\n    }\n  }\n": types.GetBalancesDocument,
     "\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    caasWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawal {\n        id\n      }\n    }\n  }\n": types.WithdrawDocument,

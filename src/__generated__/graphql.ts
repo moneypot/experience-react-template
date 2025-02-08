@@ -34,6 +34,71 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
+export type CaasAddCasinoInput = {
+  apiKey: Scalars['String']['input'];
+  baseUrl: Scalars['String']['input'];
+  graphqlUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type CaasAddCasinoPayload = {
+  __typename?: 'CaasAddCasinoPayload';
+  caasCasino?: Maybe<CaasCasino>;
+  query?: Maybe<Query>;
+};
+
+export type CaasApiKey = {
+  __typename?: 'CaasApiKey';
+  id: Scalars['UUID']['output'];
+  key: Scalars['UUID']['output'];
+  lastUsedAt?: Maybe<Scalars['Datetime']['output']>;
+  revokedAt?: Maybe<Scalars['Datetime']['output']>;
+};
+
+/**
+ * A condition to be used against `CaasApiKey` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CaasApiKeyCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `key` field. */
+  key?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CaasApiKey` values. */
+export type CaasApiKeyConnection = {
+  __typename?: 'CaasApiKeyConnection';
+  /** A list of edges which contains the `CaasApiKey` and cursor to aid in pagination. */
+  edges: Array<Maybe<CaasApiKeyEdge>>;
+  /** A list of `CaasApiKey` objects. */
+  nodes: Array<Maybe<CaasApiKey>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CaasApiKey` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CaasApiKey` edge in the connection. */
+export type CaasApiKeyEdge = {
+  __typename?: 'CaasApiKeyEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CaasApiKey` at the end of the edge. */
+  node?: Maybe<CaasApiKey>;
+};
+
+/** Methods to use when ordering `CaasApiKey`. */
+export enum CaasApiKeyOrderBy {
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  KeyAsc = 'KEY_ASC',
+  KeyDesc = 'KEY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 export type CaasAuthenticateInput = {
   casinoBaseUrl: Scalars['String']['input'];
   userToken: Scalars['String']['input'];
@@ -182,6 +247,10 @@ export type CaasCasino = {
   caasBalancesByCasinoId: CaasBalanceConnection;
   /** Reads and enables pagination through a set of `CaasBankroll`. */
   caasBankrollsByCasinoId: CaasBankrollConnection;
+  /** Reads a single `CaasCasinoSecret` that is related to this `CaasCasino`. */
+  caasCasinoSecretById?: Maybe<CaasCasinoSecret>;
+  /** Reads and enables pagination through a set of `CaasCurrency`. */
+  caasCurrenciesByCasinoId: CaasCurrencyConnection;
   /** Reads and enables pagination through a set of `CaasDeposit`. */
   caasDepositsByCasinoId: CaasDepositConnection;
   /** Reads and enables pagination through a set of `CaasExperience`. */
@@ -192,11 +261,9 @@ export type CaasCasino = {
   caasUsersByCasinoId: CaasUserConnection;
   /** Reads and enables pagination through a set of `CaasWithdrawal`. */
   caasWithdrawalsByCasinoId: CaasWithdrawalConnection;
-  currencies?: Maybe<Array<Maybe<CaasCurrency>>>;
   graphqlUrl: Scalars['String']['output'];
   id: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
-  source: CaasCasinoSource;
 };
 
 
@@ -219,6 +286,17 @@ export type CaasCasinoCaasBankrollsByCasinoIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasBankrollOrderBy>>;
+};
+
+
+export type CaasCasinoCaasCurrenciesByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasCurrencyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasCurrencyOrderBy>>;
 };
 
 
@@ -276,10 +354,69 @@ export type CaasCasinoCaasWithdrawalsByCasinoIdArgs = {
   orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
 };
 
-export enum CaasCasinoSource {
-  Auto = 'auto',
-  Manual = 'manual'
+/**
+ * A condition to be used against `CaasCasino` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type CaasCasinoCondition = {
+  /** Checks for equality with the object’s `baseUrl` field. */
+  baseUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `graphqlUrl` field. */
+  graphqlUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CaasCasino` values. */
+export type CaasCasinoConnection = {
+  __typename?: 'CaasCasinoConnection';
+  /** A list of edges which contains the `CaasCasino` and cursor to aid in pagination. */
+  edges: Array<Maybe<CaasCasinoEdge>>;
+  /** A list of `CaasCasino` objects. */
+  nodes: Array<Maybe<CaasCasino>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CaasCasino` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CaasCasino` edge in the connection. */
+export type CaasCasinoEdge = {
+  __typename?: 'CaasCasinoEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CaasCasino` at the end of the edge. */
+  node?: Maybe<CaasCasino>;
+};
+
+/** Methods to use when ordering `CaasCasino`. */
+export enum CaasCasinoOrderBy {
+  BaseUrlAsc = 'BASE_URL_ASC',
+  BaseUrlDesc = 'BASE_URL_DESC',
+  GraphqlUrlAsc = 'GRAPHQL_URL_ASC',
+  GraphqlUrlDesc = 'GRAPHQL_URL_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** Represents an update to a `CaasCasino`. Fields that are set will be updated. */
+export type CaasCasinoPatch = {
+  baseUrl?: InputMaybe<Scalars['String']['input']>;
+  graphqlUrl?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CaasCasinoSecret = {
+  __typename?: 'CaasCasinoSecret';
+  apiKey: Scalars['UUID']['output'];
+  /** Reads a single `CaasCasino` that is related to this `CaasCasinoSecret`. */
+  caasCasinoById?: Maybe<CaasCasino>;
+  controllerId: Scalars['UUID']['output'];
+  id: Scalars['UUID']['output'];
+};
 
 export type CaasClaimFaucetPayload = {
   __typename?: 'CaasClaimFaucetPayload';
@@ -309,6 +446,50 @@ export type CaasCurrencyCaasBankrollsByCurrencyKeyAndCasinoIdArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasBankrollOrderBy>>;
 };
+
+/**
+ * A condition to be used against `CaasCurrency` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CaasCurrencyCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `key` field. */
+  key?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** A connection to a list of `CaasCurrency` values. */
+export type CaasCurrencyConnection = {
+  __typename?: 'CaasCurrencyConnection';
+  /** A list of edges which contains the `CaasCurrency` and cursor to aid in pagination. */
+  edges: Array<Maybe<CaasCurrencyEdge>>;
+  /** A list of `CaasCurrency` objects. */
+  nodes: Array<Maybe<CaasCurrency>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CaasCurrency` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CaasCurrency` edge in the connection. */
+export type CaasCurrencyEdge = {
+  __typename?: 'CaasCurrencyEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CaasCurrency` at the end of the edge. */
+  node?: Maybe<CaasCurrency>;
+};
+
+/** Methods to use when ordering `CaasCurrency`. */
+export enum CaasCurrencyOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  KeyAsc = 'KEY_ASC',
+  KeyDesc = 'KEY_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 export type CaasDeposit = {
   __typename?: 'CaasDeposit';
@@ -461,18 +642,6 @@ export type CaasFaucetClaim = {
   experienceId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   userId: Scalars['UUID']['output'];
-};
-
-export type CaasRegisterCasinoInput = {
-  apiKey: Scalars['String']['input'];
-  casinoBaseUrl: Scalars['String']['input'];
-  graphqlUrl: Scalars['String']['input'];
-};
-
-export type CaasRegisterCasinoPayload = {
-  __typename?: 'CaasRegisterCasinoPayload';
-  casinoId: Scalars['UUID']['output'];
-  query?: Maybe<Query>;
 };
 
 export type CaasSession = {
@@ -642,6 +811,7 @@ export type CaasWithdrawInput = {
 
 export type CaasWithdrawPayload = {
   __typename?: 'CaasWithdrawPayload';
+  query?: Maybe<Query>;
   withdrawal: CaasWithdrawal;
 };
 
@@ -711,13 +881,34 @@ export enum CaasWithdrawalOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type Fortune = {
+  __typename?: 'Fortune';
+  id: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+};
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  addFortune?: Maybe<Fortune>;
+  caasAddCasino?: Maybe<CaasAddCasinoPayload>;
   caasAuthenticate?: Maybe<CaasAuthenticatePayload>;
   caasClaimFaucet?: Maybe<CaasClaimFaucetPayload>;
-  caasRegisterCasino?: Maybe<CaasRegisterCasinoPayload>;
   caasWithdraw?: Maybe<CaasWithdrawPayload>;
+  /** Updates a single `CaasCasino` using a unique key and a patch. */
+  updateCaasCasinoById?: Maybe<UpdateCaasCasinoPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationAddFortuneArgs = {
+  text: Scalars['String']['input'];
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCaasAddCasinoArgs = {
+  input: CaasAddCasinoInput;
 };
 
 
@@ -728,14 +919,14 @@ export type MutationCaasAuthenticateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCaasRegisterCasinoArgs = {
-  input: CaasRegisterCasinoInput;
+export type MutationCaasWithdrawArgs = {
+  input: CaasWithdrawInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCaasWithdrawArgs = {
-  input: CaasWithdrawInput;
+export type MutationUpdateCaasCasinoByIdArgs = {
+  input: UpdateCaasCasinoByIdInput;
 };
 
 /** Information about pagination in a connection. */
@@ -754,12 +945,22 @@ export type PageInfo = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
+  /** Reads and enables pagination through a set of `CaasApiKey`. */
+  allCaasApiKeys?: Maybe<CaasApiKeyConnection>;
+  /** Reads and enables pagination through a set of `CaasCasino`. */
+  allCaasCasinos?: Maybe<CaasCasinoConnection>;
+  /** Get a single `CaasApiKey`. */
+  caasApiKeyById?: Maybe<CaasApiKey>;
+  /** Get a single `CaasApiKey`. */
+  caasApiKeyByKey?: Maybe<CaasApiKey>;
   /** Get a single `CaasBalance`. */
   caasBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKey?: Maybe<CaasBalance>;
   /** Get a single `CaasBankroll`. */
   caasBankrollById?: Maybe<CaasBankroll>;
   /** Get a single `CaasCasino`. */
   caasCasinoById?: Maybe<CaasCasino>;
+  /** Get a single `CaasCasinoSecret`. */
+  caasCasinoSecretById?: Maybe<CaasCasinoSecret>;
   /** Get a single `CaasCurrency`. */
   caasCurrencyByKeyAndCasinoId?: Maybe<CaasCurrency>;
   caasCurrentCasino?: Maybe<CaasCasino>;
@@ -782,6 +983,45 @@ export type Query = {
    * which can only query top level fields if they are in a particular form.
    */
   query: Query;
+  randomFortune?: Maybe<Fortune>;
+  /** Get a single `Todo`. */
+  todoById?: Maybe<Todo>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllCaasApiKeysArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasApiKeyCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasApiKeyOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllCaasCasinosArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasCasinoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasCasinoOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasApiKeyByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasApiKeyByKeyArgs = {
+  key: Scalars['UUID']['input'];
 };
 
 
@@ -802,6 +1042,12 @@ export type QueryCaasBankrollByIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCaasCasinoByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasCasinoSecretByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
@@ -848,10 +1094,57 @@ export type QueryCaasWithdrawalByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTodoByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
 export type Subscription = {
   __typename?: 'Subscription';
   caasBalanceAlert?: Maybe<CaasBalanceAlertPayload>;
+};
+
+export type Todo = {
+  __typename?: 'Todo';
+  completed?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['Int']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+/** All input for the `updateCaasCasinoById` mutation. */
+export type UpdateCaasCasinoByIdInput = {
+  /** An object where the defined keys will be set on the `CaasCasino` being updated. */
+  caasCasinoPatch: CaasCasinoPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our update `CaasCasino` mutation. */
+export type UpdateCaasCasinoPayload = {
+  __typename?: 'UpdateCaasCasinoPayload';
+  /** The `CaasCasino` that was updated by this mutation. */
+  caasCasino?: Maybe<CaasCasino>;
+  /** An edge for our `CaasCasino`. May be used by Relay 1. */
+  caasCasinoEdge?: Maybe<CaasCasinoEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `CaasCasino` mutation. */
+export type UpdateCaasCasinoPayloadCaasCasinoEdgeArgs = {
+  orderBy?: Array<CaasCasinoOrderBy>;
 };
 
 export type AuthenticateMutationVariables = Exact<{
