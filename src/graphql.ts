@@ -48,16 +48,6 @@ export const GET_BALANCES = gql(/* GraphQL */ `
   }
 `);
 
-export const WITHDRAW = gql(/* GraphQL */ `
-  mutation Withdraw($amount: Int!, $currencyKey: String!) {
-    caasWithdraw(input: { amount: $amount, currency: $currencyKey }) {
-      withdrawal {
-        id
-      }
-    }
-  }
-`);
-
 export async function sendGraphQLRequest<T, V extends Variables = Variables>(
   store: Store,
   options: RequestOptions<V, T> & { sessionId?: string }

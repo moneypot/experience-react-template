@@ -565,6 +565,8 @@ export type CaasExperience = {
   id: Scalars['UUID']['output'];
   mpExperienceId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Todo`. */
+  todosByExperienceId: TodoConnection;
 };
 
 
@@ -576,6 +578,18 @@ export type CaasExperienceCaasSessionsByExperienceIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+};
+
+
+export type CaasExperienceTodosByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TodoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  includeDeleted?: InputMaybe<IncludeDeletedOption>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TodoOrderBy>>;
 };
 
 /**
@@ -731,6 +745,8 @@ export type CaasUser = {
   casinoId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   mpUserId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `Todo`. */
+  todosByUserId: TodoConnection;
   uname: Scalars['String']['output'];
 };
 
@@ -758,6 +774,18 @@ export type CaasUserCaasSessionsByUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+};
+
+
+export type CaasUserTodosByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TodoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  includeDeleted?: InputMaybe<IncludeDeletedOption>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TodoOrderBy>>;
 };
 
 /**
@@ -887,6 +915,18 @@ export type Fortune = {
   text: Scalars['String']['output'];
 };
 
+/** Indicates whether deleted items should be included in the results or not. */
+export enum IncludeDeletedOption {
+  /** Only include deleted items (i.e. exclude non-deleted items). */
+  Exclusively = 'EXCLUSIVELY',
+  /** If there is a parent GraphQL record and it is deleted then this is equivalent to YES, in all other cases this is equivalent to NO. */
+  Inherit = 'INHERIT',
+  /** Exclude deleted items. */
+  No = 'NO',
+  /** Include deleted items. */
+  Yes = 'YES'
+}
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -964,6 +1004,7 @@ export type Query = {
   /** Get a single `CaasCurrency`. */
   caasCurrencyByKeyAndCasinoId?: Maybe<CaasCurrency>;
   caasCurrentCasino?: Maybe<CaasCasino>;
+  caasCurrentExperience?: Maybe<CaasExperience>;
   caasCurrentSession?: Maybe<CaasSession>;
   caasCurrentUser?: Maybe<CaasUser>;
   /** Get a single `CaasDeposit`. */
@@ -1108,10 +1149,62 @@ export type Subscription = {
 
 export type Todo = {
   __typename?: 'Todo';
+  /** Reads a single `CaasExperience` that is related to this `Todo`. */
+  caasExperienceByExperienceId?: Maybe<CaasExperience>;
+  /** Reads a single `CaasUser` that is related to this `Todo`. */
+  caasUserByUserId?: Maybe<CaasUser>;
   completed?: Maybe<Scalars['Boolean']['output']>;
+  deletedAt?: Maybe<Scalars['Datetime']['output']>;
+  experienceId: Scalars['UUID']['output'];
   id: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['UUID']['output'];
 };
+
+/** A condition to be used against `Todo` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TodoCondition = {
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `Todo` values. */
+export type TodoConnection = {
+  __typename?: 'TodoConnection';
+  /** A list of edges which contains the `Todo` and cursor to aid in pagination. */
+  edges: Array<Maybe<TodoEdge>>;
+  /** A list of `Todo` objects. */
+  nodes: Array<Maybe<Todo>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Todo` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Todo` edge in the connection. */
+export type TodoEdge = {
+  __typename?: 'TodoEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Todo` at the end of the edge. */
+  node?: Maybe<Todo>;
+};
+
+/** Methods to use when ordering `Todo`. */
+export enum TodoOrderBy {
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
 
 /** All input for the `updateCaasCasinoById` mutation. */
 export type UpdateCaasCasinoByIdInput = {
@@ -1147,6 +1240,14 @@ export type UpdateCaasCasinoPayloadCaasCasinoEdgeArgs = {
   orderBy?: Array<CaasCasinoOrderBy>;
 };
 
+export type WithdrawMutationVariables = Exact<{
+  amount: Scalars['Int']['input'];
+  currencyKey: Scalars['String']['input'];
+}>;
+
+
+export type WithdrawMutation = { __typename?: 'Mutation', caasWithdraw?: { __typename?: 'CaasWithdrawPayload', withdrawal: { __typename?: 'CaasWithdrawal', id: any } } | null };
+
 export type AuthenticateMutationVariables = Exact<{
   casinoBaseUrl: Scalars['String']['input'];
   userToken: Scalars['String']['input'];
@@ -1160,15 +1261,7 @@ export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetBalancesQuery = { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', balances?: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', key: string, displayUnitScale: number, displayUnitName: string } | null } | null> | null } | null };
 
-export type WithdrawMutationVariables = Exact<{
-  amount: Scalars['Int']['input'];
-  currencyKey: Scalars['String']['input'];
-}>;
 
-
-export type WithdrawMutation = { __typename?: 'Mutation', caasWithdraw?: { __typename?: 'CaasWithdrawPayload', withdrawal: { __typename?: 'CaasWithdrawal', id: any } } | null };
-
-
+export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
 export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
 export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
-export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
