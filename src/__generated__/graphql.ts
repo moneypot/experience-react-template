@@ -43,7 +43,7 @@ export type CaasAddCasinoInput = {
 
 export type CaasAddCasinoPayload = {
   __typename?: 'CaasAddCasinoPayload';
-  caasCasino?: Maybe<CaasCasino>;
+  casino?: Maybe<CaasCasino>;
   query?: Maybe<Query>;
 };
 
@@ -147,6 +147,10 @@ export type CaasBalanceAlertPayload = {
 export type CaasBalanceCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `CaasBalance` values. */
@@ -175,9 +179,13 @@ export type CaasBalanceEdge = {
 export enum CaasBalanceOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
 }
 
 export type CaasBankroll = {
@@ -255,6 +263,8 @@ export type CaasCasino = {
   caasDepositsByCasinoId: CaasDepositConnection;
   /** Reads and enables pagination through a set of `CaasExperience`. */
   caasExperiencesByCasinoId: CaasExperienceConnection;
+  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
+  caasFaucetClaimsByCasinoId: CaasFaucetClaimConnection;
   /** Reads and enables pagination through a set of `CaasSession`. */
   caasSessionsByCasinoId: CaasSessionConnection;
   /** Reads and enables pagination through a set of `CaasUser`. */
@@ -319,6 +329,17 @@ export type CaasCasinoCaasExperiencesByCasinoIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasExperienceOrderBy>>;
+};
+
+
+export type CaasCasinoCaasFaucetClaimsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
 };
 
 
@@ -518,8 +539,12 @@ export type CaasDeposit = {
 export type CaasDepositCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `CaasDeposit` values. */
@@ -548,25 +573,70 @@ export type CaasDepositEdge = {
 export enum CaasDepositOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
 }
 
 export type CaasExperience = {
   __typename?: 'CaasExperience';
+  /** Reads and enables pagination through a set of `CaasBalance`. */
+  caasBalancesByExperienceId: CaasBalanceConnection;
   /** Reads a single `CaasCasino` that is related to this `CaasExperience`. */
   caasCasinoByCasinoId?: Maybe<CaasCasino>;
+  /** Reads and enables pagination through a set of `CaasDeposit`. */
+  caasDepositsByExperienceId: CaasDepositConnection;
+  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
+  caasFaucetClaimsByExperienceId: CaasFaucetClaimConnection;
   /** Reads and enables pagination through a set of `CaasSession`. */
   caasSessionsByExperienceId: CaasSessionConnection;
+  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
+  caasWithdrawalsByExperienceId: CaasWithdrawalConnection;
   casinoId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   mpExperienceId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
   /** Reads and enables pagination through a set of `Todo`. */
   todosByExperienceId: TodoConnection;
+};
+
+
+export type CaasExperienceCaasBalancesByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasBalanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasBalanceOrderBy>>;
+};
+
+
+export type CaasExperienceCaasDepositsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasDepositCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasDepositOrderBy>>;
+};
+
+
+export type CaasExperienceCaasFaucetClaimsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
 };
 
 
@@ -578,6 +648,17 @@ export type CaasExperienceCaasSessionsByExperienceIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+};
+
+
+export type CaasExperienceCaasWithdrawalsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasWithdrawalCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
 };
 
 
@@ -658,6 +739,58 @@ export type CaasFaucetClaim = {
   userId: Scalars['UUID']['output'];
 };
 
+/**
+ * A condition to be used against `CaasFaucetClaim` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CaasFaucetClaimCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CaasFaucetClaim` values. */
+export type CaasFaucetClaimConnection = {
+  __typename?: 'CaasFaucetClaimConnection';
+  /** A list of edges which contains the `CaasFaucetClaim` and cursor to aid in pagination. */
+  edges: Array<Maybe<CaasFaucetClaimEdge>>;
+  /** A list of `CaasFaucetClaim` objects. */
+  nodes: Array<Maybe<CaasFaucetClaim>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CaasFaucetClaim` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CaasFaucetClaim` edge in the connection. */
+export type CaasFaucetClaimEdge = {
+  __typename?: 'CaasFaucetClaimEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CaasFaucetClaim` at the end of the edge. */
+  node?: Maybe<CaasFaucetClaim>;
+};
+
+/** Methods to use when ordering `CaasFaucetClaim`. */
+export enum CaasFaucetClaimOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
 export type CaasSession = {
   __typename?: 'CaasSession';
   /** Reads a single `CaasCasino` that is related to this `CaasSession`. */
@@ -729,7 +862,9 @@ export enum CaasSessionOrderBy {
 export enum CaasTransferStatusKind {
   Canceled = 'CANCELED',
   Completed = 'COMPLETED',
-  Pending = 'PENDING'
+  Expired = 'EXPIRED',
+  Pending = 'PENDING',
+  Unclaimed = 'UNCLAIMED'
 }
 
 export type CaasUser = {
@@ -738,10 +873,18 @@ export type CaasUser = {
   allWithdrawals?: Maybe<Array<Maybe<CaasWithdrawal>>>;
   balanceByCurrency?: Maybe<CaasBalance>;
   balances?: Maybe<Array<Maybe<CaasBalance>>>;
+  /** Reads and enables pagination through a set of `CaasBalance`. */
+  caasBalancesByUserId: CaasBalanceConnection;
   /** Reads a single `CaasCasino` that is related to this `CaasUser`. */
   caasCasinoByCasinoId?: Maybe<CaasCasino>;
+  /** Reads and enables pagination through a set of `CaasDeposit`. */
+  caasDepositsByUserId: CaasDepositConnection;
+  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
+  caasFaucetClaimsByUserId: CaasFaucetClaimConnection;
   /** Reads and enables pagination through a set of `CaasSession`. */
   caasSessionsByUserId: CaasSessionConnection;
+  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
+  caasWithdrawalsByUserId: CaasWithdrawalConnection;
   casinoId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   mpUserId: Scalars['UUID']['output'];
@@ -766,6 +909,39 @@ export type CaasUserBalanceByCurrencyArgs = {
 };
 
 
+export type CaasUserCaasBalancesByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasBalanceCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasBalanceOrderBy>>;
+};
+
+
+export type CaasUserCaasDepositsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasDepositCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasDepositOrderBy>>;
+};
+
+
+export type CaasUserCaasFaucetClaimsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
+};
+
+
 export type CaasUserCaasSessionsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -774,6 +950,17 @@ export type CaasUserCaasSessionsByUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+};
+
+
+export type CaasUserCaasWithdrawalsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasWithdrawalCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
 };
 
 
@@ -840,7 +1027,7 @@ export type CaasWithdrawInput = {
 export type CaasWithdrawPayload = {
   __typename?: 'CaasWithdrawPayload';
   query?: Maybe<Query>;
-  withdrawal: CaasWithdrawal;
+  withdrawalRequest: CaasWithdrawalRequest;
 };
 
 export type CaasWithdrawal = {
@@ -854,6 +1041,8 @@ export type CaasWithdrawal = {
   caasExperienceByExperienceId?: Maybe<CaasExperience>;
   /** Reads a single `CaasUser` that is related to this `CaasWithdrawal`. */
   caasUserByUserId?: Maybe<CaasUser>;
+  /** Reads a single `CaasWithdrawalRequest` that is related to this `CaasWithdrawal`. */
+  caasWithdrawalRequestByWithdrawalRequestId?: Maybe<CaasWithdrawalRequest>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
@@ -863,6 +1052,7 @@ export type CaasWithdrawal = {
   statusAt: Scalars['Datetime']['output'];
   uname: Scalars['String']['output'];
   userId: Scalars['UUID']['output'];
+  withdrawalRequestId: Scalars['UUID']['output'];
 };
 
 /**
@@ -872,8 +1062,14 @@ export type CaasWithdrawal = {
 export type CaasWithdrawalCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `withdrawalRequestId` field. */
+  withdrawalRequestId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `CaasWithdrawal` values. */
@@ -902,12 +1098,39 @@ export type CaasWithdrawalEdge = {
 export enum CaasWithdrawalOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  WithdrawalRequestIdAsc = 'WITHDRAWAL_REQUEST_ID_ASC',
+  WithdrawalRequestIdDesc = 'WITHDRAWAL_REQUEST_ID_DESC'
 }
+
+export type CaasWithdrawalRequest = {
+  __typename?: 'CaasWithdrawalRequest';
+  amount: Scalars['Float']['output'];
+  /** Reads a single `CaasCasino` that is related to this `CaasWithdrawalRequest`. */
+  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+  /** Reads a single `CaasCurrency` that is related to this `CaasWithdrawalRequest`. */
+  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
+  /** Reads a single `CaasExperience` that is related to this `CaasWithdrawalRequest`. */
+  caasExperienceByExperienceId?: Maybe<CaasExperience>;
+  /** Reads a single `CaasUser` that is related to this `CaasWithdrawalRequest`. */
+  caasUserByUserId?: Maybe<CaasUser>;
+  /** Reads a single `CaasWithdrawal` that is related to this `CaasWithdrawalRequest`. */
+  caasWithdrawalByWithdrawalRequestId?: Maybe<CaasWithdrawal>;
+  casinoId: Scalars['UUID']['output'];
+  currencyKey: Scalars['String']['output'];
+  experienceId: Scalars['UUID']['output'];
+  id: Scalars['UUID']['output'];
+  mpTransferId?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['UUID']['output'];
+};
 
 export type Fortune = {
   __typename?: 'Fortune';
@@ -1019,6 +1242,10 @@ export type Query = {
   caasUserById?: Maybe<CaasUser>;
   /** Get a single `CaasWithdrawal`. */
   caasWithdrawalById?: Maybe<CaasWithdrawal>;
+  /** Get a single `CaasWithdrawal`. */
+  caasWithdrawalByWithdrawalRequestId?: Maybe<CaasWithdrawal>;
+  /** Get a single `CaasWithdrawalRequest`. */
+  caasWithdrawalRequestById?: Maybe<CaasWithdrawalRequest>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -1137,6 +1364,18 @@ export type QueryCaasWithdrawalByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryCaasWithdrawalByWithdrawalRequestIdArgs = {
+  withdrawalRequestId: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasWithdrawalRequestByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTodoByIdArgs = {
   id: Scalars['Int']['input'];
 };
@@ -1246,7 +1485,7 @@ export type WithdrawMutationVariables = Exact<{
 }>;
 
 
-export type WithdrawMutation = { __typename?: 'Mutation', caasWithdraw?: { __typename?: 'CaasWithdrawPayload', withdrawal: { __typename?: 'CaasWithdrawal', id: any } } | null };
+export type WithdrawMutation = { __typename?: 'Mutation', caasWithdraw?: { __typename?: 'CaasWithdrawPayload', withdrawalRequest: { __typename?: 'CaasWithdrawalRequest', id: any } } | null };
 
 export type AuthenticateMutationVariables = Exact<{
   casinoBaseUrl: Scalars['String']['input'];
@@ -1262,6 +1501,6 @@ export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetBalancesQuery = { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', balances?: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', key: string, displayUnitScale: number, displayUnitName: string } | null } | null> | null } | null };
 
 
-export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
+export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawalRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
 export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
 export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
