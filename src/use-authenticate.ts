@@ -105,7 +105,7 @@ export const useAuthenticate = (store: Store): AuthState => {
     };
 
     authenticate();
-  }, []); // Only run once on mount
+  }, [store]); // Only run once on mount
 
   return state;
 };

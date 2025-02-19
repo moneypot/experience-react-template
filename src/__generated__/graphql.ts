@@ -30,6 +30,8 @@ export type Scalars = {
    * to unexpected results.
    */
   Datetime: { input: any; output: any; }
+  /** Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: { input: any; output: any; }
   /** A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122). */
   UUID: { input: any; output: any; }
 };
@@ -265,6 +267,8 @@ export type CaasCasino = {
   caasExperiencesByCasinoId: CaasExperienceConnection;
   /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
   caasFaucetClaimsByCasinoId: CaasFaucetClaimConnection;
+  /** Reads a single `CaasJwk` that is related to this `CaasCasino`. */
+  caasJwkById?: Maybe<CaasJwk>;
   /** Reads and enables pagination through a set of `CaasSession`. */
   caasSessionsByCasinoId: CaasSessionConnection;
   /** Reads and enables pagination through a set of `CaasUser`. */
@@ -791,6 +795,24 @@ export enum CaasFaucetClaimOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
+export type CaasJwk = {
+  __typename?: 'CaasJwk';
+  /** Reads a single `CaasCasino` that is related to this `CaasJwk`. */
+  caasCasinoById?: Maybe<CaasCasino>;
+  id: Scalars['UUID']['output'];
+  jwks: Scalars['JSON']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+};
+
+export type CaasJwksHistory = {
+  __typename?: 'CaasJwksHistory';
+  /** Reads a single `CaasCasino` that is related to this `CaasJwksHistory`. */
+  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+  casinoId: Scalars['UUID']['output'];
+  id: Scalars['UUID']['output'];
+  jwks: Scalars['JSON']['output'];
+};
+
 export type CaasSession = {
   __typename?: 'CaasSession';
   /** Reads a single `CaasCasino` that is related to this `CaasSession`. */
@@ -820,6 +842,8 @@ export type CaasSessionCondition = {
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userToken` field. */
+  userToken?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 /** A connection to a list of `CaasSession` values. */
@@ -1236,6 +1260,10 @@ export type Query = {
   caasExperienceById?: Maybe<CaasExperience>;
   /** Get a single `CaasFaucetClaim`. */
   caasFaucetClaimById?: Maybe<CaasFaucetClaim>;
+  /** Get a single `CaasJwk`. */
+  caasJwkById?: Maybe<CaasJwk>;
+  /** Get a single `CaasJwksHistory`. */
+  caasJwksHistoryById?: Maybe<CaasJwksHistory>;
   /** Get a single `CaasSession`. */
   caasSessionById?: Maybe<CaasSession>;
   /** Get a single `CaasUser`. */
@@ -1341,6 +1369,18 @@ export type QueryCaasExperienceByIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryCaasFaucetClaimByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasJwkByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryCaasJwksHistoryByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
