@@ -2,13 +2,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import { Store, StoreProvider } from "./Store.tsx";
-
-// Tell parent to set our iframe height to some amount larger
-// than our content height to avoid scrollbars.
-window.parent.postMessage({ type: "setHeight", px: 1500 }, "*");
+import {
+  handleIncomingMessage,
+  postMessageToParent,
+} from "./iframe-communication";
 
 const store = new Store();
 
+window.addEventListener("message", (event) => {
+  handleIncomingMessage(store, event);
+});
+
+// Set iframe height to avoid scrollbars
+postMessageToParent({ type: "setHeight", px: 1500 });
+
+// Render the app
 createRoot(document.getElementById("root")!).render(
   <StoreProvider store={store}>
     <App />

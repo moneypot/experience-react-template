@@ -17,7 +17,9 @@
     "mobx-react-lite": "^4.0.7",
     "react": "19",
     "react-bootstrap": "^2.10.5",
-    "react-dom": "19"
+    "react-bootstrap-icons": "^1.11.5",
+    "react-dom": "19",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
