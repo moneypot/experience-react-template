@@ -267,8 +267,10 @@ export type CaasCasino = {
   caasExperiencesByCasinoId: CaasExperienceConnection;
   /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
   caasFaucetClaimsByCasinoId: CaasFaucetClaimConnection;
-  /** Reads a single `CaasJwk` that is related to this `CaasCasino`. */
-  caasJwkById?: Maybe<CaasJwk>;
+  /** Reads a single `CaasJwkSet` that is related to this `CaasCasino`. */
+  caasJwkSetByCasinoId?: Maybe<CaasJwkSet>;
+  /** Reads and enables pagination through a set of `CaasJwkSetSnapshot`. */
+  caasJwkSetSnapshotsByCasinoId: CaasJwkSetSnapshotConnection;
   /** Reads and enables pagination through a set of `CaasSession`. */
   caasSessionsByCasinoId: CaasSessionConnection;
   /** Reads and enables pagination through a set of `CaasUser`. */
@@ -344,6 +346,17 @@ export type CaasCasinoCaasFaucetClaimsByCasinoIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
+};
+
+
+export type CaasCasinoCaasJwkSetSnapshotsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<CaasJwkSetSnapshotCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<CaasJwkSetSnapshotOrderBy>>;
 };
 
 
@@ -795,23 +808,67 @@ export enum CaasFaucetClaimOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export type CaasJwk = {
-  __typename?: 'CaasJwk';
-  /** Reads a single `CaasCasino` that is related to this `CaasJwk`. */
-  caasCasinoById?: Maybe<CaasCasino>;
-  id: Scalars['UUID']['output'];
+export type CaasJwkSet = {
+  __typename?: 'CaasJwkSet';
+  /** Reads a single `CaasCasino` that is related to this `CaasJwkSet`. */
+  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+  casinoId: Scalars['UUID']['output'];
   jwks: Scalars['JSON']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
-export type CaasJwksHistory = {
-  __typename?: 'CaasJwksHistory';
-  /** Reads a single `CaasCasino` that is related to this `CaasJwksHistory`. */
+export type CaasJwkSetSnapshot = {
+  __typename?: 'CaasJwkSetSnapshot';
+  /** Reads a single `CaasCasino` that is related to this `CaasJwkSetSnapshot`. */
   caasCasinoByCasinoId?: Maybe<CaasCasino>;
   casinoId: Scalars['UUID']['output'];
   id: Scalars['UUID']['output'];
   jwks: Scalars['JSON']['output'];
 };
+
+/**
+ * A condition to be used against `CaasJwkSetSnapshot` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type CaasJwkSetSnapshotCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `CaasJwkSetSnapshot` values. */
+export type CaasJwkSetSnapshotConnection = {
+  __typename?: 'CaasJwkSetSnapshotConnection';
+  /** A list of edges which contains the `CaasJwkSetSnapshot` and cursor to aid in pagination. */
+  edges: Array<Maybe<CaasJwkSetSnapshotEdge>>;
+  /** A list of `CaasJwkSetSnapshot` objects. */
+  nodes: Array<Maybe<CaasJwkSetSnapshot>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `CaasJwkSetSnapshot` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `CaasJwkSetSnapshot` edge in the connection. */
+export type CaasJwkSetSnapshotEdge = {
+  __typename?: 'CaasJwkSetSnapshotEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `CaasJwkSetSnapshot` at the end of the edge. */
+  node?: Maybe<CaasJwkSetSnapshot>;
+};
+
+/** Methods to use when ordering `CaasJwkSetSnapshot`. */
+export enum CaasJwkSetSnapshotOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
 
 export type CaasSession = {
   __typename?: 'CaasSession';
@@ -1260,10 +1317,10 @@ export type Query = {
   caasExperienceById?: Maybe<CaasExperience>;
   /** Get a single `CaasFaucetClaim`. */
   caasFaucetClaimById?: Maybe<CaasFaucetClaim>;
-  /** Get a single `CaasJwk`. */
-  caasJwkById?: Maybe<CaasJwk>;
-  /** Get a single `CaasJwksHistory`. */
-  caasJwksHistoryById?: Maybe<CaasJwksHistory>;
+  /** Get a single `CaasJwkSet`. */
+  caasJwkSetByCasinoId?: Maybe<CaasJwkSet>;
+  /** Get a single `CaasJwkSetSnapshot`. */
+  caasJwkSetSnapshotById?: Maybe<CaasJwkSetSnapshot>;
   /** Get a single `CaasSession`. */
   caasSessionById?: Maybe<CaasSession>;
   /** Get a single `CaasUser`. */
@@ -1374,13 +1431,13 @@ export type QueryCaasFaucetClaimByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasJwkByIdArgs = {
-  id: Scalars['UUID']['input'];
+export type QueryCaasJwkSetByCasinoIdArgs = {
+  casinoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasJwksHistoryByIdArgs = {
+export type QueryCaasJwkSetSnapshotByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
