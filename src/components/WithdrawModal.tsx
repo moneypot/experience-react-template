@@ -139,7 +139,7 @@ const WithdrawModal: React.FC<{ show: boolean; hide: () => void }> = observer(
             <Form.Group>
               <Form.Label>Currency</Form.Label>
               <Form.Select
-                value={amount}
+                value={currencyKey}
                 onChange={handleCurrencyChange}
                 required
               >
