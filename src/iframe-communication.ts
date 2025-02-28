@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { Store, ThemePreference } from "./Store";
+import { Store } from "./Store";
+import { ThemePreference } from "./theme";
 
 // This module organizes code that deals with communication with the parent window over
 // the postMessage API.

@@ -1,14 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { createContext, useContext, useEffect, useState } from "react";
-
-export type ThemePreference =
-  | "light"
-  | "dark"
-  // determined by prefers-color-scheme
-  | "auto";
-
-export type Theme = "light" | "dark";
+import { createContext, useContext } from "react";
+import { ThemePreference, useTheme } from "./theme";
 
 export class Store {
   loggedIn: LoggedIn | null = null;
@@ -62,37 +55,9 @@ interface LoggedIn {
 
 const StoreContext = createContext<Store | null>(null);
 
-function getSystemIsDark(): boolean {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
-}
-
 export const StoreProvider = observer(
   ({ store, children }: { store: Store; children: React.ReactNode }) => {
-    // This ensures the component re-renders when system theme changes
-    const [systemTheme, setSystemTheme] = useState<Theme>(
-      getSystemIsDark() ? "dark" : "light"
-    );
-
-    const derivedTheme =
-      store.themePreference === "auto" ? systemTheme : store.themePreference;
-
-    useEffect(() => {
-      // The theme is applied via <html data-bs-theme={"light" | "dark"}>
-      document.documentElement.dataset.bsTheme = derivedTheme;
-
-      // Listen for system theme changes
-      const darkModeMediaQuery = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      );
-      const handleThemeChange = (e: MediaQueryListEvent) => {
-        setSystemTheme(e.matches ? "dark" : "light");
-      };
-
-      darkModeMediaQuery.addEventListener("change", handleThemeChange);
-      return () => {
-        darkModeMediaQuery.removeEventListener("change", handleThemeChange);
-      };
-    }, [derivedTheme, store.themePreference]);
+    useTheme(store.themePreference);
 
     return (
       <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
