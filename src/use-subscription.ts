@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { Store } from "./Store";
+import { Store } from "./store";
 import { createClient } from "graphql-ws";
 import { fetchAndUpdateBalances } from "./graphql";
 

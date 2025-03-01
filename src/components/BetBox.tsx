@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { FormEvent, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
-import { useStore } from "../Store";
+import { useStore } from "../store";
 import { runInAction } from "mobx";
 
 const BetBox: React.FC = observer(() => {

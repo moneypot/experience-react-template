@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import { observer } from "mobx-react-lite";
 import { createContext, useContext } from "react";
-import { ThemePreference, useTheme } from "./theme";
+import { ThemePreference } from "../theme";
 
 export class Store {
   loggedIn: LoggedIn | null = null;
@@ -32,14 +31,12 @@ export class Store {
 
 interface LoggedIn {
   // Session info
-
   sessionId: string;
   experienceId: string;
   userId: string;
   uname: string;
 
   // User info
-
   balances: {
     amount: number;
     currencyKey: string;
@@ -48,22 +45,11 @@ interface LoggedIn {
   }[];
 
   // UI
-
   // It's often useful to globaly track which currency the user wants to use
   selectedCurrencyKey: null | string;
 }
 
-const StoreContext = createContext<Store | null>(null);
-
-export const StoreProvider = observer(
-  ({ store, children }: { store: Store; children: React.ReactNode }) => {
-    useTheme(store.themePreference);
-
-    return (
-      <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
-    );
-  }
-);
+export const StoreContext = createContext<Store | null>(null);
 
 export const useStore = () => {
   const store = useContext(StoreContext);

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Form, Modal, Alert, InputGroup, Button } from "react-bootstrap";
-import { useStore } from "../Store";
+import { useStore } from "../store";
 import { sendGraphQLRequest } from "../graphql";
 import { formatError, truncateToDisplayScale } from "../util";
 import { gql } from "../__generated__";

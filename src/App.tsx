@@ -7,7 +7,7 @@ import {
   Nav,
   Button,
 } from "react-bootstrap";
-import { useStore } from "./Store";
+import { useStore } from "./store";
 import { useAuthenticate } from "./use-authenticate";
 import { observer } from "mobx-react-lite";
 import { useSubscription } from "./use-subscription";

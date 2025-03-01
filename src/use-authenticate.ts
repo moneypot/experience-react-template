@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Store } from "./Store";
+import { Store } from "./store";
 import { AUTHENTICATE, sendGraphQLRequest } from "./graphql";
 import { runInAction } from "mobx";
 import { formatError } from "./util";

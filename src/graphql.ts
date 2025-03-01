@@ -1,5 +1,5 @@
 import { GraphQLClient, RequestOptions, Variables } from "graphql-request";
-import { Store } from "./Store";
+import { Store } from "./store";
 import { gql } from "./__generated__";
 import { runInAction } from "mobx";
 
