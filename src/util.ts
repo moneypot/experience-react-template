@@ -26,6 +26,8 @@ export function formatError(e: unknown): string {
 // Returns null on bad numbers.
 // It's also lenient to let the user type 'numbers in progress' like '1.' into the input box.
 //
+// The output must always be parseable by Number.parseFloat(string).
+//
 // Usage:
 //
 //   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,4 +56,38 @@ export function truncateToDisplayScale(
 
   // Truncate decimal places
   return `${whole}.${fraction.slice(0, decimals)}`;
+}
+
+// Format a currency amount to precision based on the displayUnitScale.
+// Note: Shouldn't be used in input boxes since it won't parse back into a number.
+//
+// 123456 BTC -> 1,234.56 bits
+export function formatCurrency(
+  amount: number,
+  currency: Pick<CaasCurrency, "displayUnitName" | "displayUnitScale">,
+  options: { excludeUnit?: boolean } = {
+    excludeUnit: false,
+  }
+): string {
+  const scaledAmount = amount / (currency.displayUnitScale || 1); // prevent division by 0
+
+  // Determine precision of currency.
+  // For scale 1 -> 0 decimals, 10 -> 1 decimal, 100 -> 2 decimals, etc.
+  const decimalPlaces =
+    currency.displayUnitScale <= 1 ? 0 : Math.log10(currency.displayUnitScale);
+
+  // Use US locale to dissuade player from trying to write number values that can't be parsed
+  // by parseFloat.
+  const formatter = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
+    useGrouping: true,
+  });
+
+  if (options.excludeUnit) {
+    return formatter.format(scaledAmount);
+  } else {
+    const out = `${formatter.format(scaledAmount)} ${currency.displayUnitName}`;
+    return out;
+  }
 }

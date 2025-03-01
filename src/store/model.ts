@@ -23,6 +23,17 @@ export class Store {
     }
   }
 
+  // MOBX ACTIONS
+  //
+  // When you use these, you don't need to use runInAction because
+  // `makeAutoObservable` wraps these in `runInAction` for us.
+
+  setSelectedCurrencyKey(currencyKey: string) {
+    if (this.loggedIn) {
+      this.loggedIn.selectedCurrencyKey = currencyKey;
+    }
+  }
+
   setThemePreference(preference: ThemePreference) {
     this.themePreference = preference;
     localStorage.setItem("theme_preference", preference);

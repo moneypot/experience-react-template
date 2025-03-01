@@ -2,13 +2,18 @@ import { observer } from "mobx-react-lite";
 import React, { FormEvent, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useStore } from "../store";
-import { runInAction } from "mobx";
+import { formatCurrency, truncateToDisplayScale } from "../util";
 
 const BetBox: React.FC = observer(() => {
   const store = useStore();
   const [wagerString, setWagerString] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [sending, setSending] = useState(false);
+
+  // Ensure selected currency matches one of user's balances
+  const selectedCurrency = store.loggedIn?.balances.find(
+    (balance) => balance.currencyKey === store.loggedIn?.selectedCurrencyKey
+  );
 
   const submitBet = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,25 +27,26 @@ const BetBox: React.FC = observer(() => {
     // Reset errors
     setSubmitError("");
 
-    const decimalRegex = /^\d+(\.\d+)?$/;
-    if (!decimalRegex.test(wagerString)) {
-      setSubmitError("Invalid wager amount");
+    if (!selectedCurrency) {
+      setSubmitError("Select a currency");
       return;
     }
 
-    // Ensure selected currency matches one of user's balances
-    const selectedCurrency = store.loggedIn.balances.find(
-      (balance) => balance.currencyKey === store.loggedIn?.selectedCurrencyKey
-    );
-
-    if (!selectedCurrency) {
-      setSubmitError("Invalid currency");
+    // Must be parseable by parseFloat
+    const decimalRegex = /^\d*\.?\d*$/;
+    if (!decimalRegex.test(wagerString)) {
+      setSubmitError("Invalid wager amount");
       return;
     }
 
     // Convert display units back into base units
     const wagerBaseUnits =
       Number.parseFloat(wagerString) * selectedCurrency.displayUnitScale;
+
+    if (Number.isNaN(wagerBaseUnits)) {
+      setSubmitError("Invalid wager amount");
+      return;
+    }
 
     console.log("TODO: make bet", {
       wagerBaseUnits,
@@ -74,16 +80,18 @@ const BetBox: React.FC = observer(() => {
 
   const handleCurrencyChange = (e: FormEvent<HTMLSelectElement>) => {
     const currency = e.currentTarget.value;
-    runInAction(() => {
-      if (store.loggedIn) {
-        store.loggedIn.selectedCurrencyKey = currency;
-      }
-    });
+    store.setSelectedCurrencyKey(currency);
   };
 
   const handleWagerChange = (e: FormEvent<HTMLInputElement>) => {
     const wager = e.currentTarget.value;
-    setWagerString(wager);
+    if (!selectedCurrency) {
+      return;
+    }
+    const truncated = truncateToDisplayScale(wager, selectedCurrency);
+    if (truncated !== null) {
+      setWagerString(truncated);
+    }
   };
 
   return (
@@ -101,8 +109,7 @@ const BetBox: React.FC = observer(() => {
           )}
           {store.loggedIn?.balances.map((balance) => (
             <option key={balance.currencyKey} value={balance.currencyKey}>
-              {balance.currencyKey}: {balance.amount / balance.displayUnitScale}{" "}
-              {balance.displayUnitName}
+              {balance.currencyKey}: {formatCurrency(balance.amount, balance)}
             </option>
           ))}
         </Form.Select>
@@ -111,9 +118,9 @@ const BetBox: React.FC = observer(() => {
       <Form.Group className="mt-2">
         <Form.Label>Wager</Form.Label>
         <Form.Control
-          type="number"
+          type="text"
           name="wager"
-          inputMode="numeric"
+          inputMode="decimal"
           placeholder="Enter wager amount"
           pattern="^\d*\.?\d*$"
           title="Invalid wager"
