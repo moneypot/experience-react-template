@@ -11,7 +11,7 @@ export const AUTHENTICATE = gql(/* GraphQL */ `
       input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }
     ) {
       success {
-        sessionId
+        sessionKey
         uname
         experienceId
         userId
@@ -50,14 +50,14 @@ export const GET_BALANCES = gql(/* GraphQL */ `
 
 export async function sendGraphQLRequest<T, V extends Variables = Variables>(
   store: Store,
-  options: RequestOptions<V, T> & { sessionId?: string }
+  options: RequestOptions<V, T> & { sessionKey?: string }
 ): Promise<T> {
   const headers: HeadersInit = {};
 
-  const sessionId = store.loggedIn?.sessionId ?? options.sessionId;
+  const sessionKey = store.loggedIn?.sessionKey ?? options.sessionKey;
 
-  if (sessionId) {
-    headers.Authorization = `session:${sessionId}`;
+  if (sessionKey) {
+    headers.Authorization = `session:${sessionKey}`;
   }
 
   const url = import.meta.env.VITE_GRAPHQL_URL;

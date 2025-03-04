@@ -115,7 +115,7 @@ export type CaasAuthenticatePayload = {
 export type CaasAuthenticateSuccess = {
   __typename?: 'CaasAuthenticateSuccess';
   experienceId: Scalars['UUID']['output'];
-  sessionId: Scalars['UUID']['output'];
+  sessionKey: Scalars['UUID']['output'];
   uname: Scalars['String']['output'];
   userId: Scalars['UUID']['output'];
 };
@@ -882,6 +882,7 @@ export type CaasSession = {
   experienceId: Scalars['UUID']['output'];
   expiredAt: Scalars['Datetime']['output'];
   id: Scalars['UUID']['output'];
+  key: Scalars['UUID']['output'];
   userId: Scalars['UUID']['output'];
   userToken: Scalars['UUID']['output'];
 };
@@ -897,6 +898,8 @@ export type CaasSessionCondition = {
   experienceId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `key` field. */
+  key?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `userToken` field. */
@@ -933,6 +936,8 @@ export enum CaasSessionOrderBy {
   ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
+  KeyAsc = 'KEY_ASC',
+  KeyDesc = 'KEY_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -1590,7 +1595,7 @@ export type AuthenticateMutationVariables = Exact<{
 }>;
 
 
-export type AuthenticateMutation = { __typename?: 'Mutation', caasAuthenticate?: { __typename?: 'CaasAuthenticatePayload', success?: { __typename?: 'CaasAuthenticateSuccess', sessionId: any, uname: string, experienceId: any, userId: any } | null, query?: { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', balances?: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> | null } | null } | null } | null };
+export type AuthenticateMutation = { __typename?: 'Mutation', caasAuthenticate?: { __typename?: 'CaasAuthenticatePayload', success?: { __typename?: 'CaasAuthenticateSuccess', sessionKey: any, uname: string, experienceId: any, userId: any } | null, query?: { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', balances?: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> | null } | null } | null } | null };
 
 export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1599,5 +1604,5 @@ export type GetBalancesQuery = { __typename?: 'Query', caasCurrentUser?: { __typ
 
 
 export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawalRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
-export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionId"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
+export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionKey"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
 export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;

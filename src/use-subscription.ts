@@ -22,14 +22,14 @@ export const useSubscription = (store: Store) => {
   }, [store]);
 
   useEffect(() => {
-    if (!store.loggedIn?.sessionId) return;
+    if (!store.loggedIn?.sessionKey) return;
     const httpUrl = import.meta.env.VITE_GRAPHQL_URL;
     if (!httpUrl) return;
 
     const client = createClient({
       url: httpToWs(httpUrl),
       connectionParams: {
-        authorization: `session:${store.loggedIn.sessionId}`,
+        authorization: `session:${store.loggedIn.sessionKey}`,
       },
     });
 
@@ -63,7 +63,7 @@ export const useSubscription = (store: Store) => {
   }, [
     // Very important to do a deep dependency since we only want websocket to connect
     // on initial sessionId=(undefined -> string) transition
-    store.loggedIn?.sessionId,
+    store.loggedIn?.sessionKey,
     // Must be stable
     handleBalanceChangeAlert,
   ]);

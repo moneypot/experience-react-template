@@ -42,7 +42,7 @@ export class Store {
 
 interface LoggedIn {
   // Session info
-  sessionId: string;
+  sessionKey: string;
   experienceId: string;
   userId: string;
   uname: string;

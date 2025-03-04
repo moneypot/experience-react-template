@@ -87,7 +87,7 @@ export const useAuthenticate = (store: Store): AuthState => {
         if (success) {
           runInAction(() => {
             store.loggedIn = {
-              sessionId: success.sessionId,
+              sessionKey: success.sessionKey,
               experienceId: success.experienceId,
               userId: success.userId,
               uname: success.uname,
