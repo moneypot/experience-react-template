@@ -4,6 +4,7 @@ import { createClient } from "graphql-ws";
 import { fetchAndUpdateBalances } from "./graphql";
 
 // Swap url protocol from http(s) to ws(s)
+// Throws if url is not valid
 function httpToWs(url: string): string {
   const parsedUrl = new URL(url);
 
@@ -22,14 +23,33 @@ export const useSubscription = (store: Store) => {
   }, [store]);
 
   useEffect(() => {
-    if (!store.loggedIn?.sessionKey) return;
+    const sessionKey = store.loggedIn?.sessionKey;
+    if (!sessionKey) {
+      return;
+    }
     const httpUrl = import.meta.env.VITE_GRAPHQL_URL;
-    if (!httpUrl) return;
+    if (!httpUrl) {
+      console.error("VITE_GRAPHQL_URL is not set");
+      return;
+    }
+
+    let wsUrl: string;
+    try {
+      wsUrl = httpToWs(httpUrl);
+    } catch (error) {
+      console.error("Failed to convert HTTP URL to WS URL", error);
+      return;
+    }
 
     const client = createClient({
-      url: httpToWs(httpUrl),
+      url: wsUrl,
       connectionParams: {
-        authorization: `session:${store.loggedIn.sessionKey}`,
+        authorization: `session:${sessionKey}`,
+      },
+      retryAttempts: Infinity,
+      shouldRetry: () => {
+        // Without this, the client only retries on errors, not close events
+        return true;
       },
     });
 
