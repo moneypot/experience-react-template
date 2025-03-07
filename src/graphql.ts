@@ -18,12 +18,14 @@ export const AUTHENTICATE = gql(/* GraphQL */ `
       }
       query {
         caasCurrentUser {
-          balances {
-            amount
-            currencyKey
-            caasCurrencyByCurrencyKeyAndCasinoId {
-              displayUnitName
-              displayUnitScale
+          caasBalancesByUserId {
+            nodes {
+              amount
+              currencyKey
+              caasCurrencyByCurrencyKeyAndCasinoId {
+                displayUnitName
+                displayUnitScale
+              }
             }
           }
         }
@@ -35,13 +37,14 @@ export const AUTHENTICATE = gql(/* GraphQL */ `
 export const GET_BALANCES = gql(/* GraphQL */ `
   query GetBalances {
     caasCurrentUser {
-      balances {
-        amount
-        currencyKey
-        caasCurrencyByCurrencyKeyAndCasinoId {
-          key
-          displayUnitScale
-          displayUnitName
+      caasBalancesByUserId {
+        nodes {
+          amount
+          currencyKey
+          caasCurrencyByCurrencyKeyAndCasinoId {
+            displayUnitName
+            displayUnitScale
+          }
         }
       }
     }
@@ -83,7 +86,9 @@ export async function fetchAndUpdateBalances(store: Store) {
     document: GET_BALANCES,
   })
     .then((result) => {
-      const balances = (result.caasCurrentUser?.balances ?? [])
+      const balances = (
+        result.caasCurrentUser?.caasBalancesByUserId.nodes ?? []
+      )
         .flatMap((x) => (x ? [x] : []))
         .map((x) => ({
           amount: x.amount,
