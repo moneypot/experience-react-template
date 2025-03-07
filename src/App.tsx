@@ -26,7 +26,7 @@ const App = observer(() => {
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <>
+    <div className="mx-3">
       {showModal && (
         <WithdrawModal show={showModal} hide={() => setShowModal(false)} />
       )}
@@ -58,6 +58,7 @@ const App = observer(() => {
           <Col lg={9}>
             <div
               style={{
+                marginTop: "1rem",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -80,7 +81,7 @@ const App = observer(() => {
           </pre>
         </div>
       </Container>
-    </>
+    </div>
   );
 });
 
