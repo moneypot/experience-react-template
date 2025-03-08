@@ -73,7 +73,8 @@ export const useAuthenticate = (store: Store): AuthState => {
 
         const success = result.caasAuthenticate?.success;
         const balances = (
-          result.caasAuthenticate?.query?.caasCurrentUser?.balances ?? []
+          result.caasAuthenticate?.query?.caasCurrentUser?.caasBalancesByUserId
+            ?.nodes ?? []
         )
           .flatMap((x) => (x ? [x] : []))
           .map((x) => ({
