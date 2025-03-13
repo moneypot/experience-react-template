@@ -71,9 +71,9 @@ export const useAuthenticate = (store: Store): AuthState => {
           },
         });
 
-        const success = result.caasAuthenticate?.success;
+        const success = result.hubAuthenticate?.success;
         const balances = (
-          result.caasAuthenticate?.query?.caasCurrentUser?.caasBalancesByUserId
+          result.hubAuthenticate?.query?.hubCurrentUser?.hubBalancesByUserId
             ?.nodes ?? []
         )
           .flatMap((x) => (x ? [x] : []))
@@ -81,9 +81,9 @@ export const useAuthenticate = (store: Store): AuthState => {
             amount: x.amount,
             currencyKey: x.currencyKey,
             displayUnitName:
-              x.caasCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
+              x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
             displayUnitScale:
-              x.caasCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
+              x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
           }));
         if (success) {
           runInAction(() => {

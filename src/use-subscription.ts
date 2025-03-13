@@ -57,7 +57,7 @@ export const useSubscription = (store: Store) => {
       {
         query: `
           subscription BalanceChangeAlert {
-            caasBalanceAlert {
+            hubBalanceAlert {
               currencyKey
             }
           }

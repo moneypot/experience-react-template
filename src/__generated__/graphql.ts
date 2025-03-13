@@ -36,21 +36,27 @@ export type Scalars = {
   UUID: { input: any; output: any; }
 };
 
-export type CaasAddCasinoInput = {
+export type Fortune = {
+  __typename?: 'Fortune';
+  id: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+};
+
+export type HubAddCasinoInput = {
   apiKey: Scalars['String']['input'];
   baseUrl: Scalars['String']['input'];
   graphqlUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
-export type CaasAddCasinoPayload = {
-  __typename?: 'CaasAddCasinoPayload';
-  casino?: Maybe<CaasCasino>;
+export type HubAddCasinoPayload = {
+  __typename?: 'HubAddCasinoPayload';
+  casino?: Maybe<HubCasino>;
   query?: Maybe<Query>;
 };
 
-export type CaasApiKey = {
-  __typename?: 'CaasApiKey';
+export type HubApiKey = {
+  __typename?: 'HubApiKey';
   id: Scalars['UUID']['output'];
   key: Scalars['UUID']['output'];
   lastUsedAt?: Maybe<Scalars['Datetime']['output']>;
@@ -58,40 +64,40 @@ export type CaasApiKey = {
 };
 
 /**
- * A condition to be used against `CaasApiKey` object types. All fields are tested
+ * A condition to be used against `HubApiKey` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type CaasApiKeyCondition = {
+export type HubApiKeyCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `key` field. */
   key?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasApiKey` values. */
-export type CaasApiKeyConnection = {
-  __typename?: 'CaasApiKeyConnection';
-  /** A list of edges which contains the `CaasApiKey` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasApiKeyEdge>>;
-  /** A list of `CaasApiKey` objects. */
-  nodes: Array<Maybe<CaasApiKey>>;
+/** A connection to a list of `HubApiKey` values. */
+export type HubApiKeyConnection = {
+  __typename?: 'HubApiKeyConnection';
+  /** A list of edges which contains the `HubApiKey` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubApiKeyEdge>>;
+  /** A list of `HubApiKey` objects. */
+  nodes: Array<Maybe<HubApiKey>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasApiKey` you could get from the connection. */
+  /** The count of *all* `HubApiKey` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasApiKey` edge in the connection. */
-export type CaasApiKeyEdge = {
-  __typename?: 'CaasApiKeyEdge';
+/** A `HubApiKey` edge in the connection. */
+export type HubApiKeyEdge = {
+  __typename?: 'HubApiKeyEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasApiKey` at the end of the edge. */
-  node?: Maybe<CaasApiKey>;
+  /** The `HubApiKey` at the end of the edge. */
+  node?: Maybe<HubApiKey>;
 };
 
-/** Methods to use when ordering `CaasApiKey`. */
-export enum CaasApiKeyOrderBy {
+/** Methods to use when ordering `HubApiKey`. */
+export enum HubApiKeyOrderBy {
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
   KeyAsc = 'KEY_ASC',
@@ -101,52 +107,52 @@ export enum CaasApiKeyOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-export type CaasAuthenticateInput = {
+export type HubAuthenticateInput = {
   casinoBaseUrl: Scalars['String']['input'];
   userToken: Scalars['String']['input'];
 };
 
-export type CaasAuthenticatePayload = {
-  __typename?: 'CaasAuthenticatePayload';
+export type HubAuthenticatePayload = {
+  __typename?: 'HubAuthenticatePayload';
   query?: Maybe<Query>;
-  success?: Maybe<CaasAuthenticateSuccess>;
+  success?: Maybe<HubAuthenticateSuccess>;
 };
 
-export type CaasAuthenticateSuccess = {
-  __typename?: 'CaasAuthenticateSuccess';
+export type HubAuthenticateSuccess = {
+  __typename?: 'HubAuthenticateSuccess';
   experienceId: Scalars['UUID']['output'];
   sessionKey: Scalars['UUID']['output'];
   uname: Scalars['String']['output'];
   userId: Scalars['UUID']['output'];
 };
 
-export type CaasBalance = {
-  __typename?: 'CaasBalance';
+export type HubBalance = {
+  __typename?: 'HubBalance';
   amount: Scalars['Float']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasBalance`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasBalance`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
-  /** Reads a single `CaasExperience` that is related to this `CaasBalance`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasBalance`. */
-  caasUserByUserId?: Maybe<CaasUser>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubBalance`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubBalance`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubBalance`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubBalance`. */
+  hubUserByUserId?: Maybe<HubUser>;
   userId: Scalars['UUID']['output'];
 };
 
-export type CaasBalanceAlertPayload = {
-  __typename?: 'CaasBalanceAlertPayload';
+export type HubBalanceAlertPayload = {
+  __typename?: 'HubBalanceAlertPayload';
   currencyKey?: Maybe<Scalars['String']['output']>;
 };
 
 /**
- * A condition to be used against `CaasBalance` object types. All fields are tested
+ * A condition to be used against `HubBalance` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type CaasBalanceCondition = {
+export type HubBalanceCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
@@ -155,30 +161,30 @@ export type CaasBalanceCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasBalance` values. */
-export type CaasBalanceConnection = {
-  __typename?: 'CaasBalanceConnection';
-  /** A list of edges which contains the `CaasBalance` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasBalanceEdge>>;
-  /** A list of `CaasBalance` objects. */
-  nodes: Array<Maybe<CaasBalance>>;
+/** A connection to a list of `HubBalance` values. */
+export type HubBalanceConnection = {
+  __typename?: 'HubBalanceConnection';
+  /** A list of edges which contains the `HubBalance` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubBalanceEdge>>;
+  /** A list of `HubBalance` objects. */
+  nodes: Array<Maybe<HubBalance>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasBalance` you could get from the connection. */
+  /** The count of *all* `HubBalance` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasBalance` edge in the connection. */
-export type CaasBalanceEdge = {
-  __typename?: 'CaasBalanceEdge';
+/** A `HubBalance` edge in the connection. */
+export type HubBalanceEdge = {
+  __typename?: 'HubBalanceEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasBalance` at the end of the edge. */
-  node?: Maybe<CaasBalance>;
+  /** The `HubBalance` at the end of the edge. */
+  node?: Maybe<HubBalance>;
 };
 
-/** Methods to use when ordering `CaasBalance`. */
-export enum CaasBalanceOrderBy {
+/** Methods to use when ordering `HubBalance`. */
+export enum HubBalanceOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
@@ -190,56 +196,56 @@ export enum CaasBalanceOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export type CaasBankroll = {
-  __typename?: 'CaasBankroll';
+export type HubBankroll = {
+  __typename?: 'HubBankroll';
   amount: Scalars['Float']['output'];
   bets: Scalars['BigInt']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasBankroll`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasBankroll`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   expectedValue: Scalars['Float']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubBankroll`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubBankroll`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
   id: Scalars['UUID']['output'];
   wagered: Scalars['Float']['output'];
 };
 
 /**
- * A condition to be used against `CaasBankroll` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
+ * A condition to be used against `HubBankroll` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
  */
-export type CaasBankrollCondition = {
+export type HubBankrollCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasBankroll` values. */
-export type CaasBankrollConnection = {
-  __typename?: 'CaasBankrollConnection';
-  /** A list of edges which contains the `CaasBankroll` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasBankrollEdge>>;
-  /** A list of `CaasBankroll` objects. */
-  nodes: Array<Maybe<CaasBankroll>>;
+/** A connection to a list of `HubBankroll` values. */
+export type HubBankrollConnection = {
+  __typename?: 'HubBankrollConnection';
+  /** A list of edges which contains the `HubBankroll` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubBankrollEdge>>;
+  /** A list of `HubBankroll` objects. */
+  nodes: Array<Maybe<HubBankroll>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasBankroll` you could get from the connection. */
+  /** The count of *all* `HubBankroll` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasBankroll` edge in the connection. */
-export type CaasBankrollEdge = {
-  __typename?: 'CaasBankrollEdge';
+/** A `HubBankroll` edge in the connection. */
+export type HubBankrollEdge = {
+  __typename?: 'HubBankrollEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasBankroll` at the end of the edge. */
-  node?: Maybe<CaasBankroll>;
+  /** The `HubBankroll` at the end of the edge. */
+  node?: Maybe<HubBankroll>;
 };
 
-/** Methods to use when ordering `CaasBankroll`. */
-export enum CaasBankrollOrderBy {
+/** Methods to use when ordering `HubBankroll`. */
+export enum HubBankrollOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   IdAsc = 'ID_ASC',
@@ -249,8 +255,8 @@ export enum CaasBankrollOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** Represents an update to a `CaasBankroll`. Fields that are set will be updated. */
-export type CaasBankrollPatch = {
+/** Represents an update to a `HubBankroll`. Fields that are set will be updated. */
+export type HubBankrollPatch = {
   amount?: InputMaybe<Scalars['Float']['input']>;
   bets?: InputMaybe<Scalars['BigInt']['input']>;
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
@@ -260,166 +266,166 @@ export type CaasBankrollPatch = {
   wagered?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type CaasCasino = {
-  __typename?: 'CaasCasino';
+export type HubCasino = {
+  __typename?: 'HubCasino';
   baseUrl: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `CaasBalance`. */
-  caasBalancesByCasinoId: CaasBalanceConnection;
-  /** Reads and enables pagination through a set of `CaasBankroll`. */
-  caasBankrollsByCasinoId: CaasBankrollConnection;
-  /** Reads a single `CaasCasinoSecret` that is related to this `CaasCasino`. */
-  caasCasinoSecretById?: Maybe<CaasCasinoSecret>;
-  /** Reads and enables pagination through a set of `CaasCurrency`. */
-  caasCurrenciesByCasinoId: CaasCurrencyConnection;
-  /** Reads and enables pagination through a set of `CaasDeposit`. */
-  caasDepositsByCasinoId: CaasDepositConnection;
-  /** Reads and enables pagination through a set of `CaasExperience`. */
-  caasExperiencesByCasinoId: CaasExperienceConnection;
-  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
-  caasFaucetClaimsByCasinoId: CaasFaucetClaimConnection;
-  /** Reads a single `CaasJwkSet` that is related to this `CaasCasino`. */
-  caasJwkSetByCasinoId?: Maybe<CaasJwkSet>;
-  /** Reads and enables pagination through a set of `CaasJwkSetSnapshot`. */
-  caasJwkSetSnapshotsByCasinoId: CaasJwkSetSnapshotConnection;
-  /** Reads and enables pagination through a set of `CaasSession`. */
-  caasSessionsByCasinoId: CaasSessionConnection;
-  /** Reads and enables pagination through a set of `CaasUser`. */
-  caasUsersByCasinoId: CaasUserConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawalRequest`. */
-  caasWithdrawalRequestsByCasinoId: CaasWithdrawalRequestConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
-  caasWithdrawalsByCasinoId: CaasWithdrawalConnection;
   graphqlUrl: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `HubBalance`. */
+  hubBalancesByCasinoId: HubBalanceConnection;
+  /** Reads and enables pagination through a set of `HubBankroll`. */
+  hubBankrollsByCasinoId: HubBankrollConnection;
+  /** Reads a single `HubCasinoSecret` that is related to this `HubCasino`. */
+  hubCasinoSecretById?: Maybe<HubCasinoSecret>;
+  /** Reads and enables pagination through a set of `HubCurrency`. */
+  hubCurrenciesByCasinoId: HubCurrencyConnection;
+  /** Reads and enables pagination through a set of `HubDeposit`. */
+  hubDepositsByCasinoId: HubDepositConnection;
+  /** Reads and enables pagination through a set of `HubExperience`. */
+  hubExperiencesByCasinoId: HubExperienceConnection;
+  /** Reads and enables pagination through a set of `HubFaucetClaim`. */
+  hubFaucetClaimsByCasinoId: HubFaucetClaimConnection;
+  /** Reads a single `HubJwkSet` that is related to this `HubCasino`. */
+  hubJwkSetByCasinoId?: Maybe<HubJwkSet>;
+  /** Reads and enables pagination through a set of `HubJwkSetSnapshot`. */
+  hubJwkSetSnapshotsByCasinoId: HubJwkSetSnapshotConnection;
+  /** Reads and enables pagination through a set of `HubSession`. */
+  hubSessionsByCasinoId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubUser`. */
+  hubUsersByCasinoId: HubUserConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
+  hubWithdrawalRequestsByCasinoId: HubWithdrawalRequestConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawal`. */
+  hubWithdrawalsByCasinoId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
 };
 
 
-export type CaasCasinoCaasBalancesByCasinoIdArgs = {
+export type HubCasinoHubBalancesByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasBalanceCondition>;
+  condition?: InputMaybe<HubBalanceCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasBalanceOrderBy>>;
+  orderBy?: InputMaybe<Array<HubBalanceOrderBy>>;
 };
 
 
-export type CaasCasinoCaasBankrollsByCasinoIdArgs = {
+export type HubCasinoHubBankrollsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasBankrollCondition>;
+  condition?: InputMaybe<HubBankrollCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasBankrollOrderBy>>;
+  orderBy?: InputMaybe<Array<HubBankrollOrderBy>>;
 };
 
 
-export type CaasCasinoCaasCurrenciesByCasinoIdArgs = {
+export type HubCasinoHubCurrenciesByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasCurrencyCondition>;
+  condition?: InputMaybe<HubCurrencyCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasCurrencyOrderBy>>;
+  orderBy?: InputMaybe<Array<HubCurrencyOrderBy>>;
 };
 
 
-export type CaasCasinoCaasDepositsByCasinoIdArgs = {
+export type HubCasinoHubDepositsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasDepositCondition>;
+  condition?: InputMaybe<HubDepositCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasDepositOrderBy>>;
+  orderBy?: InputMaybe<Array<HubDepositOrderBy>>;
 };
 
 
-export type CaasCasinoCaasExperiencesByCasinoIdArgs = {
+export type HubCasinoHubExperiencesByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasExperienceCondition>;
+  condition?: InputMaybe<HubExperienceCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasExperienceOrderBy>>;
+  orderBy?: InputMaybe<Array<HubExperienceOrderBy>>;
 };
 
 
-export type CaasCasinoCaasFaucetClaimsByCasinoIdArgs = {
+export type HubCasinoHubFaucetClaimsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  condition?: InputMaybe<HubFaucetClaimCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
+  orderBy?: InputMaybe<Array<HubFaucetClaimOrderBy>>;
 };
 
 
-export type CaasCasinoCaasJwkSetSnapshotsByCasinoIdArgs = {
+export type HubCasinoHubJwkSetSnapshotsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasJwkSetSnapshotCondition>;
+  condition?: InputMaybe<HubJwkSetSnapshotCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasJwkSetSnapshotOrderBy>>;
+  orderBy?: InputMaybe<Array<HubJwkSetSnapshotOrderBy>>;
 };
 
 
-export type CaasCasinoCaasSessionsByCasinoIdArgs = {
+export type HubCasinoHubSessionsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasSessionCondition>;
+  condition?: InputMaybe<HubSessionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+  orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
 };
 
 
-export type CaasCasinoCaasUsersByCasinoIdArgs = {
+export type HubCasinoHubUsersByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasUserCondition>;
+  condition?: InputMaybe<HubUserCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasUserOrderBy>>;
+  orderBy?: InputMaybe<Array<HubUserOrderBy>>;
 };
 
 
-export type CaasCasinoCaasWithdrawalRequestsByCasinoIdArgs = {
+export type HubCasinoHubWithdrawalRequestsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalRequestCondition>;
+  condition?: InputMaybe<HubWithdrawalRequestCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalRequestOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalRequestOrderBy>>;
 };
 
 
-export type CaasCasinoCaasWithdrawalsByCasinoIdArgs = {
+export type HubCasinoHubWithdrawalsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalCondition>;
+  condition?: InputMaybe<HubWithdrawalCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
 };
 
 /**
- * A condition to be used against `CaasCasino` object types. All fields are tested
+ * A condition to be used against `HubCasino` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type CaasCasinoCondition = {
+export type HubCasinoCondition = {
   /** Checks for equality with the object’s `baseUrl` field. */
   baseUrl?: InputMaybe<Scalars['String']['input']>;
   /** Checks for equality with the object’s `graphqlUrl` field. */
@@ -428,30 +434,30 @@ export type CaasCasinoCondition = {
   id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasCasino` values. */
-export type CaasCasinoConnection = {
-  __typename?: 'CaasCasinoConnection';
-  /** A list of edges which contains the `CaasCasino` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasCasinoEdge>>;
-  /** A list of `CaasCasino` objects. */
-  nodes: Array<Maybe<CaasCasino>>;
+/** A connection to a list of `HubCasino` values. */
+export type HubCasinoConnection = {
+  __typename?: 'HubCasinoConnection';
+  /** A list of edges which contains the `HubCasino` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubCasinoEdge>>;
+  /** A list of `HubCasino` objects. */
+  nodes: Array<Maybe<HubCasino>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasCasino` you could get from the connection. */
+  /** The count of *all* `HubCasino` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasCasino` edge in the connection. */
-export type CaasCasinoEdge = {
-  __typename?: 'CaasCasinoEdge';
+/** A `HubCasino` edge in the connection. */
+export type HubCasinoEdge = {
+  __typename?: 'HubCasinoEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasCasino` at the end of the edge. */
-  node?: Maybe<CaasCasino>;
+  /** The `HubCasino` at the end of the edge. */
+  node?: Maybe<HubCasino>;
 };
 
-/** Methods to use when ordering `CaasCasino`. */
-export enum CaasCasinoOrderBy {
+/** Methods to use when ordering `HubCasino`. */
+export enum HubCasinoOrderBy {
   BaseUrlAsc = 'BASE_URL_ASC',
   BaseUrlDesc = 'BASE_URL_DESC',
   GraphqlUrlAsc = 'GRAPHQL_URL_ASC',
@@ -463,86 +469,86 @@ export enum CaasCasinoOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** Represents an update to a `CaasCasino`. Fields that are set will be updated. */
-export type CaasCasinoPatch = {
+/** Represents an update to a `HubCasino`. Fields that are set will be updated. */
+export type HubCasinoPatch = {
   baseUrl?: InputMaybe<Scalars['String']['input']>;
   graphqlUrl?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CaasCasinoSecret = {
-  __typename?: 'CaasCasinoSecret';
+export type HubCasinoSecret = {
+  __typename?: 'HubCasinoSecret';
   apiKey: Scalars['UUID']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasCasinoSecret`. */
-  caasCasinoById?: Maybe<CaasCasino>;
   controllerId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubCasinoSecret`. */
+  hubCasinoById?: Maybe<HubCasino>;
   id: Scalars['UUID']['output'];
 };
 
-export type CaasClaimFaucetPayload = {
-  __typename?: 'CaasClaimFaucetPayload';
+export type HubClaimFaucetPayload = {
+  __typename?: 'HubClaimFaucetPayload';
   query?: Maybe<Query>;
   success: Scalars['Boolean']['output'];
 };
 
-export type CaasCurrency = {
-  __typename?: 'CaasCurrency';
-  /** Reads and enables pagination through a set of `CaasBankroll`. */
-  caasBankrollsByCurrencyKeyAndCasinoId: CaasBankrollConnection;
-  /** Reads a single `CaasCasino` that is related to this `CaasCurrency`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+export type HubCurrency = {
+  __typename?: 'HubCurrency';
   casinoId: Scalars['UUID']['output'];
   displayUnitName: Scalars['String']['output'];
   displayUnitScale: Scalars['Int']['output'];
+  /** Reads and enables pagination through a set of `HubBankroll`. */
+  hubBankrollsByCurrencyKeyAndCasinoId: HubBankrollConnection;
+  /** Reads a single `HubCasino` that is related to this `HubCurrency`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
   key: Scalars['String']['output'];
 };
 
 
-export type CaasCurrencyCaasBankrollsByCurrencyKeyAndCasinoIdArgs = {
+export type HubCurrencyHubBankrollsByCurrencyKeyAndCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasBankrollCondition>;
+  condition?: InputMaybe<HubBankrollCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasBankrollOrderBy>>;
+  orderBy?: InputMaybe<Array<HubBankrollOrderBy>>;
 };
 
 /**
- * A condition to be used against `CaasCurrency` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
+ * A condition to be used against `HubCurrency` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
  */
-export type CaasCurrencyCondition = {
+export type HubCurrencyCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `key` field. */
   key?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** A connection to a list of `CaasCurrency` values. */
-export type CaasCurrencyConnection = {
-  __typename?: 'CaasCurrencyConnection';
-  /** A list of edges which contains the `CaasCurrency` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasCurrencyEdge>>;
-  /** A list of `CaasCurrency` objects. */
-  nodes: Array<Maybe<CaasCurrency>>;
+/** A connection to a list of `HubCurrency` values. */
+export type HubCurrencyConnection = {
+  __typename?: 'HubCurrencyConnection';
+  /** A list of edges which contains the `HubCurrency` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubCurrencyEdge>>;
+  /** A list of `HubCurrency` objects. */
+  nodes: Array<Maybe<HubCurrency>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasCurrency` you could get from the connection. */
+  /** The count of *all* `HubCurrency` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasCurrency` edge in the connection. */
-export type CaasCurrencyEdge = {
-  __typename?: 'CaasCurrencyEdge';
+/** A `HubCurrency` edge in the connection. */
+export type HubCurrencyEdge = {
+  __typename?: 'HubCurrencyEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasCurrency` at the end of the edge. */
-  node?: Maybe<CaasCurrency>;
+  /** The `HubCurrency` at the end of the edge. */
+  node?: Maybe<HubCurrency>;
 };
 
-/** Methods to use when ordering `CaasCurrency`. */
-export enum CaasCurrencyOrderBy {
+/** Methods to use when ordering `HubCurrency`. */
+export enum HubCurrencyOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   KeyAsc = 'KEY_ASC',
@@ -552,30 +558,30 @@ export enum CaasCurrencyOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-export type CaasDeposit = {
-  __typename?: 'CaasDeposit';
+export type HubDeposit = {
+  __typename?: 'HubDeposit';
   amount: Scalars['Float']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasDeposit`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasDeposit`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
-  /** Reads a single `CaasExperience` that is related to this `CaasDeposit`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasDeposit`. */
-  caasUserByUserId?: Maybe<CaasUser>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubDeposit`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubDeposit`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubDeposit`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubDeposit`. */
+  hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['UUID']['output'];
   mpTransferId: Scalars['String']['output'];
   userId: Scalars['UUID']['output'];
 };
 
 /**
- * A condition to be used against `CaasDeposit` object types. All fields are tested
+ * A condition to be used against `HubDeposit` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type CaasDepositCondition = {
+export type HubDepositCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
@@ -586,30 +592,30 @@ export type CaasDepositCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasDeposit` values. */
-export type CaasDepositConnection = {
-  __typename?: 'CaasDepositConnection';
-  /** A list of edges which contains the `CaasDeposit` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasDepositEdge>>;
-  /** A list of `CaasDeposit` objects. */
-  nodes: Array<Maybe<CaasDeposit>>;
+/** A connection to a list of `HubDeposit` values. */
+export type HubDepositConnection = {
+  __typename?: 'HubDepositConnection';
+  /** A list of edges which contains the `HubDeposit` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubDepositEdge>>;
+  /** A list of `HubDeposit` objects. */
+  nodes: Array<Maybe<HubDeposit>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasDeposit` you could get from the connection. */
+  /** The count of *all* `HubDeposit` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasDeposit` edge in the connection. */
-export type CaasDepositEdge = {
-  __typename?: 'CaasDepositEdge';
+/** A `HubDeposit` edge in the connection. */
+export type HubDepositEdge = {
+  __typename?: 'HubDepositEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasDeposit` at the end of the edge. */
-  node?: Maybe<CaasDeposit>;
+  /** The `HubDeposit` at the end of the edge. */
+  node?: Maybe<HubDeposit>;
 };
 
-/** Methods to use when ordering `CaasDeposit`. */
-export enum CaasDepositOrderBy {
+/** Methods to use when ordering `HubDeposit`. */
+export enum HubDepositOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
@@ -623,99 +629,112 @@ export enum CaasDepositOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export type CaasExperience = {
-  __typename?: 'CaasExperience';
-  /** Reads and enables pagination through a set of `CaasBalance`. */
-  caasBalancesByExperienceId: CaasBalanceConnection;
-  /** Reads a single `CaasCasino` that is related to this `CaasExperience`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads and enables pagination through a set of `CaasDeposit`. */
-  caasDepositsByExperienceId: CaasDepositConnection;
-  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
-  caasFaucetClaimsByExperienceId: CaasFaucetClaimConnection;
-  /** Reads and enables pagination through a set of `CaasSession`. */
-  caasSessionsByExperienceId: CaasSessionConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawalRequest`. */
-  caasWithdrawalRequestsByExperienceId: CaasWithdrawalRequestConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
-  caasWithdrawalsByExperienceId: CaasWithdrawalConnection;
+export type HubExperience = {
+  __typename?: 'HubExperience';
   casinoId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `HubBalance`. */
+  hubBalancesByExperienceId: HubBalanceConnection;
+  /** Reads a single `HubCasino` that is related to this `HubExperience`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads and enables pagination through a set of `HubDeposit`. */
+  hubDepositsByExperienceId: HubDepositConnection;
+  /** Reads and enables pagination through a set of `HubFaucetClaim`. */
+  hubFaucetClaimsByExperienceId: HubFaucetClaimConnection;
+  /** Reads and enables pagination through a set of `HubSession`. */
+  hubSessionsByExperienceId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
+  hubWithdrawalRequestsByExperienceId: HubWithdrawalRequestConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawal`. */
+  hubWithdrawalsByExperienceId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
   mpExperienceId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
+  /** Reads and enables pagination through a set of `Todo`. */
+  todosByExperienceId: TodoConnection;
 };
 
 
-export type CaasExperienceCaasBalancesByExperienceIdArgs = {
+export type HubExperienceHubBalancesByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasBalanceCondition>;
+  condition?: InputMaybe<HubBalanceCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasBalanceOrderBy>>;
+  orderBy?: InputMaybe<Array<HubBalanceOrderBy>>;
 };
 
 
-export type CaasExperienceCaasDepositsByExperienceIdArgs = {
+export type HubExperienceHubDepositsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasDepositCondition>;
+  condition?: InputMaybe<HubDepositCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasDepositOrderBy>>;
+  orderBy?: InputMaybe<Array<HubDepositOrderBy>>;
 };
 
 
-export type CaasExperienceCaasFaucetClaimsByExperienceIdArgs = {
+export type HubExperienceHubFaucetClaimsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  condition?: InputMaybe<HubFaucetClaimCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
+  orderBy?: InputMaybe<Array<HubFaucetClaimOrderBy>>;
 };
 
 
-export type CaasExperienceCaasSessionsByExperienceIdArgs = {
+export type HubExperienceHubSessionsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasSessionCondition>;
+  condition?: InputMaybe<HubSessionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+  orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
 };
 
 
-export type CaasExperienceCaasWithdrawalRequestsByExperienceIdArgs = {
+export type HubExperienceHubWithdrawalRequestsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalRequestCondition>;
+  condition?: InputMaybe<HubWithdrawalRequestCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalRequestOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalRequestOrderBy>>;
 };
 
 
-export type CaasExperienceCaasWithdrawalsByExperienceIdArgs = {
+export type HubExperienceHubWithdrawalsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalCondition>;
+  condition?: InputMaybe<HubWithdrawalCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
+};
+
+
+export type HubExperienceTodosByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TodoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TodoOrderBy>>;
 };
 
 /**
- * A condition to be used against `CaasExperience` object types. All fields are
+ * A condition to be used against `HubExperience` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
  */
-export type CaasExperienceCondition = {
+export type HubExperienceCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
@@ -724,30 +743,30 @@ export type CaasExperienceCondition = {
   mpExperienceId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasExperience` values. */
-export type CaasExperienceConnection = {
-  __typename?: 'CaasExperienceConnection';
-  /** A list of edges which contains the `CaasExperience` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasExperienceEdge>>;
-  /** A list of `CaasExperience` objects. */
-  nodes: Array<Maybe<CaasExperience>>;
+/** A connection to a list of `HubExperience` values. */
+export type HubExperienceConnection = {
+  __typename?: 'HubExperienceConnection';
+  /** A list of edges which contains the `HubExperience` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubExperienceEdge>>;
+  /** A list of `HubExperience` objects. */
+  nodes: Array<Maybe<HubExperience>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasExperience` you could get from the connection. */
+  /** The count of *all* `HubExperience` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasExperience` edge in the connection. */
-export type CaasExperienceEdge = {
-  __typename?: 'CaasExperienceEdge';
+/** A `HubExperience` edge in the connection. */
+export type HubExperienceEdge = {
+  __typename?: 'HubExperienceEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasExperience` at the end of the edge. */
-  node?: Maybe<CaasExperience>;
+  /** The `HubExperience` at the end of the edge. */
+  node?: Maybe<HubExperience>;
 };
 
-/** Methods to use when ordering `CaasExperience`. */
-export enum CaasExperienceOrderBy {
+/** Methods to use when ordering `HubExperience`. */
+export enum HubExperienceOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   IdAsc = 'ID_ASC',
@@ -759,29 +778,29 @@ export enum CaasExperienceOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-export type CaasFaucetClaim = {
-  __typename?: 'CaasFaucetClaim';
+export type HubFaucetClaim = {
+  __typename?: 'HubFaucetClaim';
   amount: Scalars['Float']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasFaucetClaim`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasFaucetClaim`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
-  /** Reads a single `CaasExperience` that is related to this `CaasFaucetClaim`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasFaucetClaim`. */
-  caasUserByUserId?: Maybe<CaasUser>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubFaucetClaim`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubFaucetClaim`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubFaucetClaim`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubFaucetClaim`. */
+  hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['UUID']['output'];
   userId: Scalars['UUID']['output'];
 };
 
 /**
- * A condition to be used against `CaasFaucetClaim` object types. All fields are
+ * A condition to be used against `HubFaucetClaim` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
  */
-export type CaasFaucetClaimCondition = {
+export type HubFaucetClaimCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `currencyKey` field. */
@@ -794,30 +813,30 @@ export type CaasFaucetClaimCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasFaucetClaim` values. */
-export type CaasFaucetClaimConnection = {
-  __typename?: 'CaasFaucetClaimConnection';
-  /** A list of edges which contains the `CaasFaucetClaim` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasFaucetClaimEdge>>;
-  /** A list of `CaasFaucetClaim` objects. */
-  nodes: Array<Maybe<CaasFaucetClaim>>;
+/** A connection to a list of `HubFaucetClaim` values. */
+export type HubFaucetClaimConnection = {
+  __typename?: 'HubFaucetClaimConnection';
+  /** A list of edges which contains the `HubFaucetClaim` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubFaucetClaimEdge>>;
+  /** A list of `HubFaucetClaim` objects. */
+  nodes: Array<Maybe<HubFaucetClaim>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasFaucetClaim` you could get from the connection. */
+  /** The count of *all* `HubFaucetClaim` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasFaucetClaim` edge in the connection. */
-export type CaasFaucetClaimEdge = {
-  __typename?: 'CaasFaucetClaimEdge';
+/** A `HubFaucetClaim` edge in the connection. */
+export type HubFaucetClaimEdge = {
+  __typename?: 'HubFaucetClaimEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasFaucetClaim` at the end of the edge. */
-  node?: Maybe<CaasFaucetClaim>;
+  /** The `HubFaucetClaim` at the end of the edge. */
+  node?: Maybe<HubFaucetClaim>;
 };
 
-/** Methods to use when ordering `CaasFaucetClaim`. */
-export enum CaasFaucetClaimOrderBy {
+/** Methods to use when ordering `HubFaucetClaim`. */
+export enum HubFaucetClaimOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   CurrencyKeyAsc = 'CURRENCY_KEY_ASC',
@@ -833,59 +852,59 @@ export enum CaasFaucetClaimOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export type CaasJwkSet = {
-  __typename?: 'CaasJwkSet';
-  /** Reads a single `CaasCasino` that is related to this `CaasJwkSet`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+export type HubJwkSet = {
+  __typename?: 'HubJwkSet';
   casinoId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubJwkSet`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
   jwks: Scalars['JSON']['output'];
   updatedAt: Scalars['Datetime']['output'];
 };
 
-export type CaasJwkSetSnapshot = {
-  __typename?: 'CaasJwkSetSnapshot';
-  /** Reads a single `CaasCasino` that is related to this `CaasJwkSetSnapshot`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
+export type HubJwkSetSnapshot = {
+  __typename?: 'HubJwkSetSnapshot';
   casinoId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubJwkSetSnapshot`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
   id: Scalars['UUID']['output'];
   jwks: Scalars['JSON']['output'];
 };
 
 /**
- * A condition to be used against `CaasJwkSetSnapshot` object types. All fields are
+ * A condition to be used against `HubJwkSetSnapshot` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
  */
-export type CaasJwkSetSnapshotCondition = {
+export type HubJwkSetSnapshotCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasJwkSetSnapshot` values. */
-export type CaasJwkSetSnapshotConnection = {
-  __typename?: 'CaasJwkSetSnapshotConnection';
-  /** A list of edges which contains the `CaasJwkSetSnapshot` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasJwkSetSnapshotEdge>>;
-  /** A list of `CaasJwkSetSnapshot` objects. */
-  nodes: Array<Maybe<CaasJwkSetSnapshot>>;
+/** A connection to a list of `HubJwkSetSnapshot` values. */
+export type HubJwkSetSnapshotConnection = {
+  __typename?: 'HubJwkSetSnapshotConnection';
+  /** A list of edges which contains the `HubJwkSetSnapshot` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubJwkSetSnapshotEdge>>;
+  /** A list of `HubJwkSetSnapshot` objects. */
+  nodes: Array<Maybe<HubJwkSetSnapshot>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasJwkSetSnapshot` you could get from the connection. */
+  /** The count of *all* `HubJwkSetSnapshot` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasJwkSetSnapshot` edge in the connection. */
-export type CaasJwkSetSnapshotEdge = {
-  __typename?: 'CaasJwkSetSnapshotEdge';
+/** A `HubJwkSetSnapshot` edge in the connection. */
+export type HubJwkSetSnapshotEdge = {
+  __typename?: 'HubJwkSetSnapshotEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasJwkSetSnapshot` at the end of the edge. */
-  node?: Maybe<CaasJwkSetSnapshot>;
+  /** The `HubJwkSetSnapshot` at the end of the edge. */
+  node?: Maybe<HubJwkSetSnapshot>;
 };
 
-/** Methods to use when ordering `CaasJwkSetSnapshot`. */
-export enum CaasJwkSetSnapshotOrderBy {
+/** Methods to use when ordering `HubJwkSetSnapshot`. */
+export enum HubJwkSetSnapshotOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   IdAsc = 'ID_ASC',
@@ -895,17 +914,17 @@ export enum CaasJwkSetSnapshotOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-export type CaasSession = {
-  __typename?: 'CaasSession';
-  /** Reads a single `CaasCasino` that is related to this `CaasSession`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasExperience` that is related to this `CaasSession`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasSession`. */
-  caasUserByUserId?: Maybe<CaasUser>;
+export type HubSession = {
+  __typename?: 'HubSession';
   casinoId: Scalars['UUID']['output'];
   experienceId: Scalars['UUID']['output'];
   expiredAt: Scalars['Datetime']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubSession`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubExperience` that is related to this `HubSession`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubSession`. */
+  hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['UUID']['output'];
   key: Scalars['UUID']['output'];
   userId: Scalars['UUID']['output'];
@@ -913,10 +932,10 @@ export type CaasSession = {
 };
 
 /**
- * A condition to be used against `CaasSession` object types. All fields are tested
+ * A condition to be used against `HubSession` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
  */
-export type CaasSessionCondition = {
+export type HubSessionCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
@@ -931,30 +950,30 @@ export type CaasSessionCondition = {
   userToken?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasSession` values. */
-export type CaasSessionConnection = {
-  __typename?: 'CaasSessionConnection';
-  /** A list of edges which contains the `CaasSession` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasSessionEdge>>;
-  /** A list of `CaasSession` objects. */
-  nodes: Array<Maybe<CaasSession>>;
+/** A connection to a list of `HubSession` values. */
+export type HubSessionConnection = {
+  __typename?: 'HubSessionConnection';
+  /** A list of edges which contains the `HubSession` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubSessionEdge>>;
+  /** A list of `HubSession` objects. */
+  nodes: Array<Maybe<HubSession>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasSession` you could get from the connection. */
+  /** The count of *all* `HubSession` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasSession` edge in the connection. */
-export type CaasSessionEdge = {
-  __typename?: 'CaasSessionEdge';
+/** A `HubSession` edge in the connection. */
+export type HubSessionEdge = {
+  __typename?: 'HubSessionEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasSession` at the end of the edge. */
-  node?: Maybe<CaasSession>;
+  /** The `HubSession` at the end of the edge. */
+  node?: Maybe<HubSession>;
 };
 
-/** Methods to use when ordering `CaasSession`. */
-export enum CaasSessionOrderBy {
+/** Methods to use when ordering `HubSession`. */
+export enum HubSessionOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
@@ -968,7 +987,7 @@ export enum CaasSessionOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export enum CaasTransferStatusKind {
+export enum HubTransferStatusKind {
   Canceled = 'CANCELED',
   Completed = 'COMPLETED',
   Expired = 'EXPIRED',
@@ -976,135 +995,145 @@ export enum CaasTransferStatusKind {
   Unclaimed = 'UNCLAIMED'
 }
 
-export type CaasUser = {
-  __typename?: 'CaasUser';
-  balanceByCurrency?: Maybe<CaasBalance>;
-  /** Reads and enables pagination through a set of `CaasBalance`. */
-  caasBalancesByUserId: CaasBalanceConnection;
-  /** Reads a single `CaasCasino` that is related to this `CaasUser`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads and enables pagination through a set of `CaasDeposit`. */
-  caasDepositsByUserId: CaasDepositConnection;
-  /** Reads and enables pagination through a set of `CaasFaucetClaim`. */
-  caasFaucetClaimsByUserId: CaasFaucetClaimConnection;
-  /** Reads and enables pagination through a set of `CaasSession`. */
-  caasSessionsByUserId: CaasSessionConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawalRequest`. */
-  caasWithdrawalRequestsByUserId: CaasWithdrawalRequestConnection;
-  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
-  caasWithdrawalsByUserId: CaasWithdrawalConnection;
+export type HubUser = {
+  __typename?: 'HubUser';
+  balanceByCurrency?: Maybe<HubBalance>;
   casinoId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `HubBalance`. */
+  hubBalancesByUserId: HubBalanceConnection;
+  /** Reads a single `HubCasino` that is related to this `HubUser`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads and enables pagination through a set of `HubDeposit`. */
+  hubDepositsByUserId: HubDepositConnection;
+  /** Reads and enables pagination through a set of `HubFaucetClaim`. */
+  hubFaucetClaimsByUserId: HubFaucetClaimConnection;
+  /** Reads and enables pagination through a set of `HubSession`. */
+  hubSessionsByUserId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
+  hubWithdrawalRequestsByUserId: HubWithdrawalRequestConnection;
+  /** Reads and enables pagination through a set of `HubWithdrawal`. */
+  hubWithdrawalsByUserId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
   mpUserId: Scalars['UUID']['output'];
+  /** Reads and enables pagination through a set of `Todo`. */
+  todosByUserId: TodoConnection;
   uname: Scalars['String']['output'];
 };
 
 
-export type CaasUserBalanceByCurrencyArgs = {
+export type HubUserBalanceByCurrencyArgs = {
   currency: Scalars['String']['input'];
 };
 
 
-export type CaasUserCaasBalancesByUserIdArgs = {
+export type HubUserHubBalancesByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasBalanceCondition>;
+  condition?: InputMaybe<HubBalanceCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasBalanceOrderBy>>;
+  orderBy?: InputMaybe<Array<HubBalanceOrderBy>>;
 };
 
 
-export type CaasUserCaasDepositsByUserIdArgs = {
+export type HubUserHubDepositsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasDepositCondition>;
+  condition?: InputMaybe<HubDepositCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasDepositOrderBy>>;
+  orderBy?: InputMaybe<Array<HubDepositOrderBy>>;
 };
 
 
-export type CaasUserCaasFaucetClaimsByUserIdArgs = {
+export type HubUserHubFaucetClaimsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasFaucetClaimCondition>;
+  condition?: InputMaybe<HubFaucetClaimCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasFaucetClaimOrderBy>>;
+  orderBy?: InputMaybe<Array<HubFaucetClaimOrderBy>>;
 };
 
 
-export type CaasUserCaasSessionsByUserIdArgs = {
+export type HubUserHubSessionsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasSessionCondition>;
+  condition?: InputMaybe<HubSessionCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasSessionOrderBy>>;
+  orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
 };
 
 
-export type CaasUserCaasWithdrawalRequestsByUserIdArgs = {
+export type HubUserHubWithdrawalRequestsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalRequestCondition>;
+  condition?: InputMaybe<HubWithdrawalRequestCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalRequestOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalRequestOrderBy>>;
 };
 
 
-export type CaasUserCaasWithdrawalsByUserIdArgs = {
+export type HubUserHubWithdrawalsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalCondition>;
+  condition?: InputMaybe<HubWithdrawalCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
 };
 
-/**
- * A condition to be used against `CaasUser` object types. All fields are tested
- * for equality and combined with a logical ‘and.’
- */
-export type CaasUserCondition = {
+
+export type HubUserTodosByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<TodoCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<TodoOrderBy>>;
+};
+
+/** A condition to be used against `HubUser` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type HubUserCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `id` field. */
   id?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasUser` values. */
-export type CaasUserConnection = {
-  __typename?: 'CaasUserConnection';
-  /** A list of edges which contains the `CaasUser` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasUserEdge>>;
-  /** A list of `CaasUser` objects. */
-  nodes: Array<Maybe<CaasUser>>;
+/** A connection to a list of `HubUser` values. */
+export type HubUserConnection = {
+  __typename?: 'HubUserConnection';
+  /** A list of edges which contains the `HubUser` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubUserEdge>>;
+  /** A list of `HubUser` objects. */
+  nodes: Array<Maybe<HubUser>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasUser` you could get from the connection. */
+  /** The count of *all* `HubUser` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasUser` edge in the connection. */
-export type CaasUserEdge = {
-  __typename?: 'CaasUserEdge';
+/** A `HubUser` edge in the connection. */
+export type HubUserEdge = {
+  __typename?: 'HubUserEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasUser` at the end of the edge. */
-  node?: Maybe<CaasUser>;
+  /** The `HubUser` at the end of the edge. */
+  node?: Maybe<HubUser>;
 };
 
-/** Methods to use when ordering `CaasUser`. */
-export enum CaasUserOrderBy {
+/** Methods to use when ordering `HubUser`. */
+export enum HubUserOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   IdAsc = 'ID_ASC',
@@ -1114,46 +1143,46 @@ export enum CaasUserOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-export type CaasWithdrawInput = {
+export type HubWithdrawInput = {
   amount: Scalars['Int']['input'];
   currency: Scalars['String']['input'];
 };
 
-export type CaasWithdrawPayload = {
-  __typename?: 'CaasWithdrawPayload';
+export type HubWithdrawPayload = {
+  __typename?: 'HubWithdrawPayload';
   query?: Maybe<Query>;
-  withdrawalRequest: CaasWithdrawalRequest;
+  withdrawalRequest: HubWithdrawalRequest;
 };
 
-export type CaasWithdrawal = {
-  __typename?: 'CaasWithdrawal';
+export type HubWithdrawal = {
+  __typename?: 'HubWithdrawal';
   amount: Scalars['Float']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasWithdrawal`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasWithdrawal`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
-  /** Reads a single `CaasExperience` that is related to this `CaasWithdrawal`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasWithdrawal`. */
-  caasUserByUserId?: Maybe<CaasUser>;
-  /** Reads a single `CaasWithdrawalRequest` that is related to this `CaasWithdrawal`. */
-  caasWithdrawalRequestByWithdrawalRequestId?: Maybe<CaasWithdrawalRequest>;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubWithdrawal`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubWithdrawal`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubWithdrawal`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubWithdrawal`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  /** Reads a single `HubWithdrawalRequest` that is related to this `HubWithdrawal`. */
+  hubWithdrawalRequestByWithdrawalRequestId?: Maybe<HubWithdrawalRequest>;
   id: Scalars['UUID']['output'];
   mpTransferId: Scalars['String']['output'];
-  status: CaasTransferStatusKind;
+  status: HubTransferStatusKind;
   statusAt: Scalars['Datetime']['output'];
   userId: Scalars['UUID']['output'];
   withdrawalRequestId: Scalars['UUID']['output'];
 };
 
 /**
- * A condition to be used against `CaasWithdrawal` object types. All fields are
+ * A condition to be used against `HubWithdrawal` object types. All fields are
  * tested for equality and combined with a logical ‘and.’
  */
-export type CaasWithdrawalCondition = {
+export type HubWithdrawalCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
@@ -1166,30 +1195,30 @@ export type CaasWithdrawalCondition = {
   withdrawalRequestId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasWithdrawal` values. */
-export type CaasWithdrawalConnection = {
-  __typename?: 'CaasWithdrawalConnection';
-  /** A list of edges which contains the `CaasWithdrawal` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasWithdrawalEdge>>;
-  /** A list of `CaasWithdrawal` objects. */
-  nodes: Array<Maybe<CaasWithdrawal>>;
+/** A connection to a list of `HubWithdrawal` values. */
+export type HubWithdrawalConnection = {
+  __typename?: 'HubWithdrawalConnection';
+  /** A list of edges which contains the `HubWithdrawal` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubWithdrawalEdge>>;
+  /** A list of `HubWithdrawal` objects. */
+  nodes: Array<Maybe<HubWithdrawal>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasWithdrawal` you could get from the connection. */
+  /** The count of *all* `HubWithdrawal` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasWithdrawal` edge in the connection. */
-export type CaasWithdrawalEdge = {
-  __typename?: 'CaasWithdrawalEdge';
+/** A `HubWithdrawal` edge in the connection. */
+export type HubWithdrawalEdge = {
+  __typename?: 'HubWithdrawalEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasWithdrawal` at the end of the edge. */
-  node?: Maybe<CaasWithdrawal>;
+  /** The `HubWithdrawal` at the end of the edge. */
+  node?: Maybe<HubWithdrawal>;
 };
 
-/** Methods to use when ordering `CaasWithdrawal`. */
-export enum CaasWithdrawalOrderBy {
+/** Methods to use when ordering `HubWithdrawal`. */
+export enum HubWithdrawalOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
@@ -1205,43 +1234,43 @@ export enum CaasWithdrawalOrderBy {
   WithdrawalRequestIdDesc = 'WITHDRAWAL_REQUEST_ID_DESC'
 }
 
-export type CaasWithdrawalRequest = {
-  __typename?: 'CaasWithdrawalRequest';
+export type HubWithdrawalRequest = {
+  __typename?: 'HubWithdrawalRequest';
   amount: Scalars['Float']['output'];
-  /** Reads a single `CaasCasino` that is related to this `CaasWithdrawalRequest`. */
-  caasCasinoByCasinoId?: Maybe<CaasCasino>;
-  /** Reads a single `CaasCurrency` that is related to this `CaasWithdrawalRequest`. */
-  caasCurrencyByCurrencyKeyAndCasinoId?: Maybe<CaasCurrency>;
-  /** Reads a single `CaasExperience` that is related to this `CaasWithdrawalRequest`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `CaasWithdrawalRequest`. */
-  caasUserByUserId?: Maybe<CaasUser>;
-  /** Reads and enables pagination through a set of `CaasWithdrawal`. */
-  caasWithdrawalsByWithdrawalRequestId: CaasWithdrawalConnection;
   casinoId: Scalars['UUID']['output'];
   currencyKey: Scalars['String']['output'];
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubWithdrawalRequest`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubWithdrawalRequest`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubWithdrawalRequest`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubWithdrawalRequest`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  /** Reads and enables pagination through a set of `HubWithdrawal`. */
+  hubWithdrawalsByWithdrawalRequestId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
   mpTransferId?: Maybe<Scalars['String']['output']>;
   userId: Scalars['UUID']['output'];
 };
 
 
-export type CaasWithdrawalRequestCaasWithdrawalsByWithdrawalRequestIdArgs = {
+export type HubWithdrawalRequestHubWithdrawalsByWithdrawalRequestIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasWithdrawalCondition>;
+  condition?: InputMaybe<HubWithdrawalCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasWithdrawalOrderBy>>;
+  orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
 };
 
 /**
- * A condition to be used against `CaasWithdrawalRequest` object types. All fields
+ * A condition to be used against `HubWithdrawalRequest` object types. All fields
  * are tested for equality and combined with a logical ‘and.’
  */
-export type CaasWithdrawalRequestCondition = {
+export type HubWithdrawalRequestCondition = {
   /** Checks for equality with the object’s `casinoId` field. */
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
@@ -1252,30 +1281,30 @@ export type CaasWithdrawalRequestCondition = {
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-/** A connection to a list of `CaasWithdrawalRequest` values. */
-export type CaasWithdrawalRequestConnection = {
-  __typename?: 'CaasWithdrawalRequestConnection';
-  /** A list of edges which contains the `CaasWithdrawalRequest` and cursor to aid in pagination. */
-  edges: Array<Maybe<CaasWithdrawalRequestEdge>>;
-  /** A list of `CaasWithdrawalRequest` objects. */
-  nodes: Array<Maybe<CaasWithdrawalRequest>>;
+/** A connection to a list of `HubWithdrawalRequest` values. */
+export type HubWithdrawalRequestConnection = {
+  __typename?: 'HubWithdrawalRequestConnection';
+  /** A list of edges which contains the `HubWithdrawalRequest` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubWithdrawalRequestEdge>>;
+  /** A list of `HubWithdrawalRequest` objects. */
+  nodes: Array<Maybe<HubWithdrawalRequest>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** The count of *all* `CaasWithdrawalRequest` you could get from the connection. */
+  /** The count of *all* `HubWithdrawalRequest` you could get from the connection. */
   totalCount: Scalars['Int']['output'];
 };
 
-/** A `CaasWithdrawalRequest` edge in the connection. */
-export type CaasWithdrawalRequestEdge = {
-  __typename?: 'CaasWithdrawalRequestEdge';
+/** A `HubWithdrawalRequest` edge in the connection. */
+export type HubWithdrawalRequestEdge = {
+  __typename?: 'HubWithdrawalRequestEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `CaasWithdrawalRequest` at the end of the edge. */
-  node?: Maybe<CaasWithdrawalRequest>;
+  /** The `HubWithdrawalRequest` at the end of the edge. */
+  node?: Maybe<HubWithdrawalRequest>;
 };
 
-/** Methods to use when ordering `CaasWithdrawalRequest`. */
-export enum CaasWithdrawalRequestOrderBy {
+/** Methods to use when ordering `HubWithdrawalRequest`. */
+export enum HubWithdrawalRequestOrderBy {
   CasinoIdAsc = 'CASINO_ID_ASC',
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
@@ -1289,24 +1318,18 @@ export enum CaasWithdrawalRequestOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
-export type Fortune = {
-  __typename?: 'Fortune';
-  id: Scalars['Int']['output'];
-  text: Scalars['String']['output'];
-};
-
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
   addFortune?: Maybe<Fortune>;
-  caasAddCasino?: Maybe<CaasAddCasinoPayload>;
-  caasAuthenticate?: Maybe<CaasAuthenticatePayload>;
-  caasClaimFaucet?: Maybe<CaasClaimFaucetPayload>;
-  caasWithdraw?: Maybe<CaasWithdrawPayload>;
-  /** Updates a single `CaasBankroll` using a unique key and a patch. */
-  updateCaasBankrollById?: Maybe<UpdateCaasBankrollPayload>;
-  /** Updates a single `CaasCasino` using a unique key and a patch. */
-  updateCaasCasinoById?: Maybe<UpdateCaasCasinoPayload>;
+  hubAddCasino?: Maybe<HubAddCasinoPayload>;
+  hubAuthenticate?: Maybe<HubAuthenticatePayload>;
+  hubClaimFaucet?: Maybe<HubClaimFaucetPayload>;
+  hubWithdraw?: Maybe<HubWithdrawPayload>;
+  /** Updates a single `HubBankroll` using a unique key and a patch. */
+  updateHubBankrollById?: Maybe<UpdateHubBankrollPayload>;
+  /** Updates a single `HubCasino` using a unique key and a patch. */
+  updateHubCasinoById?: Maybe<UpdateHubCasinoPayload>;
 };
 
 
@@ -1317,32 +1340,32 @@ export type MutationAddFortuneArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCaasAddCasinoArgs = {
-  input: CaasAddCasinoInput;
+export type MutationHubAddCasinoArgs = {
+  input: HubAddCasinoInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCaasAuthenticateArgs = {
-  input: CaasAuthenticateInput;
+export type MutationHubAuthenticateArgs = {
+  input: HubAuthenticateInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCaasWithdrawArgs = {
-  input: CaasWithdrawInput;
+export type MutationHubWithdrawArgs = {
+  input: HubWithdrawInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCaasBankrollByIdArgs = {
-  input: UpdateCaasBankrollByIdInput;
+export type MutationUpdateHubBankrollByIdArgs = {
+  input: UpdateHubBankrollByIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateCaasCasinoByIdArgs = {
-  input: UpdateCaasCasinoByIdInput;
+export type MutationUpdateHubCasinoByIdArgs = {
+  input: UpdateHubCasinoByIdInput;
 };
 
 /** Information about pagination in a connection. */
@@ -1361,46 +1384,46 @@ export type PageInfo = {
 /** The root query type which gives access points into the data universe. */
 export type Query = {
   __typename?: 'Query';
-  /** Reads and enables pagination through a set of `CaasApiKey`. */
-  allCaasApiKeys?: Maybe<CaasApiKeyConnection>;
-  /** Reads and enables pagination through a set of `CaasCasino`. */
-  allCaasCasinos?: Maybe<CaasCasinoConnection>;
-  /** Get a single `CaasApiKey`. */
-  caasApiKeyById?: Maybe<CaasApiKey>;
-  /** Get a single `CaasApiKey`. */
-  caasApiKeyByKey?: Maybe<CaasApiKey>;
-  /** Get a single `CaasBalance`. */
-  caasBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKey?: Maybe<CaasBalance>;
-  /** Get a single `CaasBankroll`. */
-  caasBankrollById?: Maybe<CaasBankroll>;
-  /** Get a single `CaasCasino`. */
-  caasCasinoById?: Maybe<CaasCasino>;
-  /** Get a single `CaasCasinoSecret`. */
-  caasCasinoSecretById?: Maybe<CaasCasinoSecret>;
-  /** Get a single `CaasCurrency`. */
-  caasCurrencyByKeyAndCasinoId?: Maybe<CaasCurrency>;
-  caasCurrentCasino?: Maybe<CaasCasino>;
-  caasCurrentExperience?: Maybe<CaasExperience>;
-  caasCurrentSession?: Maybe<CaasSession>;
-  caasCurrentUser?: Maybe<CaasUser>;
-  /** Get a single `CaasDeposit`. */
-  caasDepositById?: Maybe<CaasDeposit>;
-  /** Get a single `CaasExperience`. */
-  caasExperienceById?: Maybe<CaasExperience>;
-  /** Get a single `CaasFaucetClaim`. */
-  caasFaucetClaimById?: Maybe<CaasFaucetClaim>;
-  /** Get a single `CaasJwkSet`. */
-  caasJwkSetByCasinoId?: Maybe<CaasJwkSet>;
-  /** Get a single `CaasJwkSetSnapshot`. */
-  caasJwkSetSnapshotById?: Maybe<CaasJwkSetSnapshot>;
-  /** Get a single `CaasSession`. */
-  caasSessionById?: Maybe<CaasSession>;
-  /** Get a single `CaasUser`. */
-  caasUserById?: Maybe<CaasUser>;
-  /** Get a single `CaasWithdrawal`. */
-  caasWithdrawalById?: Maybe<CaasWithdrawal>;
-  /** Get a single `CaasWithdrawalRequest`. */
-  caasWithdrawalRequestById?: Maybe<CaasWithdrawalRequest>;
+  /** Reads and enables pagination through a set of `HubApiKey`. */
+  allHubApiKeys?: Maybe<HubApiKeyConnection>;
+  /** Reads and enables pagination through a set of `HubCasino`. */
+  allHubCasinos?: Maybe<HubCasinoConnection>;
+  /** Get a single `HubApiKey`. */
+  hubApiKeyById?: Maybe<HubApiKey>;
+  /** Get a single `HubApiKey`. */
+  hubApiKeyByKey?: Maybe<HubApiKey>;
+  /** Get a single `HubBalance`. */
+  hubBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKey?: Maybe<HubBalance>;
+  /** Get a single `HubBankroll`. */
+  hubBankrollById?: Maybe<HubBankroll>;
+  /** Get a single `HubCasino`. */
+  hubCasinoById?: Maybe<HubCasino>;
+  /** Get a single `HubCasinoSecret`. */
+  hubCasinoSecretById?: Maybe<HubCasinoSecret>;
+  /** Get a single `HubCurrency`. */
+  hubCurrencyByKeyAndCasinoId?: Maybe<HubCurrency>;
+  hubCurrentCasino?: Maybe<HubCasino>;
+  hubCurrentExperience?: Maybe<HubExperience>;
+  hubCurrentSession?: Maybe<HubSession>;
+  hubCurrentUser?: Maybe<HubUser>;
+  /** Get a single `HubDeposit`. */
+  hubDepositById?: Maybe<HubDeposit>;
+  /** Get a single `HubExperience`. */
+  hubExperienceById?: Maybe<HubExperience>;
+  /** Get a single `HubFaucetClaim`. */
+  hubFaucetClaimById?: Maybe<HubFaucetClaim>;
+  /** Get a single `HubJwkSet`. */
+  hubJwkSetByCasinoId?: Maybe<HubJwkSet>;
+  /** Get a single `HubJwkSetSnapshot`. */
+  hubJwkSetSnapshotById?: Maybe<HubJwkSetSnapshot>;
+  /** Get a single `HubSession`. */
+  hubSessionById?: Maybe<HubSession>;
+  /** Get a single `HubUser`. */
+  hubUserById?: Maybe<HubUser>;
+  /** Get a single `HubWithdrawal`. */
+  hubWithdrawalById?: Maybe<HubWithdrawal>;
+  /** Get a single `HubWithdrawalRequest`. */
+  hubWithdrawalRequestById?: Maybe<HubWithdrawalRequest>;
   /**
    * Exposes the root query type nested one level down. This is helpful for Relay 1
    * which can only query top level fields if they are in a particular form.
@@ -1413,43 +1436,43 @@ export type Query = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAllCaasApiKeysArgs = {
+export type QueryAllHubApiKeysArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasApiKeyCondition>;
+  condition?: InputMaybe<HubApiKeyCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasApiKeyOrderBy>>;
+  orderBy?: InputMaybe<Array<HubApiKeyOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAllCaasCasinosArgs = {
+export type QueryAllHubCasinosArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<CaasCasinoCondition>;
+  condition?: InputMaybe<HubCasinoCondition>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<CaasCasinoOrderBy>>;
+  orderBy?: InputMaybe<Array<HubCasinoOrderBy>>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasApiKeyByIdArgs = {
+export type QueryHubApiKeyByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasApiKeyByKeyArgs = {
+export type QueryHubApiKeyByKeyArgs = {
   key: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKeyArgs = {
+export type QueryHubBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKeyArgs = {
   casinoId: Scalars['UUID']['input'];
   currencyKey: Scalars['String']['input'];
   experienceId: Scalars['UUID']['input'];
@@ -1458,80 +1481,80 @@ export type QueryCaasBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKeyArgs
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasBankrollByIdArgs = {
+export type QueryHubBankrollByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasCasinoByIdArgs = {
+export type QueryHubCasinoByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasCasinoSecretByIdArgs = {
+export type QueryHubCasinoSecretByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasCurrencyByKeyAndCasinoIdArgs = {
+export type QueryHubCurrencyByKeyAndCasinoIdArgs = {
   casinoId: Scalars['UUID']['input'];
   key: Scalars['String']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasDepositByIdArgs = {
+export type QueryHubDepositByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasExperienceByIdArgs = {
+export type QueryHubExperienceByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasFaucetClaimByIdArgs = {
+export type QueryHubFaucetClaimByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasJwkSetByCasinoIdArgs = {
+export type QueryHubJwkSetByCasinoIdArgs = {
   casinoId: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasJwkSetSnapshotByIdArgs = {
+export type QueryHubJwkSetSnapshotByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasSessionByIdArgs = {
+export type QueryHubSessionByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasUserByIdArgs = {
+export type QueryHubUserByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasWithdrawalByIdArgs = {
+export type QueryHubWithdrawalByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryCaasWithdrawalRequestByIdArgs = {
+export type QueryHubWithdrawalRequestByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
@@ -1544,88 +1567,133 @@ export type QueryTodoByIdArgs = {
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
 export type Subscription = {
   __typename?: 'Subscription';
-  caasBalanceAlert?: Maybe<CaasBalanceAlertPayload>;
+  hubBalanceAlert?: Maybe<HubBalanceAlertPayload>;
 };
 
 export type Todo = {
   __typename?: 'Todo';
-  /** Reads a single `CaasExperience` that is related to this `Todo`. */
-  caasExperienceByExperienceId?: Maybe<CaasExperience>;
-  /** Reads a single `CaasUser` that is related to this `Todo`. */
-  caasUserByUserId?: Maybe<CaasUser>;
   completed?: Maybe<Scalars['Boolean']['output']>;
   experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubExperience` that is related to this `Todo`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `Todo`. */
+  hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
   userId: Scalars['UUID']['output'];
 };
 
-/** All input for the `updateCaasBankrollById` mutation. */
-export type UpdateCaasBankrollByIdInput = {
-  /** An object where the defined keys will be set on the `CaasBankroll` being updated. */
-  caasBankrollPatch: CaasBankrollPatch;
+/** A condition to be used against `Todo` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TodoCondition = {
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `Todo` values. */
+export type TodoConnection = {
+  __typename?: 'TodoConnection';
+  /** A list of edges which contains the `Todo` and cursor to aid in pagination. */
+  edges: Array<Maybe<TodoEdge>>;
+  /** A list of `Todo` objects. */
+  nodes: Array<Maybe<Todo>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Todo` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Todo` edge in the connection. */
+export type TodoEdge = {
+  __typename?: 'TodoEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Todo` at the end of the edge. */
+  node?: Maybe<Todo>;
+};
+
+/** Methods to use when ordering `Todo`. */
+export enum TodoOrderBy {
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** All input for the `updateHubBankrollById` mutation. */
+export type UpdateHubBankrollByIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `HubBankroll` being updated. */
+  hubBankrollPatch: HubBankrollPatch;
   id: Scalars['UUID']['input'];
 };
 
-/** The output of our update `CaasBankroll` mutation. */
-export type UpdateCaasBankrollPayload = {
-  __typename?: 'UpdateCaasBankrollPayload';
-  /** The `CaasBankroll` that was updated by this mutation. */
-  caasBankroll?: Maybe<CaasBankroll>;
-  /** An edge for our `CaasBankroll`. May be used by Relay 1. */
-  caasBankrollEdge?: Maybe<CaasBankrollEdge>;
+/** The output of our update `HubBankroll` mutation. */
+export type UpdateHubBankrollPayload = {
+  __typename?: 'UpdateHubBankrollPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `HubBankroll` that was updated by this mutation. */
+  hubBankroll?: Maybe<HubBankroll>;
+  /** An edge for our `HubBankroll`. May be used by Relay 1. */
+  hubBankrollEdge?: Maybe<HubBankrollEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
 
 
-/** The output of our update `CaasBankroll` mutation. */
-export type UpdateCaasBankrollPayloadCaasBankrollEdgeArgs = {
-  orderBy?: Array<CaasBankrollOrderBy>;
+/** The output of our update `HubBankroll` mutation. */
+export type UpdateHubBankrollPayloadHubBankrollEdgeArgs = {
+  orderBy?: Array<HubBankrollOrderBy>;
 };
 
-/** All input for the `updateCaasCasinoById` mutation. */
-export type UpdateCaasCasinoByIdInput = {
-  /** An object where the defined keys will be set on the `CaasCasino` being updated. */
-  caasCasinoPatch: CaasCasinoPatch;
+/** All input for the `updateHubCasinoById` mutation. */
+export type UpdateHubCasinoByIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** An object where the defined keys will be set on the `HubCasino` being updated. */
+  hubCasinoPatch: HubCasinoPatch;
   id: Scalars['UUID']['input'];
 };
 
-/** The output of our update `CaasCasino` mutation. */
-export type UpdateCaasCasinoPayload = {
-  __typename?: 'UpdateCaasCasinoPayload';
-  /** The `CaasCasino` that was updated by this mutation. */
-  caasCasino?: Maybe<CaasCasino>;
-  /** An edge for our `CaasCasino`. May be used by Relay 1. */
-  caasCasinoEdge?: Maybe<CaasCasinoEdge>;
+/** The output of our update `HubCasino` mutation. */
+export type UpdateHubCasinoPayload = {
+  __typename?: 'UpdateHubCasinoPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** The `HubCasino` that was updated by this mutation. */
+  hubCasino?: Maybe<HubCasino>;
+  /** An edge for our `HubCasino`. May be used by Relay 1. */
+  hubCasinoEdge?: Maybe<HubCasinoEdge>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
 };
 
 
-/** The output of our update `CaasCasino` mutation. */
-export type UpdateCaasCasinoPayloadCaasCasinoEdgeArgs = {
-  orderBy?: Array<CaasCasinoOrderBy>;
+/** The output of our update `HubCasino` mutation. */
+export type UpdateHubCasinoPayloadHubCasinoEdgeArgs = {
+  orderBy?: Array<HubCasinoOrderBy>;
 };
 
 export type WithdrawMutationVariables = Exact<{
@@ -1634,7 +1702,7 @@ export type WithdrawMutationVariables = Exact<{
 }>;
 
 
-export type WithdrawMutation = { __typename?: 'Mutation', caasWithdraw?: { __typename?: 'CaasWithdrawPayload', withdrawalRequest: { __typename?: 'CaasWithdrawalRequest', id: any } } | null };
+export type WithdrawMutation = { __typename?: 'Mutation', hubWithdraw?: { __typename?: 'HubWithdrawPayload', withdrawalRequest: { __typename?: 'HubWithdrawalRequest', id: any } } | null };
 
 export type AuthenticateMutationVariables = Exact<{
   casinoBaseUrl: Scalars['String']['input'];
@@ -1642,14 +1710,14 @@ export type AuthenticateMutationVariables = Exact<{
 }>;
 
 
-export type AuthenticateMutation = { __typename?: 'Mutation', caasAuthenticate?: { __typename?: 'CaasAuthenticatePayload', success?: { __typename?: 'CaasAuthenticateSuccess', sessionKey: any, uname: string, experienceId: any, userId: any } | null, query?: { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', caasBalancesByUserId: { __typename?: 'CaasBalanceConnection', nodes: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null } | null } | null };
+export type AuthenticateMutation = { __typename?: 'Mutation', hubAuthenticate?: { __typename?: 'HubAuthenticatePayload', success?: { __typename?: 'HubAuthenticateSuccess', sessionKey: any, uname: string, experienceId: any, userId: any } | null, query?: { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null } | null } | null };
 
 export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBalancesQuery = { __typename?: 'Query', caasCurrentUser?: { __typename?: 'CaasUser', caasBalancesByUserId: { __typename?: 'CaasBalanceConnection', nodes: Array<{ __typename?: 'CaasBalance', amount: number, currencyKey: string, caasCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'CaasCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null };
+export type GetBalancesQuery = { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null };
 
 
-export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawalRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
-export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionKey"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
-export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"caasBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"caasCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
+export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawalRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
+export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionKey"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
+export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;

@@ -8,7 +8,7 @@ import { gql } from "../__generated__";
 
 const WITHDRAW = gql(/* GraphQL */ `
   mutation Withdraw($amount: Int!, $currencyKey: String!) {
-    caasWithdraw(input: { amount: $amount, currency: $currencyKey }) {
+    hubWithdraw(input: { amount: $amount, currency: $currencyKey }) {
       withdrawalRequest {
         id
       }

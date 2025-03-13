@@ -16,9 +16,9 @@ Of course, replace these with any of your own preferences.
 
 ## Usage
 
-- Run a `@moneypot/caas` server on localhost
+- Run a `@moneypot/hub` server on localhost
 - Git clone this project
-- Rename `.env.template` to `.env` and set `VITE_GRAPHQL_URL` to point to your caas server.
+- Rename `.env.template` to `.env` and set `VITE_GRAPHQL_URL` to point to your hub server.
 - Run the frontend: `npm run dev`
 - GraphQL types codegen: `npm run codegen`
 

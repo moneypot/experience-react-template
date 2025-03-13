@@ -13,7 +13,7 @@ if (new URL(import.meta.env.VITE_GRAPHQL_URL).pathname !== "/graphql") {
 }
 
 const config: CodegenConfig = {
-  // This should point to a @moneypot/caas graphql api
+  // This should point to a @moneypot/hub graphql api
   schema: import.meta.env.VITE_GRAPHQL_URL,
   documents: ["src/**/*.{ts,tsx}"],
   generates: {

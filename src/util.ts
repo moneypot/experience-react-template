@@ -1,7 +1,7 @@
 // Get an error string from GraphQLError and Errors.
 // This function is mostly because calling `error.message` on a GraphQLError object
 
-import { CaasCurrency } from "./__generated__/graphql";
+import { HubCurrency } from "./__generated__/graphql";
 
 // returns a user-unfriendly string instead of just its first error message.
 export function formatError(e: unknown): string {
@@ -42,7 +42,7 @@ export function formatError(e: unknown): string {
 // f('1.', ...) == '1.'
 export function truncateToDisplayScale(
   value: string,
-  currency: Pick<CaasCurrency, "displayUnitScale">
+  currency: Pick<HubCurrency, "displayUnitScale">
 ): string | null {
   // Check for valid numeric format and return early if invalid
   if (!/^\d*\.?\d*$/.test(value)) return null;
@@ -64,7 +64,7 @@ export function truncateToDisplayScale(
 // 123456 BTC -> 1,234.56 bits
 export function formatCurrency(
   amount: number,
-  currency: Pick<CaasCurrency, "displayUnitName" | "displayUnitScale">,
+  currency: Pick<HubCurrency, "displayUnitName" | "displayUnitScale">,
   options: { excludeUnit?: boolean } = {
     excludeUnit: false,
   }

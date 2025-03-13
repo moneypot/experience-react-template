@@ -3,11 +3,11 @@ import { Store } from "./store";
 import { gql } from "./__generated__";
 import { runInAction } from "mobx";
 
-// This module contains our GraphQL documents and operations to talk to the @moneypot/caas GraphQL API.
+// This module contains our GraphQL documents and operations to talk to the @moneypot/hub GraphQL API.
 
 export const AUTHENTICATE = gql(/* GraphQL */ `
   mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {
-    caasAuthenticate(
+    hubAuthenticate(
       input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }
     ) {
       success {
@@ -17,12 +17,12 @@ export const AUTHENTICATE = gql(/* GraphQL */ `
         userId
       }
       query {
-        caasCurrentUser {
-          caasBalancesByUserId {
+        hubCurrentUser {
+          hubBalancesByUserId {
             nodes {
               amount
               currencyKey
-              caasCurrencyByCurrencyKeyAndCasinoId {
+              hubCurrencyByCurrencyKeyAndCasinoId {
                 displayUnitName
                 displayUnitScale
               }
@@ -36,12 +36,12 @@ export const AUTHENTICATE = gql(/* GraphQL */ `
 
 export const GET_BALANCES = gql(/* GraphQL */ `
   query GetBalances {
-    caasCurrentUser {
-      caasBalancesByUserId {
+    hubCurrentUser {
+      hubBalancesByUserId {
         nodes {
           amount
           currencyKey
-          caasCurrencyByCurrencyKeyAndCasinoId {
+          hubCurrencyByCurrencyKeyAndCasinoId {
             displayUnitName
             displayUnitScale
           }
@@ -86,17 +86,15 @@ export async function fetchAndUpdateBalances(store: Store) {
     document: GET_BALANCES,
   })
     .then((result) => {
-      const balances = (
-        result.caasCurrentUser?.caasBalancesByUserId.nodes ?? []
-      )
+      const balances = (result.hubCurrentUser?.hubBalancesByUserId.nodes ?? [])
         .flatMap((x) => (x ? [x] : []))
         .map((x) => ({
           amount: x.amount,
           currencyKey: x.currencyKey,
           displayUnitName:
-            x.caasCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
+            x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
           displayUnitScale:
-            x.caasCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
+            x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
         }));
       runInAction(() => {
         if (store.loggedIn) {
