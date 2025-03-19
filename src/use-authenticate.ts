@@ -3,6 +3,7 @@ import { Store } from "./store";
 import { AUTHENTICATE, sendGraphQLRequest } from "./graphql";
 import { runInAction } from "mobx";
 import { formatError } from "./util";
+import { postMessageToParent } from "./iframe-communication";
 
 type AuthState =
   | { status: "loading" }
@@ -95,6 +96,16 @@ export const useAuthenticate = (store: Store): AuthState => {
               selectedCurrencyKey: balances[0]?.currencyKey ?? null,
               balances,
             };
+          });
+          postMessageToParent({
+            type: "playerBalances",
+            balances: balances.reduce(
+              (acc, b) => ({
+                ...acc,
+                [b.currencyKey]: b.amount,
+              }),
+              {}
+            ),
           });
           setState({ status: "success" });
         } else {

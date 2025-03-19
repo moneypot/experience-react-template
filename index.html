@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>unnamed-experience</title>
     <style>
-      /* Prevent flash of white background during load */
+      /* Avoid flash of white background during load */
       html {
-        visibility: hidden;
-        background-color: #212529; /* var(--bs-dark) is not available during load */
-      }
-      html[data-bs-theme] {
-        visibility: visible;
+        background-color: #212529;
       }
     </style>
   </head>

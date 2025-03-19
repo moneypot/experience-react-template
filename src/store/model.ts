@@ -1,26 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import { createContext, useContext } from "react";
-import { ThemePreference } from "../theme";
 
 export class Store {
   loggedIn: LoggedIn | null = null;
 
-  themePreference: ThemePreference = "auto";
-
   constructor() {
     makeAutoObservable(this);
-
-    // Initialize theme preference from localStorage
-    if (typeof window !== "undefined") {
-      const savedPreference = localStorage.getItem("theme_preference");
-      if (
-        savedPreference === "light" ||
-        savedPreference === "dark" ||
-        savedPreference === "auto"
-      ) {
-        this.themePreference = savedPreference;
-      }
-    }
   }
 
   // MOBX ACTIONS
@@ -32,11 +17,6 @@ export class Store {
     if (this.loggedIn) {
       this.loggedIn.selectedCurrencyKey = currencyKey;
     }
-  }
-
-  setThemePreference(preference: ThemePreference) {
-    this.themePreference = preference;
-    localStorage.setItem("theme_preference", preference);
   }
 }
 

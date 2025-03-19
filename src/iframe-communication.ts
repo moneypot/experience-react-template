@@ -1,34 +1,37 @@
 import { z } from "zod";
 import { Store } from "./store";
-import { ThemePreference } from "./theme";
 
 // This module organizes code that deals with communication with the parent window over
 // the postMessage API.
 //
 // Incoming messages:
 //
-// - { type: "setTheme", theme: "light" | "dark" | "auto" }
-//
-//   The user has changed their color theme preference.
-//   If your game only supports one theme, you can ignore this message.
+// (The casino doesn't send any incoming messages yet, but here's boilerplate for when it does.)
 //
 // Outgoing messages:
 //
 // - { type: "setHeight", px: number }
 //
 //   Tell the parent window how tall our <iframe> should be to prevent scrolling.
+//
+// - { type: "playerBalances", balances: Record<string, number> }
+//
+//   Tell the parent window the player's balances and any time they change.
+//   Note: You can also send partial data for one just one currency changes
+//         and it will be merged with the existing data.
 
 // ===== INCOMING MESSAGES (from parent to iframe) =====
 
 // Define schemas for incoming messages
-export const SetThemeSchema = z.object({
-  type: z.literal("setTheme"),
-  theme: z.enum(["light", "dark", "auto"]),
+
+// (The casino doesn't send any incoming messages yet, but here's boilerplate for when it does.)
+export const DummySchema = z.object({
+  type: z.literal("__dummy__"),
 });
 
 // Union type of all supported incoming message schemas
 export const IncomingMessageSchema = z.discriminatedUnion("type", [
-  SetThemeSchema,
+  DummySchema,
   // Add more message schemas here as needed
 ]);
 
@@ -36,10 +39,11 @@ export const IncomingMessageSchema = z.discriminatedUnion("type", [
 export type IncomingMessage = z.infer<typeof IncomingMessageSchema>;
 
 // Incoming message handler map
-export const incomingMessageHandlers = {
-  setTheme: (store: Store, theme: ThemePreference) => {
-    store.setThemePreference(theme);
-  },
+export const incomingMessageHandlers: Record<
+  IncomingMessage["type"],
+  (store: Store, message: IncomingMessage) => void
+> = {
+  __dummy__: () => {},
 };
 
 export function handleIncomingMessage(store: Store, event: MessageEvent): void {
@@ -55,8 +59,8 @@ export function handleIncomingMessage(store: Store, event: MessageEvent): void {
 
   // Handle the message based on its type
   switch (message.type) {
-    case "setTheme": {
-      incomingMessageHandlers.setTheme(store, message.theme);
+    case "__dummy__": {
+      incomingMessageHandlers.__dummy__(store, message);
       break;
     }
   }
@@ -70,9 +74,15 @@ export const SetHeightSchema = z.object({
   px: z.number(),
 });
 
+export const PlayerBalancesSchema = z.object({
+  type: z.literal("playerBalances"),
+  balances: z.record(z.string(), z.number()),
+});
+
 // Union type of all supported outgoing message schemas
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
   SetHeightSchema,
+  PlayerBalancesSchema,
   // Add more message schemas here as needed
 ]);
 
