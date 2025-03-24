@@ -17,8 +17,6 @@ import { Store } from "./store";
 // - { type: "playerBalances", balances: Record<string, number> }
 //
 //   Tell the parent window the player's balances and any time they change.
-//   Note: You can also send partial data for one just one currency changes
-//         and it will be merged with the existing data.
 
 // ===== INCOMING MESSAGES (from parent to iframe) =====
 
