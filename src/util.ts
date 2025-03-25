@@ -62,19 +62,25 @@ export function truncateToDisplayScale(
 // Note: Shouldn't be used in input boxes since it won't parse back into a number.
 //
 // 123456 BTC -> 1,234.56 bits
+// 0.1 HOUSE -> 0 tokens (truncated at displayUnitScale precision)
 export function formatCurrency(
   amount: number,
-  currency: Pick<HubCurrency, "displayUnitName" | "displayUnitScale">,
+  currency: Pick<HubCurrency, "displayUnitScale" | "displayUnitName">,
   options: { excludeUnit?: boolean } = {
     excludeUnit: false,
   }
 ): string {
-  const scaledAmount = amount / (currency.displayUnitScale || 1); // prevent division by 0
-
   // Determine precision of currency.
   // For scale 1 -> 0 decimals, 10 -> 1 decimal, 100 -> 2 decimals, etc.
   const decimalPlaces =
     currency.displayUnitScale <= 1 ? 0 : Math.log10(currency.displayUnitScale);
+
+  // Scale base amount to display amount (e.g. 200 satoshis -> 2 bits)
+  const scaledAmount = amount / (currency.displayUnitScale || 1); // prevent division by 0
+
+  // Truncate at the appropriate decimal place before formatting
+  const factor = Math.pow(10, decimalPlaces);
+  const truncatedAmount = Math.floor(scaledAmount * factor) / factor;
 
   // Use US locale to dissuade player from trying to write number values that can't be parsed
   // by parseFloat.
@@ -85,9 +91,11 @@ export function formatCurrency(
   });
 
   if (options.excludeUnit) {
-    return formatter.format(scaledAmount);
+    return formatter.format(truncatedAmount);
   } else {
-    const out = `${formatter.format(scaledAmount)} ${currency.displayUnitName}`;
+    const out = `${formatter.format(truncatedAmount)} ${
+      currency.displayUnitName
+    }`;
     return out;
   }
 }
