@@ -17,6 +17,12 @@ import { Store } from "./store";
 // - { type: "playerBalances", balances: Record<string, number> }
 //
 //   Tell the parent window the player's balances and any time they change.
+//
+// - { type: "path", path: string }
+//
+//   Tell the parent window the current path of the iframe.
+//   It will update #path={path} in the parent window such that if the user visits that
+//   URL, path will get appended to our iframe URL.
 
 // ===== INCOMING MESSAGES (from parent to iframe) =====
 
@@ -77,11 +83,16 @@ export const PlayerBalancesSchema = z.object({
   balances: z.record(z.string(), z.number()),
 });
 
+export const PathSchema = z.object({
+  type: z.literal("path"),
+  path: z.string(),
+});
+
 // Union type of all supported outgoing message schemas
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
   SetHeightSchema,
   PlayerBalancesSchema,
-  // Add more message schemas here as needed
+  PathSchema,
 ]);
 
 // Type for all supported outgoing messages
