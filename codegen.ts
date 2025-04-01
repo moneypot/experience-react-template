@@ -16,6 +16,14 @@ const config: CodegenConfig = {
   // This should point to a @moneypot/hub graphql api
   schema: import.meta.env.VITE_GRAPHQL_URL,
   documents: ["src/**/*.{ts,tsx}"],
+  config: {
+    // By default, these are `any` so let's tell it to codegen them into string types.
+    scalars: {
+      UUID: "string",
+      Datetime: "string",
+      Cursor: "string",
+    },
+  },
   generates: {
     "./src/__generated__/": {
       preset: "client",

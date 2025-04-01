@@ -10,10 +10,6 @@ import { Store } from "./store";
 //
 // Outgoing messages:
 //
-// - { type: "setHeight", px: number }
-//
-//   Tell the parent window how tall our <iframe> should be to prevent scrolling.
-//
 // - { type: "playerBalances", balances: Record<string, number> }
 //
 //   Tell the parent window the player's balances and any time they change.
@@ -72,12 +68,6 @@ export function handleIncomingMessage(store: Store, event: MessageEvent): void {
 
 // ===== OUTGOING MESSAGES (from iframe to parent) =====
 
-// Define schemas for outgoing messages
-export const SetHeightSchema = z.object({
-  type: z.literal("setHeight"),
-  px: z.number(),
-});
-
 export const PlayerBalancesSchema = z.object({
   type: z.literal("playerBalances"),
   balances: z.record(z.string(), z.number()),
@@ -90,7 +80,6 @@ export const PathSchema = z.object({
 
 // Union type of all supported outgoing message schemas
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
-  SetHeightSchema,
   PlayerBalancesSchema,
   PathSchema,
 ]);
