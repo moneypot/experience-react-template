@@ -51,6 +51,7 @@ export const useSubscription = (store: Store) => {
         // Without this, the client only retries on errors, not close events
         return true;
       },
+      keepAlive: 12_000,
     });
 
     const dispose = client.subscribe(
