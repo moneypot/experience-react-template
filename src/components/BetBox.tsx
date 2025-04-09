@@ -1,154 +1,229 @@
 import { observer } from "mobx-react-lite";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useCallback, useEffect, useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useStore } from "../store";
-import { formatCurrency, truncateToDisplayScale } from "../util";
+import { formatCurrency, formatError, truncateToDisplayScale } from "../util";
+import { FormikHelpers, useFormik } from "formik";
+import * as Yup from "yup";
+import { HubCurrency } from "../__generated__/graphql";
+
+type FormValues = {
+  currencyKey: HubCurrency["key"];
+  // Must be converted from display units to base units for submit
+  displayWager: number;
+};
 
 const BetBox: React.FC = observer(() => {
   const store = useStore();
-  const [wagerString, setWagerString] = useState("");
-  const [submitError, setSubmitError] = useState("");
-  const [sending, setSending] = useState(false);
 
   // Ensure selected currency matches one of user's balances
   const selectedCurrency = store.loggedIn?.balances.find(
     (balance) => balance.currencyKey === store.loggedIn?.selectedCurrencyKey
   );
 
-  const submitBet = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!store.loggedIn) {
-      return;
-    }
-    if (sending) {
-      return;
-    }
+  const selectedCurrencyBalance = store.loggedIn?.balances.find(
+    (balance) => balance.currencyKey === selectedCurrency?.currencyKey
+  )?.amount;
 
-    // Reset errors
-    setSubmitError("");
-
-    if (!selectedCurrency) {
-      setSubmitError("Select a currency");
-      return;
-    }
-
-    // Must be parseable by parseFloat
-    const decimalRegex = /^\d*\.?\d*$/;
-    if (!decimalRegex.test(wagerString)) {
-      setSubmitError("Invalid wager amount");
-      return;
-    }
-
-    // Convert display units back into base units
-    const wagerBaseUnits =
-      Number.parseFloat(wagerString) * selectedCurrency.displayUnitScale;
-
-    if (Number.isNaN(wagerBaseUnits)) {
-      setSubmitError("Invalid wager amount");
-      return;
-    }
-
-    console.log("TODO: make bet", {
-      wagerBaseUnits,
-      currency: selectedCurrency.currencyKey,
+  const validationSchema = useMemo(() => {
+    return Yup.object({
+      currencyKey: Yup.string().required("Currency is required"),
+      displayWager: Yup.number()
+        .label("Wager")
+        .moreThan(0)
+        .required()
+        .test(
+          "insufficint-funds",
+          "You cannot afford this wager",
+          function (value) {
+            if (value === undefined) return false;
+            if (!selectedCurrencyBalance) return false;
+            return value <= selectedCurrencyBalance;
+          }
+        ),
     });
+  }, [selectedCurrencyBalance]);
 
-    // Mock http request
-    setSending(true);
-    new Promise((resolve) => setTimeout(resolve, 1000)).finally(() => {
-      setSending(false);
-    });
+  const handleSubmit = useCallback(
+    (
+      values: FormValues,
+      { setSubmitting, setStatus }: FormikHelpers<FormValues>
+    ) => {
+      // Reset errors
+      setStatus(null);
+      setSubmitting(true);
 
-    // Here's where you'd do something like this:
-    //
-    // sendGraphQLRequest(store, {
-    //   document: MAKE_BET,
-    //   variables: {
-    //     wager: wagerBaseUnits,
-    //     currency: selectedCurrency.currencyKey,
-    //   },
-    // })
-    //   .then((result) => {
-    //   })
-    //   .catch((e) => {
-    //     setSubmitError(formatError(e));
-    //   })
-    //   .finally(() => {
-    //     setSending(false);
-    //   });
-  };
+      if (!selectedCurrency) {
+        setStatus("Select a currency");
+        return;
+      }
 
-  const handleCurrencyChange = (e: FormEvent<HTMLSelectElement>) => {
-    const currency = e.currentTarget.value;
-    store.setSelectedCurrencyKey(currency);
-  };
+      // Convert display units back into base units (floored to integer)
+      const baseWager = Math.floor(
+        values.displayWager * selectedCurrency.displayUnitScale
+      );
 
-  const handleWagerChange = (e: FormEvent<HTMLInputElement>) => {
-    const wager = e.currentTarget.value;
-    if (!selectedCurrency) {
-      return;
+      console.log("TODO: Submit bet", {
+        baseWager,
+        currencyKey: selectedCurrency.currencyKey,
+      });
+
+      // Replace this with a real http request
+      new Promise((resolve) => setTimeout(resolve, 1000))
+        .then(() => {
+          console.log("TODO: Submit bet");
+        })
+        .catch((e) => {
+          setStatus(formatError(e));
+        })
+        .finally(() => {
+          setSubmitting(false);
+        });
+    },
+    [selectedCurrency]
+  );
+
+  const initialValues = useMemo(() => {
+    return {
+      currencyKey: store.loggedIn?.selectedCurrencyKey ?? "",
+      displayWager: 2,
+    };
+  }, [store.loggedIn?.selectedCurrencyKey]);
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: handleSubmit,
+  });
+
+  // Force revalidation when selected currency balance changes
+  useEffect(
+    () => {
+      if (formik.values.displayWager) {
+        formik.validateField("displayWager");
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      // Don't depend on `formik` since it will trigger infinite re-renders
+      selectedCurrencyBalance,
+      formik.values.displayWager,
+    ]
+  );
+
+  // When store.loggedIn is complete, set form currency
+  useEffect(() => {
+    if (store.loggedIn && formik.values.currencyKey === "") {
+      formik.setFieldValue("currencyKey", store.loggedIn.selectedCurrencyKey);
     }
-    const truncated = truncateToDisplayScale(wager, selectedCurrency);
-    if (truncated !== null) {
-      setWagerString(truncated);
-    }
-  };
+  }, [store.loggedIn, formik]);
+
+  const handleCurrencyChange = useCallback(
+    (e: FormEvent<HTMLSelectElement>) => {
+      const currency = e.currentTarget.value;
+      store.setSelectedCurrencyKey(currency);
+    },
+    [store]
+  );
+
+  const handleWagerChange = useCallback(
+    (e: FormEvent<HTMLInputElement>) => {
+      const wager = e.currentTarget.value;
+      if (!selectedCurrency) {
+        return;
+      }
+      const truncated = truncateToDisplayScale(wager, selectedCurrency);
+      if (truncated !== null) {
+        formik.setFieldValue(
+          "displayWager",
+          truncated === "" ? "" : Number.parseFloat(truncated)
+        );
+      }
+    },
+    [selectedCurrency, formik]
+  );
 
   return (
-    <Form onSubmit={submitBet}>
-      <Form.Group>
-        <Form.Label>Currency</Form.Label>
-        <Form.Select
-          onChange={handleCurrencyChange}
-          value={store.loggedIn?.selectedCurrencyKey ?? undefined}
-          disabled={!store.loggedIn}
-        >
-          {!store.loggedIn && <option>Log in to select a currency</option>}
-          {store.loggedIn?.balances.length === 0 && (
-            <option>Deposit to select a currency</option>
+    <>
+      <Form onSubmit={formik.handleSubmit}>
+        <fieldset disabled={!store.loggedIn || formik.isSubmitting}>
+          {formik.status && (
+            <Alert
+              variant={formik.status.variant}
+              onClose={() => formik.setStatus(null)}
+              dismissible
+            >
+              {formik.status.children}
+            </Alert>
           )}
-          {store.loggedIn?.balances.map((balance) => (
-            <option key={balance.currencyKey} value={balance.currencyKey}>
-              {balance.currencyKey}: {formatCurrency(balance.amount, balance)}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
+          <Form.Group>
+            <Form.Label>Currency</Form.Label>
+            <Form.Select
+              name="currencyKey"
+              value={store.loggedIn?.selectedCurrencyKey ?? undefined}
+              onChange={handleCurrencyChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                !!(formik.touched.currencyKey && formik.errors.currencyKey)
+              }
+            >
+              {!store.loggedIn && <option>Log in to select a currency</option>}
+              {store.loggedIn?.balances.length === 0 && (
+                <option>Deposit to select a currency</option>
+              )}
+              {store.loggedIn?.balances.map((balance) => (
+                <option key={balance.currencyKey} value={balance.currencyKey}>
+                  {balance.currencyKey}:{" "}
+                  {formatCurrency(balance.amount, balance)}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.currencyKey}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-      <Form.Group className="mt-2">
-        <Form.Label>Wager</Form.Label>
-        <Form.Control
-          type="text"
-          name="wager"
-          inputMode="decimal"
-          placeholder="Enter wager amount"
-          pattern="^\d*\.?\d*$"
-          title="Invalid wager"
-          required
-          value={wagerString}
-          onInput={handleWagerChange}
-        />
-      </Form.Group>
+          <Form.Group className="mt-2">
+            <Form.Label>Wager</Form.Label>
+            <Form.Control
+              name="displayWager"
+              type="number"
+              inputMode="numeric"
+              step="0.01"
+              placeholder="Enter wager amount"
+              required
+              value={
+                formik.values.displayWager === 0
+                  ? "0"
+                  : formik.values.displayWager || ""
+              }
+              onInput={handleWagerChange}
+              onBlur={formik.handleBlur}
+              isInvalid={!!formik.errors.displayWager}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.displayWager}
+            </Form.Control.Feedback>
+          </Form.Group>
 
-      <Form.Group className="mt-3">
-        {submitError && (
-          <Alert
-            variant="danger"
-            dismissible
-            onClose={() => setSubmitError("")}
-          >
-            {submitError}
-          </Alert>
-        )}
-        <Button
-          type="submit"
-          variant="primary"
-          className={"w-100 " + (sending ? "disabled" : "")}
-        >
-          Bet
-        </Button>
-      </Form.Group>
-    </Form>
+          <Form.Group className="mt-3">
+            <Button
+              type="submit"
+              variant="primary"
+              className={
+                "w-100 " +
+                (formik.isSubmitting || !formik.isValid ? "disabled" : "")
+              }
+            >
+              Bet{" "}
+              {formik.values.displayWager > 0 &&
+                selectedCurrency &&
+                formatCurrency(formik.values.displayWager, selectedCurrency)}
+            </Button>
+          </Form.Group>
+        </fieldset>
+      </Form>
+    </>
   );
 });
 

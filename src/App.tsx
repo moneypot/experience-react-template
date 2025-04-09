@@ -28,10 +28,7 @@ const App = observer(() => {
             Deposit money into this experience to begin betting.
           </Alert>
         )}
-        <Row>
-          <Col lg={3}>
-            <BetBox />
-          </Col>
+        <Row className="justify-content-center">
           <Col lg={9}>
             <div
               style={{
@@ -46,6 +43,9 @@ const App = observer(() => {
             >
               TODO: Build game here
             </div>
+          </Col>
+          <Col lg={3}>
+            <BetBox />
           </Col>
         </Row>
         <div className="mt-4">
