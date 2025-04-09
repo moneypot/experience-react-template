@@ -1,19 +1,9 @@
-import {
-  Container,
-  Row,
-  Col,
-  Alert,
-  Navbar,
-  Nav,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
 import { useStore } from "./store";
 import { useAuthenticate } from "./use-authenticate";
 import { observer } from "mobx-react-lite";
 import { useSubscription } from "./use-subscription";
 import BetBox from "./components/BetBox";
-import { useState } from "react";
-import WithdrawModal from "./components/WithdrawModal";
 
 // Tips:
 //
@@ -23,14 +13,9 @@ const App = observer(() => {
   const store = useStore();
   const authResult = useAuthenticate(store);
   useSubscription(store);
-  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="mx-3">
-      {showModal && (
-        <WithdrawModal show={showModal} hide={() => setShowModal(false)} />
-      )}
-
       <Container>
         {authResult.status === "error" && (
           <Alert variant="danger">Auth error: {authResult.error}</Alert>
@@ -43,14 +28,6 @@ const App = observer(() => {
             Deposit money into this experience to begin betting.
           </Alert>
         )}
-        <Navbar>
-          {/* <Navbar.Brand>My Casino</Navbar.Brand> */}
-          <Nav className="ms-auto">
-            <Nav.Link as={Button} onClick={() => setShowModal(true)}>
-              Withdraw
-            </Nav.Link>
-          </Nav>
-        </Navbar>
         <Row>
           <Col lg={3}>
             <BetBox />
