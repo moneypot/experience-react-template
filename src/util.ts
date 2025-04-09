@@ -44,18 +44,24 @@ export function truncateToDisplayScale(
   value: string,
   currency: Pick<HubCurrency, "displayUnitScale">
 ): string | null {
-  // Check for valid numeric format and return early if invalid
   if (!/^\d*\.?\d*$/.test(value)) return null;
   if (!value || value === ".") return value;
 
   const decimals = Math.log10(currency.displayUnitScale);
-  const [whole, fraction] = value.split(".");
+  const regex = new RegExp(`^\\d*\\.?\\d{0,${decimals}}$`);
 
-  // Handle whole numbers
-  if (!fraction) return value;
+  // If already valid, return as-is
+  if (regex.test(value)) {
+    return value;
+  }
 
-  // Truncate decimal places
-  return `${whole}.${fraction.slice(0, decimals)}`;
+  // Try to truncate
+  const parts = value.split(".");
+  if (parts.length === 2 && /^\d+$/.test(parts[0]) && /^\d+$/.test(parts[1])) {
+    return `${parts[0]}.${parts[1].slice(0, decimals)}`;
+  }
+
+  return null;
 }
 
 // Format a currency amount to precision based on the displayUnitScale.
