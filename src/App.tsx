@@ -23,11 +23,6 @@ const App = observer(() => {
         {authResult.status === "loading" && (
           <Alert variant="info">Authenticating...</Alert>
         )}
-        {store.loggedIn?.balances.length === 0 && (
-          <Alert variant="warning">
-            Deposit money into this experience to begin betting.
-          </Alert>
-        )}
         <Row className="justify-content-center">
           <Col lg={6} md={8}>
             <div
