@@ -29,7 +29,7 @@ const App = observer(() => {
           </Alert>
         )}
         <Row className="justify-content-center">
-          <Col lg={9}>
+          <Col lg={6} md={8}>
             <div
               style={{
                 marginTop: "1rem",
@@ -44,7 +44,7 @@ const App = observer(() => {
               TODO: Build game here
             </div>
           </Col>
-          <Col lg={3}>
+          <Col lg={3} md={4}>
             <BetBox />
           </Col>
         </Row>
