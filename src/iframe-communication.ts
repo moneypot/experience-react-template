@@ -19,6 +19,13 @@ import { Store } from "./store";
 //   Tell the parent window the current path of the iframe.
 //   It will update #path={path} in the parent window such that if the user visits that
 //   URL, path will get appended to our iframe URL.
+//
+// - { type: "status", status: "ready" | "fatal" }
+//
+//   (Required) Tell the parent window when your experience is finished loading
+//   and ready to be revealed to player. This includes initial requests like user
+//   authentication. If your experience hits an error that it can't recover from,
+//   then send a "fatal" status.
 
 // ===== INCOMING MESSAGES (from parent to iframe) =====
 
@@ -78,10 +85,16 @@ export const PathSchema = z.object({
   path: z.string(),
 });
 
+export const StatusSchema = z.object({
+  type: z.literal("status"),
+  status: z.enum(["ready", "fatal"]),
+});
+
 // Union type of all supported outgoing message schemas
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
   PlayerBalancesSchema,
   PathSchema,
+  StatusSchema,
 ]);
 
 // Type for all supported outgoing messages

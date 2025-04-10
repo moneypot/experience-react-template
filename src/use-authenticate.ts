@@ -47,76 +47,89 @@ export const useAuthenticate = (store: Store): AuthState => {
 
   useEffect(() => {
     const authenticate = async () => {
-      try {
-        // Get #userToken from url
-        const userToken = new URLSearchParams(
-          window.location.hash.slice(1)
-        ).get("userToken");
+      // Get #userToken from url
+      const userToken = new URLSearchParams(window.location.hash.slice(1)).get(
+        "userToken"
+      );
 
-        // Get baseCasinoUrl from iframe parent url or referrer
-        const casinoBaseUrl = getCasinoBaseUrl();
+      // Get baseCasinoUrl from iframe parent url or referrer
+      const casinoBaseUrl = getCasinoBaseUrl();
 
-        if (!userToken) {
-          throw new Error("No userToken found in URL");
-        }
+      if (!userToken) {
+        throw new Error("No userToken found in URL");
+      }
 
-        if (!casinoBaseUrl) {
-          throw new Error("No baseCasinoUrl found in parent URL");
-        }
+      if (!casinoBaseUrl) {
+        throw new Error("No baseCasinoUrl found in parent URL");
+      }
 
-        const result = await sendGraphQLRequest(store, {
-          document: AUTHENTICATE,
-          variables: {
-            userToken,
-            casinoBaseUrl,
-          },
+      const result = await sendGraphQLRequest(store, {
+        document: AUTHENTICATE,
+        variables: {
+          userToken,
+          casinoBaseUrl,
+        },
+      });
+
+      const success = result.hubAuthenticate?.success;
+      const balances = (
+        result.hubAuthenticate?.query?.hubCurrentUser?.hubBalancesByUserId
+          ?.nodes ?? []
+      )
+        .flatMap((x) => (x ? [x] : []))
+        .map((x) => ({
+          amount: x.amount,
+          currencyKey: x.currencyKey,
+          displayUnitName:
+            x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
+          displayUnitScale:
+            x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
+        }));
+      if (success) {
+        runInAction(() => {
+          store.loggedIn = {
+            sessionKey: success.sessionKey,
+            experienceId: success.experienceId,
+            userId: success.userId,
+            uname: success.uname,
+            selectedCurrencyKey: balances[0]?.currencyKey ?? null,
+            balances,
+          };
         });
-
-        const success = result.hubAuthenticate?.success;
-        const balances = (
-          result.hubAuthenticate?.query?.hubCurrentUser?.hubBalancesByUserId
-            ?.nodes ?? []
-        )
-          .flatMap((x) => (x ? [x] : []))
-          .map((x) => ({
-            amount: x.amount,
-            currencyKey: x.currencyKey,
-            displayUnitName:
-              x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
-            displayUnitScale:
-              x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
-          }));
-        if (success) {
-          runInAction(() => {
-            store.loggedIn = {
-              sessionKey: success.sessionKey,
-              experienceId: success.experienceId,
-              userId: success.userId,
-              uname: success.uname,
-              selectedCurrencyKey: balances[0]?.currencyKey ?? null,
-              balances,
-            };
-          });
-          postMessageToParent({
-            type: "playerBalances",
-            balances: balances.reduce(
-              (acc, b) => ({
-                ...acc,
-                [b.currencyKey]: b.amount,
-              }),
-              {}
-            ),
-          });
-          setState({ status: "success" });
-        } else {
-          throw new Error("Authentication failed due to empty response");
-        }
-      } catch (e) {
-        setState({ status: "error", error: formatError(e) });
+        postMessageToParent({
+          type: "playerBalances",
+          balances: balances.reduce(
+            (acc, b) => ({
+              ...acc,
+              [b.currencyKey]: b.amount,
+            }),
+            {}
+          ),
+        });
+      } else {
+        console.warn("Authentication failed due to empty response");
+        throw new Error("Authentication failed");
       }
     };
 
-    authenticate();
+    authenticate()
+      // No matter what happens inside authenticate, we want to always post a 'status' message
+      .then(
+        () => {
+          setState({ status: "success" });
+          postMessageToParent({
+            type: "status",
+            status: "ready",
+          });
+        },
+        (e) => {
+          setState({ status: "error", error: formatError(e) });
+          postMessageToParent({
+            type: "status",
+            status: "fatal",
+          });
+        }
+      );
   }, [store]); // Only run once on mount
 
   return state;
