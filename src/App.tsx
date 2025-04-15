@@ -15,7 +15,7 @@ const App = observer(() => {
   useSubscription(store);
 
   return (
-    <div className="mx-3">
+    <div className="mx-3 mt-4">
       <Container>
         {authResult.status === "error" && (
           <Alert variant="danger">Auth error: {authResult.error}</Alert>
@@ -27,13 +27,14 @@ const App = observer(() => {
           <Col lg={6} md={8}>
             <div
               style={{
-                marginTop: "1rem",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
                 height: "25vh",
-                backgroundColor: "#cccccc",
+                backgroundColor: "#1b1f22",
+                border: "2px solid var(--bs-border-color)",
+                borderRadius: "var(--bs-border-radius)",
               }}
             >
               TODO: Build game here
