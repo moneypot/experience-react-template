@@ -123,6 +123,7 @@ export const useAuthenticate = (store: Store): AuthState => {
           });
         },
         (e) => {
+          console.error("Authentication failed", e);
           setState({ status: "error", error: formatError(e) });
           postMessageToParent({
             type: "status",
