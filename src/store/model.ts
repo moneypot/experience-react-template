@@ -1,5 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import { createContext, useContext } from "react";
+import {
+  HubBalance,
+  HubCurrency,
+  HubExperience,
+  HubSession,
+  HubUser,
+} from "../__generated__/graphql";
 
 export class Store {
   loggedIn: LoggedIn | null = null;
@@ -22,22 +29,22 @@ export class Store {
 
 interface LoggedIn {
   // Session info
-  sessionKey: string;
-  experienceId: string;
-  userId: string;
-  uname: string;
+  sessionKey: HubSession["key"];
+  experienceId: HubExperience["id"];
+  userId: HubUser["id"];
+  uname: HubUser["uname"];
 
   // User info
   balances: {
-    amount: number;
-    currencyKey: string;
-    displayUnitName: string;
-    displayUnitScale: number;
+    amount: HubBalance["amount"];
+    currencyKey: HubCurrency["key"];
+    displayUnitName: HubCurrency["displayUnitName"];
+    displayUnitScale: HubCurrency["displayUnitScale"];
   }[];
 
   // UI
   // It's often useful to globaly track which currency the user wants to use
-  selectedCurrencyKey: null | string;
+  selectedCurrencyKey: null | HubCurrency["key"];
 }
 
 export const StoreContext = createContext<Store | null>(null);

@@ -5,10 +5,8 @@ import { useStore } from "../store";
 import { formatCurrency, formatError, truncateToDisplayScale } from "../util";
 import { FormikHelpers, useFormik } from "formik";
 import * as Yup from "yup";
-import { HubCurrency } from "../__generated__/graphql";
 
 type FormValues = {
-  currencyKey: HubCurrency["key"];
   // Must be converted from display units to base units for submit
   displayWager: number;
 };
@@ -27,7 +25,6 @@ const BetBox: React.FC = observer(() => {
 
   const validationSchema = useMemo(() => {
     return Yup.object({
-      currencyKey: Yup.string().required("Currency is required"),
       displayWager: Yup.number()
         .label("Wager")
         .moreThan(0)
@@ -85,10 +82,9 @@ const BetBox: React.FC = observer(() => {
 
   const initialValues = useMemo(() => {
     return {
-      currencyKey: store.loggedIn?.selectedCurrencyKey ?? "",
-      displayWager: 2,
+      displayWager: 1,
     };
-  }, [store.loggedIn?.selectedCurrencyKey]);
+  }, []);
 
   const formik = useFormik({
     initialValues,
@@ -110,13 +106,6 @@ const BetBox: React.FC = observer(() => {
       formik.values.displayWager,
     ]
   );
-
-  // When store.loggedIn is complete, set form currency
-  useEffect(() => {
-    if (store.loggedIn && formik.values.currencyKey === "") {
-      formik.setFieldValue("currencyKey", store.loggedIn.selectedCurrencyKey);
-    }
-  }, [store.loggedIn, formik]);
 
   const handleCurrencyChange = useCallback(
     (e: FormEvent<HTMLSelectElement>) => {
@@ -162,10 +151,6 @@ const BetBox: React.FC = observer(() => {
               name="currencyKey"
               value={store.loggedIn?.selectedCurrencyKey ?? undefined}
               onChange={handleCurrencyChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                !!(formik.touched.currencyKey && formik.errors.currencyKey)
-              }
             >
               {!store.loggedIn && <option>Log in to select a currency</option>}
               {store.loggedIn?.balances.length === 0 && (
@@ -178,9 +163,6 @@ const BetBox: React.FC = observer(() => {
                 </option>
               ))}
             </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.currencyKey}
-            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mt-2">
