@@ -4,11 +4,12 @@ import { Alert, Button, Form } from "react-bootstrap";
 import { useStore } from "../store";
 import { formatCurrency, formatError, truncateToDisplayScale } from "../util";
 import { FormikHelpers, useFormik } from "formik";
-import * as Yup from "yup";
+import { z } from "zod";
+import { withZodSchema } from "formik-validator-zod";
 
 type FormValues = {
   // Must be converted from display units to base units for submit
-  displayWager: number;
+  displayWager: string;
 };
 
 const BetBox: React.FC = observer(() => {
@@ -24,20 +25,19 @@ const BetBox: React.FC = observer(() => {
   )?.amount;
 
   const validationSchema = useMemo(() => {
-    return Yup.object({
-      displayWager: Yup.number()
-        .label("Wager")
-        .moreThan(0)
-        .required()
-        .test(
-          "insufficint-funds",
-          "You cannot afford this wager",
-          function (value) {
-            if (value === undefined) return false;
-            if (!selectedCurrencyBalance) return false;
-            return value <= selectedCurrencyBalance;
-          }
-        ),
+    return z.object({
+      displayWager: z
+        .string()
+        .regex(/^\d*\.?\d*$/, "Wager must be a number")
+        .refine((value) => {
+          if (value === "") return false;
+          return Number.parseFloat(value) > 0;
+        }, "Wager must be greater than 0")
+        .refine((value) => {
+          if (value === "") return false;
+          if (!selectedCurrencyBalance) return false;
+          return Number.parseFloat(value) <= selectedCurrencyBalance;
+        }, "You cannot afford this wager"),
     });
   }, [selectedCurrencyBalance]);
 
@@ -57,7 +57,8 @@ const BetBox: React.FC = observer(() => {
 
       // Convert display units back into base units (floored to integer)
       const baseWager = Math.floor(
-        values.displayWager * selectedCurrency.displayUnitScale
+        Number.parseFloat(values.displayWager) *
+          selectedCurrency.displayUnitScale
       );
 
       console.log("TODO: Submit bet", {
@@ -82,13 +83,15 @@ const BetBox: React.FC = observer(() => {
 
   const initialValues = useMemo(() => {
     return {
-      displayWager: 1,
+      displayWager: "1",
     };
   }, []);
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
+    validate: (values) => {
+      return withZodSchema(validationSchema)(values);
+    },
     onSubmit: handleSubmit,
   });
 
@@ -123,10 +126,7 @@ const BetBox: React.FC = observer(() => {
       }
       const truncated = truncateToDisplayScale(wager, selectedCurrency);
       if (truncated !== null) {
-        formik.setFieldValue(
-          "displayWager",
-          truncated === "" ? "" : Number.parseFloat(truncated)
-        );
+        formik.setFieldValue("displayWager", truncated);
       }
     },
     [selectedCurrency, formik]
@@ -174,14 +174,13 @@ const BetBox: React.FC = observer(() => {
               step="0.01"
               placeholder="Enter wager amount"
               required
-              value={
-                formik.values.displayWager === 0
-                  ? "0"
-                  : formik.values.displayWager || ""
-              }
+              value={formik.values.displayWager}
               onInput={handleWagerChange}
               onBlur={formik.handleBlur}
-              isInvalid={!!formik.errors.displayWager}
+              isInvalid={
+                formik.values.displayWager.length > 0 &&
+                !!formik.errors.displayWager
+              }
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.displayWager}
@@ -198,9 +197,12 @@ const BetBox: React.FC = observer(() => {
               }
             >
               Bet{" "}
-              {formik.values.displayWager > 0 &&
+              {formik.values.displayWager &&
                 selectedCurrency &&
-                formatCurrency(formik.values.displayWager, selectedCurrency)}
+                formatCurrency(
+                  Number.parseFloat(formik.values.displayWager),
+                  selectedCurrency
+                )}
             </Button>
           </Form.Group>
         </fieldset>
