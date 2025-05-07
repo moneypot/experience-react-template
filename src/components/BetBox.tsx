@@ -20,10 +20,6 @@ const BetBox: React.FC = observer(() => {
     (balance) => balance.currencyKey === store.loggedIn?.selectedCurrencyKey
   );
 
-  const selectedCurrencyBalance = store.loggedIn?.balances.find(
-    (balance) => balance.currencyKey === selectedCurrency?.currencyKey
-  )?.amount;
-
   const validationSchema = useMemo(() => {
     return z.object({
       displayWager: z
@@ -35,11 +31,11 @@ const BetBox: React.FC = observer(() => {
         }, "Wager must be greater than 0")
         .refine((value) => {
           if (value === "") return false;
-          if (!selectedCurrencyBalance) return false;
-          return Number.parseFloat(value) <= selectedCurrencyBalance;
+          if (!selectedCurrency) return false;
+          return Number.parseFloat(value) <= selectedCurrency.amount;
         }, "You cannot afford this wager"),
     });
-  }, [selectedCurrencyBalance]);
+  }, [selectedCurrency]);
 
   const handleSubmit = useCallback(
     (
@@ -105,7 +101,7 @@ const BetBox: React.FC = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       // Don't depend on `formik` since it will trigger infinite re-renders
-      selectedCurrencyBalance,
+      selectedCurrency,
       formik.values.displayWager,
     ]
   );
@@ -125,6 +121,7 @@ const BetBox: React.FC = observer(() => {
         return;
       }
       const truncated = truncateToDisplayScale(wager, selectedCurrency);
+      console.log("truncated", typeof truncated);
       if (truncated !== null) {
         formik.setFieldValue("displayWager", truncated);
       }
@@ -132,80 +129,84 @@ const BetBox: React.FC = observer(() => {
     [selectedCurrency, formik]
   );
 
+  const inputsDisabled = !store.loggedIn || formik.isSubmitting;
+  const submitDisabled =
+    !store.loggedIn || formik.isSubmitting || !formik.isValid;
+
   return (
     <>
       <Form onSubmit={formik.handleSubmit}>
-        <fieldset disabled={!store.loggedIn || formik.isSubmitting}>
-          {formik.status && (
-            <Alert
-              variant={formik.status.variant}
-              onClose={() => formik.setStatus(null)}
-              dismissible
-            >
-              {formik.status.children}
-            </Alert>
-          )}
-          <Form.Group>
-            <Form.Label>Currency</Form.Label>
-            <Form.Select
-              name="currencyKey"
-              value={store.loggedIn?.selectedCurrencyKey ?? undefined}
-              onChange={handleCurrencyChange}
-            >
-              {!store.loggedIn && <option>Log in to select a currency</option>}
-              {store.loggedIn?.balances.length === 0 && (
-                <option>Deposit to select a currency</option>
+        {formik.status && (
+          <Alert
+            variant={formik.status.variant}
+            onClose={() => formik.setStatus(null)}
+            dismissible
+          >
+            {formik.status.children}
+          </Alert>
+        )}
+        <Form.Group>
+          <Form.Label>Currency</Form.Label>
+          <Form.Select
+            name="currencyKey"
+            value={store.loggedIn?.selectedCurrencyKey ?? undefined}
+            onChange={handleCurrencyChange}
+            disabled={inputsDisabled}
+          >
+            {!store.loggedIn && <option>Log in to select a currency</option>}
+            {store.loggedIn?.balances.length === 0 && (
+              <option>Deposit to select a currency</option>
+            )}
+            {store.loggedIn?.balances.map((balance) => (
+              <option key={balance.currencyKey} value={balance.currencyKey}>
+                {balance.currencyKey}: {formatCurrency(balance.amount, balance)}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mt-2">
+          <Form.Label>Wager</Form.Label>
+          <Form.Control
+            name="displayWager"
+            type="text"
+            inputMode="numeric"
+            placeholder="Enter wager amount"
+            required
+            // For text fields that user might input manually,
+            // use the disabled class instead of disabled attribute so that
+            // user focus isn't lost during the submit process
+            className={inputsDisabled ? "disabled" : ""}
+            value={formik.values.displayWager}
+            onInput={handleWagerChange}
+            onBlur={formik.handleBlur}
+            isInvalid={
+              // Only show error if user has entered a value
+              formik.values.displayWager.length > 0 &&
+              !!formik.errors.displayWager
+            }
+          />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.displayWager}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group className="mt-3">
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-100"
+            disabled={submitDisabled}
+          >
+            Bet{" "}
+            {formik.values.displayWager &&
+              selectedCurrency &&
+              formatCurrency(
+                Number.parseFloat(formik.values.displayWager),
+                selectedCurrency
               )}
-              {store.loggedIn?.balances.map((balance) => (
-                <option key={balance.currencyKey} value={balance.currencyKey}>
-                  {balance.currencyKey}:{" "}
-                  {formatCurrency(balance.amount, balance)}
-                </option>
-              ))}
-            </Form.Select>
-          </Form.Group>
-
-          <Form.Group className="mt-2">
-            <Form.Label>Wager</Form.Label>
-            <Form.Control
-              name="displayWager"
-              type="number"
-              inputMode="numeric"
-              step="0.01"
-              placeholder="Enter wager amount"
-              required
-              value={formik.values.displayWager}
-              onInput={handleWagerChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                formik.values.displayWager.length > 0 &&
-                !!formik.errors.displayWager
-              }
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.displayWager}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mt-3">
-            <Button
-              type="submit"
-              variant="primary"
-              className={
-                "w-100 " +
-                (formik.isSubmitting || !formik.isValid ? "disabled" : "")
-              }
-            >
-              Bet{" "}
-              {formik.values.displayWager &&
-                selectedCurrency &&
-                formatCurrency(
-                  Number.parseFloat(formik.values.displayWager),
-                  selectedCurrency
-                )}
-            </Button>
-          </Form.Group>
-        </fieldset>
+          </Button>
+        </Form.Group>
       </Form>
     </>
   );
