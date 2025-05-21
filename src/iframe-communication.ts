@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { Store } from "./store";
 
 // This module organizes code that deals with communication with the parent window over
@@ -85,16 +85,29 @@ export const PathSchema = z.object({
   path: z.string(),
 });
 
-export const StatusSchema = z.object({
-  type: z.literal("status"),
-  status: z.enum(["ready", "fatal"]),
+export const PutSuccessSchema = z.object({
+  type: z.literal("putSuccess"),
+  mpTransferId: z.uuid(),
 });
+
+export const StatusSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("status"),
+    status: z.literal("ready"),
+    features: z.array(z.enum(["putSuccess"])),
+  }),
+  z.object({
+    type: z.literal("status"),
+    status: z.literal("fatal"),
+  }),
+]);
 
 // Union type of all supported outgoing message schemas
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
   PlayerBalancesSchema,
   PathSchema,
   StatusSchema,
+  PutSuccessSchema,
 ]);
 
 // Type for all supported outgoing messages

@@ -120,6 +120,11 @@ export const useAuthenticate = (store: Store): AuthState => {
           postMessageToParent({
             type: "status",
             status: "ready",
+            features: [
+              // If we opt in to this feature flag, we MUST post putSuccess events
+              // to the parent window when our hub server broadcasts successful puts.
+              "putSuccess",
+            ],
           });
         },
         (e) => {

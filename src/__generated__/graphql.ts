@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** Binary data encoded using Base64 */
+  Base64EncodedBinary: { input: any; output: any; }
   /**
    * A signed eight-byte integer. The upper big integer values are greater than the
    * max value for a JavaScript number. Therefore all big integers will be output as
@@ -21,7 +23,7 @@ export type Scalars = {
    */
   BigInt: { input: any; output: any; }
   /** A location in a connection that can be used for resuming pagination. */
-  Cursor: { input: any; output: any; }
+  Cursor: { input: string; output: string; }
   /**
    * A point in time as described by the [ISO
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) and, if it has a timezone, [RFC
@@ -29,12 +31,18 @@ export type Scalars = {
    * that do not conform to both ISO 8601 and RFC 3339 may be coerced, which may lead
    * to unexpected results.
    */
-  Datetime: { input: any; output: any; }
+  Datetime: { input: string; output: string; }
   /** Represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: any; output: any; }
   /** A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122). */
-  UUID: { input: any; output: any; }
+  UUID: { input: string; output: string; }
 };
+
+export enum BetKind {
+  Coinflip = 'COINFLIP',
+  CrashDice = 'CRASH_DICE',
+  Pachinko = 'PACHINKO'
+}
 
 export type Fortune = {
   __typename?: 'Fortune';
@@ -126,6 +134,11 @@ export type HubAuthenticateSuccess = {
   userId: Scalars['UUID']['output'];
 };
 
+export type HubBadHashChainError = {
+  __typename?: 'HubBadHashChainError';
+  message?: Maybe<Scalars['String']['output']>;
+};
+
 export type HubBalance = {
   __typename?: 'HubBalance';
   amount: Scalars['Float']['output'];
@@ -140,6 +153,7 @@ export type HubBalance = {
   hubExperienceByExperienceId?: Maybe<HubExperience>;
   /** Reads a single `HubUser` that is related to this `HubBalance`. */
   hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
   userId: Scalars['UUID']['output'];
 };
 
@@ -157,6 +171,8 @@ export type HubBalanceCondition = {
   casinoId?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `experienceId` field. */
   experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -189,6 +205,8 @@ export enum HubBalanceOrderBy {
   CasinoIdDesc = 'CASINO_ID_DESC',
   ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
   ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
@@ -284,12 +302,18 @@ export type HubCasino = {
   hubExperiencesByCasinoId: HubExperienceConnection;
   /** Reads and enables pagination through a set of `HubFaucetClaim`. */
   hubFaucetClaimsByCasinoId: HubFaucetClaimConnection;
+  /** Reads and enables pagination through a set of `HubHashChain`. */
+  hubHashChainsByCasinoId: HubHashChainConnection;
   /** Reads a single `HubJwkSet` that is related to this `HubCasino`. */
   hubJwkSetByCasinoId?: Maybe<HubJwkSet>;
   /** Reads and enables pagination through a set of `HubJwkSetSnapshot`. */
   hubJwkSetSnapshotsByCasinoId: HubJwkSetSnapshotConnection;
+  /** Reads and enables pagination through a set of `HubOutcomeBet`. */
+  hubOutcomeBetsByCasinoId: HubOutcomeBetConnection;
   /** Reads and enables pagination through a set of `HubSession`. */
   hubSessionsByCasinoId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubTakeRequest`. */
+  hubTakeRequestsByCasinoId: HubTakeRequestConnection;
   /** Reads and enables pagination through a set of `HubUser`. */
   hubUsersByCasinoId: HubUserConnection;
   /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
@@ -367,6 +391,17 @@ export type HubCasinoHubFaucetClaimsByCasinoIdArgs = {
 };
 
 
+export type HubCasinoHubHashChainsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubHashChainCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubHashChainOrderBy>>;
+};
+
+
 export type HubCasinoHubJwkSetSnapshotsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -378,6 +413,17 @@ export type HubCasinoHubJwkSetSnapshotsByCasinoIdArgs = {
 };
 
 
+export type HubCasinoHubOutcomeBetsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubOutcomeBetCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubOutcomeBetOrderBy>>;
+};
+
+
 export type HubCasinoHubSessionsByCasinoIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -386,6 +432,17 @@ export type HubCasinoHubSessionsByCasinoIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
+};
+
+
+export type HubCasinoHubTakeRequestsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubTakeRequestCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubTakeRequestOrderBy>>;
 };
 
 
@@ -489,6 +546,15 @@ export type HubClaimFaucetPayload = {
   __typename?: 'HubClaimFaucetPayload';
   query?: Maybe<Query>;
   success: Scalars['Boolean']['output'];
+};
+
+export type HubCreateHashChainInput = {
+  clientSeed: Scalars['String']['input'];
+};
+
+export type HubCreateHashChainPayload = {
+  __typename?: 'HubCreateHashChainPayload';
+  hashChain: HubHashChain;
 };
 
 export type HubCurrency = {
@@ -640,8 +706,14 @@ export type HubExperience = {
   hubDepositsByExperienceId: HubDepositConnection;
   /** Reads and enables pagination through a set of `HubFaucetClaim`. */
   hubFaucetClaimsByExperienceId: HubFaucetClaimConnection;
+  /** Reads and enables pagination through a set of `HubHashChain`. */
+  hubHashChainsByExperienceId: HubHashChainConnection;
+  /** Reads and enables pagination through a set of `HubOutcomeBet`. */
+  hubOutcomeBetsByExperienceId: HubOutcomeBetConnection;
   /** Reads and enables pagination through a set of `HubSession`. */
   hubSessionsByExperienceId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubTakeRequest`. */
+  hubTakeRequestsByExperienceId: HubTakeRequestConnection;
   /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
   hubWithdrawalRequestsByExperienceId: HubWithdrawalRequestConnection;
   /** Reads and enables pagination through a set of `HubWithdrawal`. */
@@ -649,8 +721,6 @@ export type HubExperience = {
   id: Scalars['UUID']['output'];
   mpExperienceId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
-  /** Reads and enables pagination through a set of `Todo`. */
-  todosByExperienceId: TodoConnection;
 };
 
 
@@ -687,6 +757,28 @@ export type HubExperienceHubFaucetClaimsByExperienceIdArgs = {
 };
 
 
+export type HubExperienceHubHashChainsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubHashChainCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubHashChainOrderBy>>;
+};
+
+
+export type HubExperienceHubOutcomeBetsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubOutcomeBetCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubOutcomeBetOrderBy>>;
+};
+
+
 export type HubExperienceHubSessionsByExperienceIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -695,6 +787,17 @@ export type HubExperienceHubSessionsByExperienceIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
+};
+
+
+export type HubExperienceHubTakeRequestsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubTakeRequestCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubTakeRequestOrderBy>>;
 };
 
 
@@ -717,17 +820,6 @@ export type HubExperienceHubWithdrawalsByExperienceIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
-};
-
-
-export type HubExperienceTodosByExperienceIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TodoCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TodoOrderBy>>;
 };
 
 /**
@@ -852,6 +944,161 @@ export enum HubFaucetClaimOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
+export type HubHash = {
+  __typename?: 'HubHash';
+  digest: Scalars['Base64EncodedBinary']['output'];
+  hashChainId: Scalars['UUID']['output'];
+  /** Reads a single `HubHashChain` that is related to this `HubHash`. */
+  hubHashChainByHashChainId?: Maybe<HubHashChain>;
+  id: Scalars['UUID']['output'];
+  iteration: Scalars['Int']['output'];
+  kind: HubHashKind;
+  metadata: Scalars['JSON']['output'];
+};
+
+export type HubHashChain = {
+  __typename?: 'HubHashChain';
+  active: Scalars['Boolean']['output'];
+  casinoId: Scalars['UUID']['output'];
+  clientSeed: Scalars['String']['output'];
+  currentIteration: Scalars['Int']['output'];
+  experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubHashChain`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubExperience` that is related to this `HubHashChain`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads and enables pagination through a set of `HubHash`. */
+  hubHashesByHashChainId: HubHashConnection;
+  /** Reads and enables pagination through a set of `HubOutcomeBet`. */
+  hubOutcomeBetsByHashChainId: HubOutcomeBetConnection;
+  /** Reads a single `HubUser` that is related to this `HubHashChain`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  maxIteration: Scalars['Int']['output'];
+  userId: Scalars['UUID']['output'];
+};
+
+
+export type HubHashChainHubHashesByHashChainIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubHashCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubHashOrderBy>>;
+};
+
+
+export type HubHashChainHubOutcomeBetsByHashChainIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubOutcomeBetCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubOutcomeBetOrderBy>>;
+};
+
+/**
+ * A condition to be used against `HubHashChain` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type HubHashChainCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubHashChain` values. */
+export type HubHashChainConnection = {
+  __typename?: 'HubHashChainConnection';
+  /** A list of edges which contains the `HubHashChain` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubHashChainEdge>>;
+  /** A list of `HubHashChain` objects. */
+  nodes: Array<Maybe<HubHashChain>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubHashChain` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubHashChain` edge in the connection. */
+export type HubHashChainEdge = {
+  __typename?: 'HubHashChainEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubHashChain` at the end of the edge. */
+  node?: Maybe<HubHashChain>;
+};
+
+/** Methods to use when ordering `HubHashChain`. */
+export enum HubHashChainOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** A condition to be used against `HubHash` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type HubHashCondition = {
+  /** Checks for equality with the object’s `hashChainId` field. */
+  hashChainId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubHash` values. */
+export type HubHashConnection = {
+  __typename?: 'HubHashConnection';
+  /** A list of edges which contains the `HubHash` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubHashEdge>>;
+  /** A list of `HubHash` objects. */
+  nodes: Array<Maybe<HubHash>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubHash` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubHash` edge in the connection. */
+export type HubHashEdge = {
+  __typename?: 'HubHashEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubHash` at the end of the edge. */
+  node?: Maybe<HubHash>;
+};
+
+export enum HubHashKind {
+  Intermediate = 'INTERMEDIATE',
+  Preimage = 'PREIMAGE',
+  Terminal = 'TERMINAL'
+}
+
+/** Methods to use when ordering `HubHash`. */
+export enum HubHashOrderBy {
+  HashChainIdAsc = 'HASH_CHAIN_ID_ASC',
+  HashChainIdDesc = 'HASH_CHAIN_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 export type HubJwkSet = {
   __typename?: 'HubJwkSet';
   casinoId: Scalars['UUID']['output'];
@@ -913,6 +1160,146 @@ export enum HubJwkSetSnapshotOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+export type HubMakeOutcomeBetInput = {
+  currency: Scalars['String']['input'];
+  hashChainId: Scalars['UUID']['input'];
+  kind: BetKind;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  outcomes: Array<HubOutcomeInput>;
+  wager: Scalars['Int']['input'];
+};
+
+export type HubMakeOutcomeBetPayload = {
+  __typename?: 'HubMakeOutcomeBetPayload';
+  result: HubMakeOutcomeBetResult;
+};
+
+export type HubMakeOutcomeBetResult = HubBadHashChainError | HubMakeOutcomeBetSuccess;
+
+export type HubMakeOutcomeBetSuccess = {
+  __typename?: 'HubMakeOutcomeBetSuccess';
+  bet: HubOutcomeBet;
+};
+
+export enum HubMpTakeRequestStatus {
+  ControllerRejected = 'CONTROLLER_REJECTED',
+  Pending = 'PENDING',
+  Transferred = 'TRANSFERRED',
+  UserCanceled = 'USER_CANCELED'
+}
+
+export enum HubMpTransferStatus {
+  Canceled = 'CANCELED',
+  Completed = 'COMPLETED',
+  Expired = 'EXPIRED',
+  Pending = 'PENDING',
+  Unclaimed = 'UNCLAIMED'
+}
+
+export type HubOutcome = {
+  __typename?: 'HubOutcome';
+  profit?: Maybe<Scalars['Float']['output']>;
+  weight?: Maybe<Scalars['Float']['output']>;
+};
+
+export type HubOutcomeBet = {
+  __typename?: 'HubOutcomeBet';
+  casinoId: Scalars['UUID']['output'];
+  currencyKey: Scalars['String']['output'];
+  experienceId: Scalars['UUID']['output'];
+  hashChainId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubOutcomeBet`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubOutcomeBet`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubOutcomeBet`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubHashChain` that is related to this `HubOutcomeBet`. */
+  hubHashChainByHashChainId?: Maybe<HubHashChain>;
+  /** Reads a single `HubUser` that is related to this `HubOutcomeBet`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  kind: Scalars['String']['output'];
+  metadata: Scalars['JSON']['output'];
+  outcomeIdx?: Maybe<Scalars['Int']['output']>;
+  outcomes: Array<Maybe<HubOutcome>>;
+  profit: Scalars['Float']['output'];
+  userId: Scalars['UUID']['output'];
+  wager: Scalars['Float']['output'];
+};
+
+/**
+ * A condition to be used against `HubOutcomeBet` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type HubOutcomeBetCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `hashChainId` field. */
+  hashChainId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `kind` field. */
+  kind?: InputMaybe<Scalars['String']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubOutcomeBet` values. */
+export type HubOutcomeBetConnection = {
+  __typename?: 'HubOutcomeBetConnection';
+  /** A list of edges which contains the `HubOutcomeBet` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubOutcomeBetEdge>>;
+  /** A list of `HubOutcomeBet` objects. */
+  nodes: Array<Maybe<HubOutcomeBet>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubOutcomeBet` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubOutcomeBet` edge in the connection. */
+export type HubOutcomeBetEdge = {
+  __typename?: 'HubOutcomeBetEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubOutcomeBet` at the end of the edge. */
+  node?: Maybe<HubOutcomeBet>;
+};
+
+/** Methods to use when ordering `HubOutcomeBet`. */
+export enum HubOutcomeBetOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  HashChainIdAsc = 'HASH_CHAIN_ID_ASC',
+  HashChainIdDesc = 'HASH_CHAIN_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  KindAsc = 'KIND_ASC',
+  KindDesc = 'KIND_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+/** An input for mutations affecting `HubOutcome` */
+export type HubOutcomeInput = {
+  profit: Scalars['Float']['input'];
+  weight: Scalars['Float']['input'];
+};
+
+export type HubPutAlertPayload = {
+  __typename?: 'HubPutAlertPayload';
+  currencyKey: Scalars['String']['output'];
+  mpTransferId: Scalars['UUID']['output'];
+};
 
 export type HubSession = {
   __typename?: 'HubSession';
@@ -987,6 +1374,106 @@ export enum HubSessionOrderBy {
   UserIdDesc = 'USER_ID_DESC'
 }
 
+export type HubTakeRequest = {
+  __typename?: 'HubTakeRequest';
+  amount?: Maybe<Scalars['Float']['output']>;
+  casinoId: Scalars['UUID']['output'];
+  currencyKey: Scalars['String']['output'];
+  experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubTakeRequest`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubCurrency` that is related to this `HubTakeRequest`. */
+  hubCurrencyByCurrencyKeyAndCasinoId?: Maybe<HubCurrency>;
+  /** Reads a single `HubExperience` that is related to this `HubTakeRequest`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubTakeRequest`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  mpStatus: HubMpTakeRequestStatus;
+  mpTakeRequestId: Scalars['UUID']['output'];
+  mpTransferId?: Maybe<Scalars['UUID']['output']>;
+  mpTransferStatus?: Maybe<HubMpTransferStatus>;
+  reservedAmount: Scalars['Float']['output'];
+  status: HubTakeRequestStatus;
+  statusChangedAt: Scalars['Datetime']['output'];
+  transferCompletionAttemptedAt?: Maybe<Scalars['Datetime']['output']>;
+  transferNeedsCompletion: Scalars['Boolean']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `HubTakeRequest` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type HubTakeRequestCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `mpTakeRequestId` field. */
+  mpTakeRequestId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: InputMaybe<HubTakeRequestStatus>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubTakeRequest` values. */
+export type HubTakeRequestConnection = {
+  __typename?: 'HubTakeRequestConnection';
+  /** A list of edges which contains the `HubTakeRequest` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubTakeRequestEdge>>;
+  /** A list of `HubTakeRequest` objects. */
+  nodes: Array<Maybe<HubTakeRequest>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubTakeRequest` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubTakeRequest` edge in the connection. */
+export type HubTakeRequestEdge = {
+  __typename?: 'HubTakeRequestEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubTakeRequest` at the end of the edge. */
+  node?: Maybe<HubTakeRequest>;
+};
+
+/** Methods to use when ordering `HubTakeRequest`. */
+export enum HubTakeRequestOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  MpTakeRequestIdAsc = 'MP_TAKE_REQUEST_ID_ASC',
+  MpTakeRequestIdDesc = 'MP_TAKE_REQUEST_ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+export enum HubTakeRequestStatus {
+  Completed = 'COMPLETED',
+  Failed = 'FAILED',
+  Pending = 'PENDING',
+  Processing = 'PROCESSING',
+  Rejected = 'REJECTED'
+}
+
 export enum HubTransferStatusKind {
   Canceled = 'CANCELED',
   Completed = 'COMPLETED',
@@ -997,8 +1484,9 @@ export enum HubTransferStatusKind {
 
 export type HubUser = {
   __typename?: 'HubUser';
-  balanceByCurrency?: Maybe<HubBalance>;
+  activeHashChain?: Maybe<HubHashChain>;
   casinoId: Scalars['UUID']['output'];
+  hubBalanceByCurrency?: Maybe<HubBalance>;
   /** Reads and enables pagination through a set of `HubBalance`. */
   hubBalancesByUserId: HubBalanceConnection;
   /** Reads a single `HubCasino` that is related to this `HubUser`. */
@@ -1007,21 +1495,25 @@ export type HubUser = {
   hubDepositsByUserId: HubDepositConnection;
   /** Reads and enables pagination through a set of `HubFaucetClaim`. */
   hubFaucetClaimsByUserId: HubFaucetClaimConnection;
+  /** Reads and enables pagination through a set of `HubHashChain`. */
+  hubHashChainsByUserId: HubHashChainConnection;
+  /** Reads and enables pagination through a set of `HubOutcomeBet`. */
+  hubOutcomeBetsByUserId: HubOutcomeBetConnection;
   /** Reads and enables pagination through a set of `HubSession`. */
   hubSessionsByUserId: HubSessionConnection;
+  /** Reads and enables pagination through a set of `HubTakeRequest`. */
+  hubTakeRequestsByUserId: HubTakeRequestConnection;
   /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
   hubWithdrawalRequestsByUserId: HubWithdrawalRequestConnection;
   /** Reads and enables pagination through a set of `HubWithdrawal`. */
   hubWithdrawalsByUserId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
   mpUserId: Scalars['UUID']['output'];
-  /** Reads and enables pagination through a set of `Todo`. */
-  todosByUserId: TodoConnection;
   uname: Scalars['String']['output'];
 };
 
 
-export type HubUserBalanceByCurrencyArgs = {
+export type HubUserHubBalanceByCurrencyArgs = {
   currency: Scalars['String']['input'];
 };
 
@@ -1059,6 +1551,28 @@ export type HubUserHubFaucetClaimsByUserIdArgs = {
 };
 
 
+export type HubUserHubHashChainsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubHashChainCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubHashChainOrderBy>>;
+};
+
+
+export type HubUserHubOutcomeBetsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubOutcomeBetCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubOutcomeBetOrderBy>>;
+};
+
+
 export type HubUserHubSessionsByUserIdArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
@@ -1067,6 +1581,17 @@ export type HubUserHubSessionsByUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubSessionOrderBy>>;
+};
+
+
+export type HubUserHubTakeRequestsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubTakeRequestCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubTakeRequestOrderBy>>;
 };
 
 
@@ -1089,17 +1614,6 @@ export type HubUserHubWithdrawalsByUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubWithdrawalOrderBy>>;
-};
-
-
-export type HubUserTodosByUserIdArgs = {
-  after?: InputMaybe<Scalars['Cursor']['input']>;
-  before?: InputMaybe<Scalars['Cursor']['input']>;
-  condition?: InputMaybe<TodoCondition>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<TodoOrderBy>>;
 };
 
 /** A condition to be used against `HubUser` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -1325,6 +1839,8 @@ export type Mutation = {
   hubAddCasino?: Maybe<HubAddCasinoPayload>;
   hubAuthenticate?: Maybe<HubAuthenticatePayload>;
   hubClaimFaucet?: Maybe<HubClaimFaucetPayload>;
+  hubCreateHashChain: HubCreateHashChainPayload;
+  hubMakeOutcomeBet?: Maybe<HubMakeOutcomeBetPayload>;
   hubWithdraw?: Maybe<HubWithdrawPayload>;
   /** Updates a single `HubBankroll` using a unique key and a patch. */
   updateHubBankrollById?: Maybe<UpdateHubBankrollPayload>;
@@ -1348,6 +1864,18 @@ export type MutationHubAddCasinoArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationHubAuthenticateArgs = {
   input: HubAuthenticateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubCreateHashChainArgs = {
+  input: HubCreateHashChainInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubMakeOutcomeBetArgs = {
+  input: HubMakeOutcomeBetInput;
 };
 
 
@@ -1393,7 +1921,7 @@ export type Query = {
   /** Get a single `HubApiKey`. */
   hubApiKeyByKey?: Maybe<HubApiKey>;
   /** Get a single `HubBalance`. */
-  hubBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKey?: Maybe<HubBalance>;
+  hubBalanceById?: Maybe<HubBalance>;
   /** Get a single `HubBankroll`. */
   hubBankrollById?: Maybe<HubBankroll>;
   /** Get a single `HubCasino`. */
@@ -1412,12 +1940,22 @@ export type Query = {
   hubExperienceById?: Maybe<HubExperience>;
   /** Get a single `HubFaucetClaim`. */
   hubFaucetClaimById?: Maybe<HubFaucetClaim>;
+  /** Get a single `HubHash`. */
+  hubHashById?: Maybe<HubHash>;
+  /** Get a single `HubHashChain`. */
+  hubHashChainById?: Maybe<HubHashChain>;
   /** Get a single `HubJwkSet`. */
   hubJwkSetByCasinoId?: Maybe<HubJwkSet>;
   /** Get a single `HubJwkSetSnapshot`. */
   hubJwkSetSnapshotById?: Maybe<HubJwkSetSnapshot>;
+  /** Get a single `HubOutcomeBet`. */
+  hubOutcomeBetById?: Maybe<HubOutcomeBet>;
   /** Get a single `HubSession`. */
   hubSessionById?: Maybe<HubSession>;
+  /** Get a single `HubTakeRequest`. */
+  hubTakeRequestById?: Maybe<HubTakeRequest>;
+  /** Get a single `HubTakeRequest`. */
+  hubTakeRequestByMpTakeRequestId?: Maybe<HubTakeRequest>;
   /** Get a single `HubUser`. */
   hubUserById?: Maybe<HubUser>;
   /** Get a single `HubWithdrawal`. */
@@ -1430,8 +1968,6 @@ export type Query = {
    */
   query: Query;
   randomFortune?: Maybe<Fortune>;
-  /** Get a single `Todo`. */
-  todoById?: Maybe<Todo>;
 };
 
 
@@ -1472,11 +2008,8 @@ export type QueryHubApiKeyByKeyArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryHubBalanceByCasinoIdAndUserIdAndExperienceIdAndCurrencyKeyArgs = {
-  casinoId: Scalars['UUID']['input'];
-  currencyKey: Scalars['String']['input'];
-  experienceId: Scalars['UUID']['input'];
-  userId: Scalars['UUID']['input'];
+export type QueryHubBalanceByIdArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -1524,6 +2057,18 @@ export type QueryHubFaucetClaimByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryHubHashByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryHubHashChainByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryHubJwkSetByCasinoIdArgs = {
   casinoId: Scalars['UUID']['input'];
 };
@@ -1536,8 +2081,26 @@ export type QueryHubJwkSetSnapshotByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryHubOutcomeBetByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryHubSessionByIdArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryHubTakeRequestByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryHubTakeRequestByMpTakeRequestIdArgs = {
+  mpTakeRequestId: Scalars['UUID']['input'];
 };
 
 
@@ -1558,75 +2121,12 @@ export type QueryHubWithdrawalRequestByIdArgs = {
   id: Scalars['UUID']['input'];
 };
 
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTodoByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
 /** The root subscription type: contains realtime events you can subscribe to with the `subscription` operation. */
 export type Subscription = {
   __typename?: 'Subscription';
   hubBalanceAlert?: Maybe<HubBalanceAlertPayload>;
+  hubPutAlert?: Maybe<HubPutAlertPayload>;
 };
-
-export type Todo = {
-  __typename?: 'Todo';
-  completed?: Maybe<Scalars['Boolean']['output']>;
-  experienceId: Scalars['UUID']['output'];
-  /** Reads a single `HubExperience` that is related to this `Todo`. */
-  hubExperienceByExperienceId?: Maybe<HubExperience>;
-  /** Reads a single `HubUser` that is related to this `Todo`. */
-  hubUserByUserId?: Maybe<HubUser>;
-  id: Scalars['Int']['output'];
-  title?: Maybe<Scalars['String']['output']>;
-  userId: Scalars['UUID']['output'];
-};
-
-/** A condition to be used against `Todo` object types. All fields are tested for equality and combined with a logical ‘and.’ */
-export type TodoCondition = {
-  /** Checks for equality with the object’s `experienceId` field. */
-  experienceId?: InputMaybe<Scalars['UUID']['input']>;
-  /** Checks for equality with the object’s `id` field. */
-  id?: InputMaybe<Scalars['Int']['input']>;
-  /** Checks for equality with the object’s `userId` field. */
-  userId?: InputMaybe<Scalars['UUID']['input']>;
-};
-
-/** A connection to a list of `Todo` values. */
-export type TodoConnection = {
-  __typename?: 'TodoConnection';
-  /** A list of edges which contains the `Todo` and cursor to aid in pagination. */
-  edges: Array<Maybe<TodoEdge>>;
-  /** A list of `Todo` objects. */
-  nodes: Array<Maybe<Todo>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `Todo` you could get from the connection. */
-  totalCount: Scalars['Int']['output'];
-};
-
-/** A `Todo` edge in the connection. */
-export type TodoEdge = {
-  __typename?: 'TodoEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']['output']>;
-  /** The `Todo` at the end of the edge. */
-  node?: Maybe<Todo>;
-};
-
-/** Methods to use when ordering `Todo`. */
-export enum TodoOrderBy {
-  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
-  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  Natural = 'NATURAL',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  UserIdAsc = 'USER_ID_ASC',
-  UserIdDesc = 'USER_ID_DESC'
-}
 
 /** All input for the `updateHubBankrollById` mutation. */
 export type UpdateHubBankrollByIdInput = {
@@ -1696,28 +2196,31 @@ export type UpdateHubCasinoPayloadHubCasinoEdgeArgs = {
   orderBy?: Array<HubCasinoOrderBy>;
 };
 
-export type WithdrawMutationVariables = Exact<{
-  amount: Scalars['Int']['input'];
-  currencyKey: Scalars['String']['input'];
-}>;
-
-
-export type WithdrawMutation = { __typename?: 'Mutation', hubWithdraw?: { __typename?: 'HubWithdrawPayload', withdrawalRequest: { __typename?: 'HubWithdrawalRequest', id: any } } | null };
-
 export type AuthenticateMutationVariables = Exact<{
   casinoBaseUrl: Scalars['String']['input'];
   userToken: Scalars['String']['input'];
 }>;
 
 
-export type AuthenticateMutation = { __typename?: 'Mutation', hubAuthenticate?: { __typename?: 'HubAuthenticatePayload', success?: { __typename?: 'HubAuthenticateSuccess', sessionKey: any, uname: string, experienceId: any, userId: any } | null, query?: { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null } | null } | null };
+export type AuthenticateMutation = { __typename?: 'Mutation', hubAuthenticate?: { __typename?: 'HubAuthenticatePayload', success?: { __typename?: 'HubAuthenticateSuccess', sessionKey: string, uname: string, experienceId: string, userId: string } | null, query?: { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null } | null } | null };
 
 export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetBalancesQuery = { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null };
 
+export type PutAlertSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
-export const WithdrawDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Withdraw"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubWithdraw"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"currency"},"value":{"kind":"Variable","name":{"kind":"Name","value":"currencyKey"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"withdrawalRequest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<WithdrawMutation, WithdrawMutationVariables>;
+
+export type PutAlertSubscription = { __typename?: 'Subscription', hubPutAlert?: { __typename?: 'HubPutAlertPayload', mpTransferId: string } | null };
+
+export type BalanceChangeAlertSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BalanceChangeAlertSubscription = { __typename?: 'Subscription', hubBalanceAlert?: { __typename?: 'HubBalanceAlertPayload', currencyKey?: string | null } | null };
+
+
 export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionKey"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
 export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
+export const PutAlertDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"PutAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubPutAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mpTransferId"}}]}}]}}]} as unknown as DocumentNode<PutAlertSubscription, PutAlertSubscriptionVariables>;
+export const BalanceChangeAlertDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"BalanceChangeAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalanceAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}}]}}]}}]} as unknown as DocumentNode<BalanceChangeAlertSubscription, BalanceChangeAlertSubscriptionVariables>;

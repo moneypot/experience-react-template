@@ -14,14 +14,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    hubWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawalRequest {\n        id\n      }\n    }\n  }\n": typeof types.WithdrawDocument,
     "\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    hubAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionKey\n        uname\n        experienceId\n        userId\n      }\n      query {\n        hubCurrentUser {\n          hubBalancesByUserId {\n            nodes {\n              amount\n              currencyKey\n              hubCurrencyByCurrencyKeyAndCasinoId {\n                displayUnitName\n                displayUnitScale\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": typeof types.AuthenticateDocument,
     "\n  query GetBalances {\n    hubCurrentUser {\n      hubBalancesByUserId {\n        nodes {\n          amount\n          currencyKey\n          hubCurrencyByCurrencyKeyAndCasinoId {\n            displayUnitName\n            displayUnitScale\n          }\n        }\n      }\n    }\n  }\n": typeof types.GetBalancesDocument,
+    "\n  subscription PutAlert {\n    hubPutAlert {\n      mpTransferId\n    }\n  }\n": typeof types.PutAlertDocument,
+    "\n  subscription BalanceChangeAlert {\n    hubBalanceAlert {\n      currencyKey\n    }\n  }\n": typeof types.BalanceChangeAlertDocument,
 };
 const documents: Documents = {
-    "\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    hubWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawalRequest {\n        id\n      }\n    }\n  }\n": types.WithdrawDocument,
     "\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    hubAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionKey\n        uname\n        experienceId\n        userId\n      }\n      query {\n        hubCurrentUser {\n          hubBalancesByUserId {\n            nodes {\n              amount\n              currencyKey\n              hubCurrencyByCurrencyKeyAndCasinoId {\n                displayUnitName\n                displayUnitScale\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": types.AuthenticateDocument,
     "\n  query GetBalances {\n    hubCurrentUser {\n      hubBalancesByUserId {\n        nodes {\n          amount\n          currencyKey\n          hubCurrencyByCurrencyKeyAndCasinoId {\n            displayUnitName\n            displayUnitScale\n          }\n        }\n      }\n    }\n  }\n": types.GetBalancesDocument,
+    "\n  subscription PutAlert {\n    hubPutAlert {\n      mpTransferId\n    }\n  }\n": types.PutAlertDocument,
+    "\n  subscription BalanceChangeAlert {\n    hubBalanceAlert {\n      currencyKey\n    }\n  }\n": types.BalanceChangeAlertDocument,
 };
 
 /**
@@ -41,15 +43,19 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    hubWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawalRequest {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Withdraw($amount: Int!, $currencyKey: String!) {\n    hubWithdraw(input: { amount: $amount, currency: $currencyKey }) {\n      withdrawalRequest {\n        id\n      }\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function gql(source: "\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    hubAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionKey\n        uname\n        experienceId\n        userId\n      }\n      query {\n        hubCurrentUser {\n          hubBalancesByUserId {\n            nodes {\n              amount\n              currencyKey\n              hubCurrencyByCurrencyKeyAndCasinoId {\n                displayUnitName\n                displayUnitScale\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {\n    hubAuthenticate(\n      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }\n    ) {\n      success {\n        sessionKey\n        uname\n        experienceId\n        userId\n      }\n      query {\n        hubCurrentUser {\n          hubBalancesByUserId {\n            nodes {\n              amount\n              currencyKey\n              hubCurrencyByCurrencyKeyAndCasinoId {\n                displayUnitName\n                displayUnitScale\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetBalances {\n    hubCurrentUser {\n      hubBalancesByUserId {\n        nodes {\n          amount\n          currencyKey\n          hubCurrencyByCurrencyKeyAndCasinoId {\n            displayUnitName\n            displayUnitScale\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetBalances {\n    hubCurrentUser {\n      hubBalancesByUserId {\n        nodes {\n          amount\n          currencyKey\n          hubCurrencyByCurrencyKeyAndCasinoId {\n            displayUnitName\n            displayUnitScale\n          }\n        }\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  subscription PutAlert {\n    hubPutAlert {\n      mpTransferId\n    }\n  }\n"): (typeof documents)["\n  subscription PutAlert {\n    hubPutAlert {\n      mpTransferId\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  subscription BalanceChangeAlert {\n    hubBalanceAlert {\n      currencyKey\n    }\n  }\n"): (typeof documents)["\n  subscription BalanceChangeAlert {\n    hubBalanceAlert {\n      currencyKey\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

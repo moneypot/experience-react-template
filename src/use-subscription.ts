@@ -2,6 +2,13 @@ import { useCallback, useEffect } from "react";
 import { Store } from "./store";
 import { createClient } from "graphql-ws";
 import { fetchAndUpdateBalances } from "./graphql";
+import { postMessageToParent } from "./iframe-communication";
+import { gql } from "./__generated__";
+import { print } from "graphql";
+import {
+  BalanceChangeAlertSubscription,
+  PutAlertSubscription,
+} from "./__generated__/graphql";
 
 // Swap url protocol from http(s) to ws(s)
 // Throws if url is not valid
@@ -17,10 +24,33 @@ function httpToWs(url: string): string {
   return parsedUrl.toString();
 }
 
+const PUT_ALERT_SUBSCRIPTION = gql(/* GraphQL */ `
+  subscription PutAlert {
+    hubPutAlert {
+      mpTransferId
+    }
+  }
+`);
+
+const BALANCE_CHANGE_ALERT_SUBSCRIPTION = gql(/* GraphQL */ `
+  subscription BalanceChangeAlert {
+    hubBalanceAlert {
+      currencyKey
+    }
+  }
+`);
+
 export const useSubscription = (store: Store) => {
   const handleBalanceChangeAlert = useCallback(() => {
     fetchAndUpdateBalances(store);
   }, [store]);
+
+  const handlePutSuccessAlert = useCallback((mpTransferId: string) => {
+    postMessageToParent({
+      type: "putSuccess",
+      mpTransferId,
+    });
+  }, []);
 
   useEffect(() => {
     const sessionKey = store.loggedIn?.sessionKey;
@@ -54,19 +84,15 @@ export const useSubscription = (store: Store) => {
       keepAlive: 12_000,
     });
 
-    const dispose = client.subscribe(
+    const disposePutAlert = client.subscribe<PutAlertSubscription>(
       {
-        query: `
-          subscription BalanceChangeAlert {
-            hubBalanceAlert {
-              currencyKey
-            }
-          }
-        `,
+        query: print(PUT_ALERT_SUBSCRIPTION),
       },
       {
-        next: () => {
-          handleBalanceChangeAlert();
+        next: (thing) => {
+          if (thing.data?.hubPutAlert?.mpTransferId) {
+            handlePutSuccessAlert(thing.data.hubPutAlert.mpTransferId);
+          }
         },
         error: (error) => {
           console.error("Error during WebSocket subscription:", error);
@@ -77,8 +103,27 @@ export const useSubscription = (store: Store) => {
       }
     );
 
+    const disposeBalanceAlert =
+      client.subscribe<BalanceChangeAlertSubscription>(
+        {
+          query: print(BALANCE_CHANGE_ALERT_SUBSCRIPTION),
+        },
+        {
+          next: () => {
+            handleBalanceChangeAlert();
+          },
+          error: (error) => {
+            console.error("Error during WebSocket subscription:", error);
+          },
+          complete: () => {
+            console.log("Subscription complete");
+          },
+        }
+      );
+
     return () => {
-      dispose();
+      disposePutAlert();
+      disposeBalanceAlert();
       client.dispose();
     };
   }, [
