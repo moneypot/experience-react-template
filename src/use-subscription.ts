@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { Store } from "./store";
-import { createClient } from "graphql-ws";
+import { Client, createClient, FormattedExecutionResult } from "graphql-ws";
 import { fetchAndUpdateBalances } from "./graphql";
 import { postMessageToParent } from "./iframe-communication";
 import { gql } from "./__generated__";
 import { print } from "graphql";
+import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import {
   BalanceChangeAlertSubscription,
   PutAlertSubscription,
@@ -84,40 +85,24 @@ export const useSubscription = (store: Store) => {
       keepAlive: 12_000,
     });
 
-    const disposePutAlert = client.subscribe<PutAlertSubscription>(
-      {
-        query: print(PUT_ALERT_SUBSCRIPTION),
-      },
-      {
-        next: (thing) => {
-          if (thing.data?.hubPutAlert?.mpTransferId) {
-            handlePutSuccessAlert(thing.data.hubPutAlert.mpTransferId);
-          }
-        },
-        error: (error) => {
-          console.error("Error during WebSocket subscription:", error);
-        },
-        complete: () => {
-          console.log("Subscription complete");
-        },
+    const disposePutAlert = createSubscription<PutAlertSubscription>(
+      client,
+      PUT_ALERT_SUBSCRIPTION,
+      (result) => {
+        if (result.data?.hubPutAlert?.mpTransferId) {
+          handlePutSuccessAlert(result.data.hubPutAlert.mpTransferId);
+        }
       }
     );
 
     const disposeBalanceAlert =
-      client.subscribe<BalanceChangeAlertSubscription>(
-        {
-          query: print(BALANCE_CHANGE_ALERT_SUBSCRIPTION),
-        },
-        {
-          next: () => {
+      createSubscription<BalanceChangeAlertSubscription>(
+        client,
+        BALANCE_CHANGE_ALERT_SUBSCRIPTION,
+        (result) => {
+          if (result.data?.hubBalanceAlert) {
             handleBalanceChangeAlert();
-          },
-          error: (error) => {
-            console.error("Error during WebSocket subscription:", error);
-          },
-          complete: () => {
-            console.log("Subscription complete");
-          },
+          }
         }
       );
 
@@ -132,5 +117,29 @@ export const useSubscription = (store: Store) => {
     store.loggedIn?.sessionKey,
     // Must be stable
     handleBalanceChangeAlert,
+    handlePutSuccessAlert,
   ]);
 };
+
+// Helper to create a typed subscription
+function createSubscription<TData>(
+  client: Client,
+  query: TypedDocumentNode<TData, Record<string, never>>,
+  handler: (
+    response: FormattedExecutionResult<TData, Record<string, never>>
+  ) => void
+): () => void {
+  return client.subscribe<TData>(
+    { query: print(query) },
+    {
+      next: (
+        result: FormattedExecutionResult<TData, Record<string, never>>
+      ) => {
+        handler(result);
+      },
+      error: (err) =>
+        console.error(`Error during WebSocket subscription: ${err}`),
+      complete: () => console.log("Subscription closed"),
+    }
+  );
+}

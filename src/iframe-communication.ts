@@ -90,7 +90,7 @@ export const PutSuccessSchema = z.object({
   mpTransferId: z.uuid(),
 });
 
-export const StatusSchema = z.discriminatedUnion("type", [
+export const StatusSchema = z.discriminatedUnion("status", [
   z.object({
     type: z.literal("status"),
     status: z.literal("ready"),
@@ -106,8 +106,8 @@ export const StatusSchema = z.discriminatedUnion("type", [
 export const OutgoingMessageSchema = z.discriminatedUnion("type", [
   PlayerBalancesSchema,
   PathSchema,
-  StatusSchema,
   PutSuccessSchema,
+  StatusSchema,
 ]);
 
 // Type for all supported outgoing messages
