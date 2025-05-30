@@ -99,9 +99,14 @@ export function formatCurrency(
   if (options.excludeUnit) {
     return formatter.format(truncatedAmount);
   } else {
-    const out = `${formatter.format(truncatedAmount)} ${
-      currency.displayUnitName
-    }`;
+    const out = `${formatter.format(truncatedAmount)} ${pluralize(
+      currency.displayUnitName,
+      truncatedAmount
+    )}`;
     return out;
   }
+}
+
+function pluralize(word: string, count: number, suffix: string = "s"): string {
+  return count === 1 ? word : word + suffix;
 }
