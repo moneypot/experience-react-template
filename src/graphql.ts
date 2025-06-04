@@ -2,7 +2,7 @@ import { GraphQLClient, RequestOptions, Variables } from "graphql-request";
 import { Store } from "./store";
 import { gql } from "./__generated__";
 import { runInAction } from "mobx";
-import { postMessageToParent } from "./iframe-communication";
+import { postMessageToParent } from "@moneypot/frontend-utils";
 
 // This module contains our GraphQL documents and operations to talk to the @moneypot/hub GraphQL API.
 

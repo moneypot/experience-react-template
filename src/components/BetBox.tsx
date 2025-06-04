@@ -2,10 +2,14 @@ import { observer } from "mobx-react-lite";
 import React, { FormEvent, useCallback, useEffect, useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useStore } from "../store";
-import { formatCurrency, formatError, truncateToDisplayScale } from "../util";
 import { FormikHelpers, useFormik } from "formik";
 import { z } from "zod";
 import { withZodSchema } from "formik-validator-zod";
+import {
+  formatCurrency,
+  formatError,
+  truncateToDisplayScale,
+} from "@moneypot/frontend-utils";
 
 type FormValues = {
   // Must be converted from display units to base units for submit
@@ -68,7 +72,7 @@ const BetBox: React.FC = observer(() => {
           console.log("TODO: Submit bet");
         })
         .catch((e) => {
-          setStatus(formatError(e));
+          setStatus(formatError(e) || "Unknown error");
         })
         .finally(() => {
           setSubmitting(false);

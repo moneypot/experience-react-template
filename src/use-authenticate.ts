@@ -2,43 +2,16 @@ import { useState, useEffect } from "react";
 import { Store } from "./store";
 import { AUTHENTICATE, sendGraphQLRequest } from "./graphql";
 import { runInAction } from "mobx";
-import { formatError } from "./util";
-import { postMessageToParent } from "./iframe-communication";
+import {
+  formatError,
+  getCasinoBaseUrl,
+  postMessageToParent,
+} from "@moneypot/frontend-utils";
 
 type AuthState =
   | { status: "loading" }
   | { status: "error"; error: string }
   | { status: "success" };
-
-// Try getting parent window URL from different sources in order of preference
-function getCasinoBaseUrl(): string | null {
-  const possibleUrls = [
-    // In dev mode, check #casinoBaseUrl=<url> from URL
-    import.meta.env.DEV
-      ? new URLSearchParams(window.location.hash.slice(1)).get("casinoBaseUrl")
-      : null,
-
-    // Check ancestor origins, not available in every browser
-    document.location.ancestorOrigins?.[
-      document.location.ancestorOrigins.length - 1
-    ],
-
-    // Check referrer if it's different from current origin
-    document.referrer !== window.location.origin ? document.referrer : null,
-
-    // In dev mode, check session storage
-    import.meta.env.DEV ? sessionStorage.getItem("casinoBaseUrl") : null,
-  ];
-
-  const validUrl = possibleUrls.find((url) => url && URL.canParse(url));
-
-  if (validUrl) {
-    sessionStorage.setItem("casinoBaseUrl", validUrl);
-    return new URL(validUrl).origin;
-  }
-
-  return null;
-}
 
 // Note: This runs once on initial mount. Doesn't do any retry logic.
 // User will have to reload to try auth again.
@@ -129,7 +102,10 @@ export const useAuthenticate = (store: Store): AuthState => {
         },
         (e) => {
           console.error("Authentication failed", e);
-          setState({ status: "error", error: formatError(e) });
+          setState({
+            status: "error",
+            error: formatError(e) || "Unknown error",
+          });
           postMessageToParent({
             type: "status",
             status: "fatal",

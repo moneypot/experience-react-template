@@ -13,6 +13,7 @@
     "codegen": "npx graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@moneypot/frontend-utils": "^0.0.1",
     "bootstrap": "^5.3.3",
     "formik": "^2.4.6",
     "formik-validator-zod": "^2.2.0",
