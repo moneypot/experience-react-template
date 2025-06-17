@@ -1,9 +1,10 @@
 import { Container, Row, Col, Alert } from "react-bootstrap";
 import { useStore } from "./store";
-import { useAuthenticate } from "./use-authenticate";
+import { useAuthenticate } from "./hooks/use-authenticate";
 import { observer } from "mobx-react-lite";
-import { useSubscription } from "./use-subscription";
+import { useSubscription } from "./hooks/use-subscription";
 import BetBox from "./components/BetBox";
+import GameBox from "./components/GameBox";
 
 // Tips:
 //
@@ -27,17 +28,12 @@ const App = observer(() => {
           <Col lg={6} md={8}>
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "25vh",
                 backgroundColor: "#1b1f22",
                 border: "2px solid var(--bs-border-color)",
                 borderRadius: "var(--bs-border-radius)",
               }}
             >
-              TODO: Build game here
+              <GameBox />
             </div>
           </Col>
           <Col lg={3} md={4}>

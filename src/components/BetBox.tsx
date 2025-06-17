@@ -10,6 +10,7 @@ import {
   formatError,
   truncateToDisplayScale,
 } from "@moneypot/frontend-utils";
+import makeCoinflipBet from "../api/make-coinflip-bet";
 
 type FormValues = {
   // Must be converted from display units to base units for submit
@@ -46,6 +47,11 @@ const BetBox: React.FC = observer(() => {
       values: FormValues,
       { setSubmitting, setStatus }: FormikHelpers<FormValues>
     ) => {
+      if (!store.loggedIn) {
+        // No-op if player is not logged in
+        return;
+      }
+
       // Reset errors
       setStatus(null);
       setSubmitting(true);
@@ -61,16 +67,12 @@ const BetBox: React.FC = observer(() => {
           selectedCurrency.displayUnitScale
       );
 
-      console.log("TODO: Submit bet", {
-        baseWager,
-        currencyKey: selectedCurrency.currencyKey,
-      });
-
-      // Replace this with a real http request
-      new Promise((resolve) => setTimeout(resolve, 1000))
-        .then(() => {
-          console.log("TODO: Submit bet");
-        })
+      makeCoinflipBet(store, {
+        wager: baseWager,
+        currency: selectedCurrency.currencyKey,
+        hashChainId: store.loggedIn.activeHashChainId,
+        clientSeed: store.loggedIn.clientSeed,
+      })
         .catch((e) => {
           setStatus(formatError(e) || "Unknown error");
         })
@@ -78,7 +80,7 @@ const BetBox: React.FC = observer(() => {
           setSubmitting(false);
         });
     },
-    [selectedCurrency]
+    [selectedCurrency, store]
   );
 
   const initialValues = useMemo(() => {

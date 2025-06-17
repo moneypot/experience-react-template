@@ -6,35 +6,6 @@ import { postMessageToParent } from "@moneypot/frontend-utils";
 
 // This module contains our GraphQL documents and operations to talk to the @moneypot/hub GraphQL API.
 
-export const AUTHENTICATE = gql(/* GraphQL */ `
-  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {
-    hubAuthenticate(
-      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }
-    ) {
-      success {
-        sessionKey
-        uname
-        experienceId
-        userId
-      }
-      query {
-        hubCurrentUser {
-          hubBalancesByUserId {
-            nodes {
-              amount
-              currencyKey
-              hubCurrencyByCurrencyKeyAndCasinoId {
-                displayUnitName
-                displayUnitScale
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`);
-
 export const GET_BALANCES = gql(/* GraphQL */ `
   query GetBalances {
     hubCurrentUser {

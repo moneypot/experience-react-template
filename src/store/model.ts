@@ -4,6 +4,8 @@ import {
   HubBalance,
   HubCurrency,
   HubExperience,
+  HubHashChain,
+  HubOutcomeBet,
   HubSession,
   HubUser,
 } from "../__generated__/graphql";
@@ -13,6 +15,12 @@ export class Store {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  // REACTIVE GETTERS
+
+  get latestBet(): BetResult | null {
+    return this.loggedIn?.bets[0] ?? null;
   }
 
   // MOBX ACTIONS
@@ -25,7 +33,42 @@ export class Store {
       this.loggedIn.selectedCurrencyKey = currencyKey;
     }
   }
+
+  setActiveHashChainId(hashChainId: string) {
+    if (this.loggedIn) {
+      this.loggedIn.activeHashChainId = hashChainId;
+    }
+  }
+
+  setClientSeed(clientSeed: string) {
+    if (this.loggedIn) {
+      this.loggedIn.clientSeed = clientSeed;
+    }
+  }
+
+  // Only keep the latest 25 bets
+  addBet(bet: BetResult) {
+    if (this.loggedIn) {
+      const newBets = [bet, ...this.loggedIn.bets].slice(0, 25);
+      this.loggedIn.bets = newBets;
+    }
+  }
 }
+
+type StoreBalance = {
+  amount: HubBalance["amount"];
+  currencyKey: HubCurrency["key"];
+  displayUnitName: HubCurrency["displayUnitName"];
+  displayUnitScale: HubCurrency["displayUnitScale"];
+};
+
+export type BetResult = {
+  id: HubOutcomeBet["id"];
+  coinSide: "heads" | "tails";
+  wager: HubOutcomeBet["wager"];
+  profit: HubOutcomeBet["profit"];
+  currency: Pick<HubCurrency, "key" | "displayUnitName" | "displayUnitScale">;
+};
 
 interface LoggedIn {
   // Session info
@@ -35,12 +78,14 @@ interface LoggedIn {
   uname: HubUser["uname"];
 
   // User info
-  balances: {
-    amount: HubBalance["amount"];
-    currencyKey: HubCurrency["key"];
-    displayUnitName: HubCurrency["displayUnitName"];
-    displayUnitScale: HubCurrency["displayUnitScale"];
-  }[];
+  balances: StoreBalance[];
+
+  // Provably fair
+  activeHashChainId: HubHashChain["id"] | null;
+  clientSeed: string;
+
+  // Show the last bet in the UI
+  bets: BetResult[];
 
   // UI
   // It's often useful to globaly track which currency the user wants to use

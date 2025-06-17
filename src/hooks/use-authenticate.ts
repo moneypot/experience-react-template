@@ -1,12 +1,45 @@
 import { useState, useEffect } from "react";
-import { Store } from "./store";
-import { AUTHENTICATE, sendGraphQLRequest } from "./graphql";
+import { Store } from "../store";
+import { sendGraphQLRequest } from "../graphql";
 import { runInAction } from "mobx";
 import {
   formatError,
   getCasinoBaseUrl,
   postMessageToParent,
 } from "@moneypot/frontend-utils";
+import { gql } from "../__generated__";
+
+const AUTHENTICATE = gql(/* GraphQL */ `
+  mutation Authenticate($casinoBaseUrl: String!, $userToken: String!) {
+    hubAuthenticate(
+      input: { casinoBaseUrl: $casinoBaseUrl, userToken: $userToken }
+    ) {
+      success {
+        sessionKey
+        uname
+        experienceId
+        userId
+      }
+      query {
+        hubCurrentUser {
+          activeHashChain {
+            id
+          }
+          hubBalancesByUserId {
+            nodes {
+              amount
+              currencyKey
+              hubCurrencyByCurrencyKeyAndCasinoId {
+                displayUnitName
+                displayUnitScale
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`);
 
 type AuthState =
   | { status: "loading" }
@@ -59,6 +92,9 @@ export const useAuthenticate = (store: Store): AuthState => {
             x.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
         }));
       if (success) {
+        const activeHashChainId =
+          result.hubAuthenticate?.query?.hubCurrentUser?.activeHashChain?.id ??
+          null;
         runInAction(() => {
           store.loggedIn = {
             sessionKey: success.sessionKey,
@@ -67,6 +103,9 @@ export const useAuthenticate = (store: Store): AuthState => {
             uname: success.uname,
             selectedCurrencyKey: balances[0]?.currencyKey ?? null,
             balances,
+            bets: [],
+            activeHashChainId,
+            clientSeed: crypto.randomUUID(),
           };
         });
         postMessageToParent({

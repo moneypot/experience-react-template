@@ -1,14 +1,14 @@
 import { useCallback, useEffect } from "react";
-import { Store } from "./store";
+import { Store } from "../store";
 import { Client, createClient, FormattedExecutionResult } from "graphql-ws";
-import { fetchAndUpdateBalances } from "./graphql";
-import { gql } from "./__generated__";
+import { fetchAndUpdateBalances } from "../graphql";
+import { gql } from "../__generated__";
 import { print } from "graphql";
 import { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import {
   BalanceChangeAlertSubscription,
   PutAlertSubscription,
-} from "./__generated__/graphql";
+} from "../__generated__/graphql";
 import { postMessageToParent } from "@moneypot/frontend-utils";
 
 // Swap url protocol from http(s) to ws(s)
