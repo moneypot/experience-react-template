@@ -52,7 +52,10 @@ const BetHistory: React.FC = observer(() => {
     >
       {store.loggedIn?.bets.map((bet) => {
         return (
-          <div className={`${bet.profit > 0 ? "text-success" : "text-danger"}`}>
+          <div
+            key={bet.id}
+            className={`${bet.profit > 0 ? "text-success" : "text-danger"}`}
+          >
             {bet.coinSide}
           </div>
         );
