@@ -756,12 +756,6 @@ export type HubCasinoSecret = {
   id: Scalars['UUID']['output'];
 };
 
-export type HubClaimFaucetPayload = {
-  __typename?: 'HubClaimFaucetPayload';
-  query?: Maybe<Query>;
-  success: Scalars['Boolean']['output'];
-};
-
 export type HubCreateHashChainPayload = {
   __typename?: 'HubCreateHashChainPayload';
   hashChain: HubHashChain;
@@ -1274,6 +1268,7 @@ export type HubHashChain = {
   hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['UUID']['output'];
   maxIteration: Scalars['Int']['output'];
+  preimageHash?: Maybe<HubHash>;
   userId: Scalars['UUID']['output'];
 };
 
@@ -1590,6 +1585,15 @@ export type HubPutAlertPayload = {
   mpTransferId: Scalars['UUID']['output'];
 };
 
+export type HubRevealHashChainInput = {
+  hashChainId: Scalars['UUID']['input'];
+};
+
+export type HubRevealHashChainPayload = {
+  __typename?: 'HubRevealHashChainPayload';
+  preimageHash: HubHash;
+};
+
 export type HubSession = {
   __typename?: 'HubSession';
   casinoId: Scalars['UUID']['output'];
@@ -1667,7 +1671,9 @@ export type HubTakeRequest = {
   __typename?: 'HubTakeRequest';
   amount?: Maybe<Scalars['Float']['output']>;
   casinoId: Scalars['UUID']['output'];
+  completionAttemptCount?: Maybe<Scalars['Int']['output']>;
   currencyKey: Scalars['String']['output'];
+  debug?: Maybe<Scalars['String']['output']>;
   experienceId: Scalars['UUID']['output'];
   /** Reads a single `HubCasino` that is related to this `HubTakeRequest`. */
   hubCasinoByCasinoId?: Maybe<HubCasino>;
@@ -1678,10 +1684,12 @@ export type HubTakeRequest = {
   /** Reads a single `HubUser` that is related to this `HubTakeRequest`. */
   hubUserByUserId?: Maybe<HubUser>;
   id: Scalars['UUID']['output'];
+  insufficientBalanceError?: Maybe<Scalars['Boolean']['output']>;
   mpStatus: HubMpTakeRequestStatus;
   mpTakeRequestId: Scalars['UUID']['output'];
   mpTransferId?: Maybe<Scalars['UUID']['output']>;
   mpTransferStatus?: Maybe<HubMpTransferStatus>;
+  refundedAt?: Maybe<Scalars['Datetime']['output']>;
   reservedAmount: Scalars['Float']['output'];
   status: HubTakeRequestStatus;
   statusChangedAt: Scalars['Datetime']['output'];
@@ -1747,8 +1755,6 @@ export enum HubTakeRequestOrderBy {
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
   UpdatedAtAsc = 'UPDATED_AT_ASC',
   UpdatedAtDesc = 'UPDATED_AT_DESC',
   UserIdAsc = 'USER_ID_ASC',
@@ -1998,17 +2004,6 @@ export enum HubUserOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
-
-export type HubWithdrawInput = {
-  amount: Scalars['Int']['input'];
-  currency: Scalars['String']['input'];
-};
-
-export type HubWithdrawPayload = {
-  __typename?: 'HubWithdrawPayload';
-  query?: Maybe<Query>;
-  withdrawalRequest: HubWithdrawalRequest;
-};
 
 export type HubWithdrawal = {
   __typename?: 'HubWithdrawal';
@@ -2403,10 +2398,9 @@ export type Mutation = {
   cashoutMinesGame: MinesGameCashoutPayload;
   hubAddCasino?: Maybe<HubAddCasinoPayload>;
   hubAuthenticate?: Maybe<HubAuthenticatePayload>;
-  hubClaimFaucet?: Maybe<HubClaimFaucetPayload>;
   hubCreateHashChain: HubCreateHashChainPayload;
   hubMakeOutcomeBet?: Maybe<HubMakeOutcomeBetPayload>;
-  hubWithdraw?: Maybe<HubWithdrawPayload>;
+  hubRevealHashChain: HubRevealHashChainPayload;
   makeMinesMove: MakeMinesMovePayload;
   startMinesGame: StartMinesGamePayload;
   /** Updates a single `HubBankroll` using a unique key and a patch. */
@@ -2441,8 +2435,8 @@ export type MutationHubMakeOutcomeBetArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationHubWithdrawArgs = {
-  input: HubWithdrawInput;
+export type MutationHubRevealHashChainArgs = {
+  input: HubRevealHashChainInput;
 };
 
 
