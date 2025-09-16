@@ -41,6 +41,7 @@ export type Scalars = {
 export enum BetKind {
   Coinflip = 'COINFLIP',
   CrashDice = 'CRASH_DICE',
+  General = 'GENERAL',
   Pachinko = 'PACHINKO',
   Wheel = 'WHEEL'
 }

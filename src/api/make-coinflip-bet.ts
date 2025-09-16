@@ -74,7 +74,7 @@ export default async function makeCoinflipBet(
     document: MAKE_COINFLIP_BET,
     variables: {
       input: {
-        kind: BetKind.Coinflip,
+        kind: BetKind.General,
         wager: input.wager,
         currency: input.currency,
         outcomes,
