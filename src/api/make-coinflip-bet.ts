@@ -6,8 +6,8 @@ import { sendGraphQLRequest } from "../graphql";
 import { Store } from "../store";
 import { createHashChain } from "./hash-chain";
 
-const MAKE_CONIFLIP_BET = gql(/* GraphQL */ `
-  mutation MakeConiflipBet($input: HubMakeOutcomeBetInput!) {
+const MAKE_COINFLIP_BET = gql(/* GraphQL */ `
+  mutation MakeCoinflipBet($input: HubMakeOutcomeBetInput!) {
     hubMakeOutcomeBet(input: $input) {
       result {
         __typename
@@ -71,7 +71,7 @@ export default async function makeCoinflipBet(
   console.log("outcomes", outcomes);
 
   const result = await sendGraphQLRequest(store, {
-    document: MAKE_CONIFLIP_BET,
+    document: MAKE_COINFLIP_BET,
     variables: {
       input: {
         kind: BetKind.Coinflip,
