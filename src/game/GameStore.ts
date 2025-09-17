@@ -2,6 +2,7 @@ import { BaseStore } from "@moneypot/experience-react-sdk/store";
 import { makeAutoObservable } from "mobx";
 import { createContext, useContext } from "react";
 
+// /src/GameStore.ts
 export type BetResult = {
   id: string;
   wager: number;
@@ -11,6 +12,7 @@ export type BetResult = {
     displayUnitName: string;
     displayUnitScale: number;
   };
+  symbols?: [string, string, string]; // NEW
 };
 
 export class GameStore {
@@ -28,7 +30,7 @@ export class GameStore {
   // REACTIVE GETTERS
 
   get latestBet() {
-    return this.bets[this.bets.length - 1];
+    return this.bets[0];
   }
 
   // forward to baseStore
@@ -47,11 +49,9 @@ export class GameStore {
   // ACTIONS
 
   addBet(bet: BetResult) {
-    // Ensure there are only 10 bets max
-    if (this.bets.length >= 10) {
-      this.bets.shift();
-    }
-    this.bets.push(bet);
+    this.bets.unshift(bet);
+    // Ensure we only keep the last N bets
+    this.bets.splice(20);
   }
 }
 
