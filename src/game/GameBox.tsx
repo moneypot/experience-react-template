@@ -1,10 +1,9 @@
 // GameBox.tsx - Contains our game UI
 import { observer } from "mobx-react-lite";
-import { useStore } from "../store";
-import { BetResult } from "../store/model";
+import { BetResult, useGameStore } from "../GameStore";
 
 const GameBox: React.FC = observer(() => {
-  const store = useStore();
+  const store = useGameStore();
 
   function deltaWager(bet: BetResult) {
     return bet.profit * bet.wager;
@@ -21,7 +20,7 @@ const GameBox: React.FC = observer(() => {
                 store.latestBet.profit > 0 ? "text-success" : "text-danger"
               } display-3 text-uppercase`}
             >
-              {store.latestBet.coinSide}
+              {store.latestBet.profit > 0 ? "Heads" : "Tails"}
             </p>
             <p
               className={`${
@@ -43,20 +42,20 @@ const GameBox: React.FC = observer(() => {
 export default GameBox;
 
 const BetHistory: React.FC = observer(() => {
-  const store = useStore();
+  const store = useGameStore();
 
   return (
     <div
       className="d-flex flex-row gap-2 w-100 ps-1 pb-1 pe-0"
       style={{ overflowX: "hidden" }}
     >
-      {store.loggedIn?.bets.map((bet) => {
+      {store.bets.map((bet) => {
         return (
           <div
             key={bet.id}
             className={`${bet.profit > 0 ? "text-success" : "text-danger"}`}
           >
-            {bet.coinSide}
+            {bet.profit > 0 ? "Heads" : "Tails"}
           </div>
         );
       })}

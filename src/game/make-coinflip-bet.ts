@@ -2,9 +2,11 @@
 
 import { gql } from "../__generated__";
 import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
-import { sendGraphQLRequest } from "../graphql";
-import { Store } from "../store";
-import { createHashChain } from "./hash-chain";
+import {
+  createHashChain,
+  sendGraphQLRequest,
+} from "@moneypot/experience-react-sdk/graphql";
+import { GameStore } from "../GameStore";
 
 const MAKE_COINFLIP_BET = gql(/* GraphQL */ `
   mutation MakeCoinflipBet($input: HubMakeOutcomeBetInput!) {
@@ -41,19 +43,29 @@ export type BetInput = {
   clientSeed: string;
 };
 
-export default async function makeCoinflipBet(
-  store: Store,
-  input: BetInput,
-  retryOnBadHashChain: boolean = true
-) {
+export default async function makeCoinflipBet({
+  gameStore,
+  input,
+  retryOnBadHashChain = true,
+}: {
+  gameStore: GameStore;
+  input: BetInput;
+  retryOnBadHashChain?: boolean;
+}) {
+  // If we have no active hash chain id, then first create one
   if (input.hashChainId === null) {
-    const hashChainId = await createHashChain(store);
-    return makeCoinflipBet(store, {
-      ...input,
-      hashChainId,
+    const hashChainId = await createHashChain(gameStore.baseStore);
+    return makeCoinflipBet({
+      gameStore,
+      input: {
+        ...input,
+        hashChainId,
+      },
+      retryOnBadHashChain,
     });
   }
 
+  // Generalize our game into a list of outcomes
   const houseEdge = 0.01;
   const profitOnWin = (1 - houseEdge) / 0.5 - 1; // 0.98 when houseEdge = 0.01
   const outcomes: HubOutcomeInput[] = [
@@ -70,7 +82,8 @@ export default async function makeCoinflipBet(
   ];
   console.log("outcomes", outcomes);
 
-  const result = await sendGraphQLRequest(store, {
+  // Send the outcome bet to the hub server
+  const result = await sendGraphQLRequest(gameStore.baseStore, {
     document: MAKE_COINFLIP_BET,
     variables: {
       input: {
@@ -90,25 +103,27 @@ export default async function makeCoinflipBet(
       throw new Error("No result from makeCoinflipBet");
     }
     case "HubBadHashChainError": {
+      // If the hash chain is bad (e.g. expired), then request a new one and try the bet again
       if (!retryOnBadHashChain) {
         throw new Error("Bad hash chain");
       }
 
-      const hashChainId = await createHashChain(store);
-      return makeCoinflipBet(
-        store,
-        {
+      const hashChainId = await createHashChain(gameStore.baseStore);
+      return makeCoinflipBet({
+        gameStore,
+        input: {
           ...input,
           hashChainId,
         },
-        false
-      );
+        // Retry bet with the new hash chain,
+        // but if it fails again, don't retry.
+        retryOnBadHashChain: false,
+      });
     }
     case "HubMakeOutcomeBetSuccess": {
       const bet = result.hubMakeOutcomeBet!.result!.bet!;
-      store.addBet({
+      gameStore.addBet({
         id: bet.id,
-        coinSide: bet.profit > 0 ? "heads" : "tails",
         wager: bet.wager,
         profit: bet.profit,
         currency: {

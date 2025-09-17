@@ -1,5 +1,7 @@
 # Moneypot experience template (React)
 
+(This is a version of experience-react-template that uses @moneypot/experience-react-sdk in an attempt to extract all boilerplate and leave only unique game logic. Will replace moneypot/experience-react-template which could be moved to moneypot/experience-react-template-boilerplate since inline boilerplate can also be useful.)
+
 A React template for building a Moneypot experience optimized for becoming instantly productive.
 
 Batteries included:

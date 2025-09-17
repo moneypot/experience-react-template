@@ -1,19 +1,18 @@
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import { useStore } from "./store";
-import { useAuthenticate } from "./hooks/use-authenticate";
 import { observer } from "mobx-react-lite";
-import { useSubscription } from "./hooks/use-subscription";
-import BetBox from "./components/BetBox";
-import GameBox from "./components/GameBox";
+import BetBox from "./game/BetBox";
+import GameBox from "./game/GameBox";
+import { useAuthenticate, useSubscription } from "@moneypot/experience-react-sdk/hooks";
+import { useGameStore } from "./GameStore";
 
 // Tips:
 //
 // - Canonical way to check if user is logged in: `if (store.loggedIn)`.
 
 const App = observer(() => {
-  const store = useStore();
-  const authResult = useAuthenticate(store);
-  useSubscription(store);
+  const gameStore = useGameStore();
+  const authResult = useAuthenticate(gameStore.baseStore);
+  useSubscription(gameStore.baseStore);
 
   return (
     <div className="mx-3 mt-4">
@@ -45,7 +44,7 @@ const App = observer(() => {
           <pre>
             {
               // Debug: Show MobX state
-              JSON.stringify(store, null, 2)
+              JSON.stringify(gameStore, null, 2)
             }
           </pre>
         </div>
