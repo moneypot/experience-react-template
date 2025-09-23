@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { createContext, useContext } from "react";
 
 // /src/GameStore.ts
-export type BetResult = {
+export type DiceBetResult = {
   id: string;
   wager: number;
   profit: number;
@@ -12,7 +12,18 @@ export type BetResult = {
     displayUnitName: string;
     displayUnitScale: number;
   };
-  symbols?: [string, string, string]; // NEW
+};
+
+export type SlotsBetResult = {
+  id: string;
+  wager: number;
+  profit: number;
+  currency: {
+    key: string;
+    displayUnitName: string;
+    displayUnitScale: number;
+  };
+  symbols: [string, string, string];
 };
 
 export class GameStore {
@@ -20,7 +31,8 @@ export class GameStore {
   baseStore: BaseStore;
 
   // We can track additional state custom to our game here
-  bets: BetResult[] = [];
+  diceBets: DiceBetResult[] = [];
+  slotsBets: SlotsBetResult[] = [];
 
   constructor({ baseStore }: { baseStore: BaseStore }) {
     makeAutoObservable(this);
@@ -29,8 +41,12 @@ export class GameStore {
 
   // REACTIVE GETTERS
 
-  get latestBet() {
-    return this.bets[0];
+  get latestDiceBet() {
+    return this.diceBets[0];
+  }
+
+  get latestSlotsBet() {
+    return this.slotsBets[0];
   }
 
   // forward to baseStore
@@ -48,10 +64,16 @@ export class GameStore {
 
   // ACTIONS
 
-  addBet(bet: BetResult) {
-    this.bets.unshift(bet);
+  addDiceBet(bet: DiceBetResult) {
+    this.diceBets.unshift(bet);
     // Ensure we only keep the last N bets
-    this.bets.splice(20);
+    this.diceBets.splice(20);
+  }
+
+  addSlotsBet(bet: SlotsBetResult) {
+    this.slotsBets.unshift(bet);
+    // Ensure we only keep the last N bets
+    this.slotsBets.splice(20);
   }
 }
 

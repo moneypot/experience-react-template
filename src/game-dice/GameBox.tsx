@@ -1,35 +1,42 @@
 // GameBox.tsx - Contains our game UI
 import { observer } from "mobx-react-lite";
-import { BetResult, useGameStore } from "../GameStore";
+import { DiceBetResult, useGameStore } from "../GameStore";
 
 const GameBox: React.FC = observer(() => {
   const store = useGameStore();
 
-  function deltaWager(bet: BetResult) {
+  function deltaWager(bet: DiceBetResult) {
     return bet.profit * bet.wager;
   }
 
   return (
     <div>
-      <div className="p-3 text-center">
-        {!store.latestBet && <div>No last bet</div>}
-        {store.latestBet && (
+      <div className="p-3 text-center position-relative">
+        <div className="position-absolute top-0 start-0 text-muted small">
+          Heads = Win 1.98x
+        </div>
+        <div className="position-absolute top-0 end-0 text-muted small">
+          99% RTP
+        </div>
+
+        {!store.latestDiceBet && <div>No last bet</div>}
+        {store.latestDiceBet && (
           <>
             <p
               className={`${
-                store.latestBet.profit > 0 ? "text-success" : "text-danger"
+                store.latestDiceBet.profit > 0 ? "text-success" : "text-danger"
               } display-3 text-uppercase`}
             >
-              {store.latestBet.profit > 0 ? "Heads" : "Tails"}
+              {store.latestDiceBet.profit > 0 ? "Heads" : "Tails"}
             </p>
             <p
               className={`${
-                store.latestBet.profit > 0 ? "text-success" : "text-danger"
+                store.latestDiceBet.profit > 0 ? "text-success" : "text-danger"
               }`}
             >
-              {store.latestBet.profit > 0 ? "You won" : "You lost"}{" "}
-              {deltaWager(store.latestBet).toFixed(2)}{" "}
-              {store.latestBet.currency.displayUnitName}
+              {store.latestDiceBet.profit > 0 ? "You won" : "You lost"}{" "}
+              {deltaWager(store.latestDiceBet).toFixed(2)}{" "}
+              {store.latestDiceBet.currency.displayUnitName}
             </p>
           </>
         )}
@@ -49,7 +56,7 @@ const BetHistory: React.FC = observer(() => {
       className="d-flex flex-row gap-2 w-100 ps-1 pb-1 pe-0"
       style={{ overflowX: "hidden" }}
     >
-      {store.bets.map((bet) => {
+      {store.diceBets.map((bet) => {
         return (
           <div
             key={bet.id}

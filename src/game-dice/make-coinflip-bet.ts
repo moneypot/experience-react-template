@@ -122,7 +122,7 @@ export default async function makeCoinflipBet({
     }
     case "HubMakeOutcomeBetSuccess": {
       const bet = result.hubMakeOutcomeBet!.result!.bet!;
-      gameStore.addBet({
+      gameStore.addDiceBet({
         id: bet.id,
         wager: bet.wager,
         profit: bet.profit,

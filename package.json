@@ -11,9 +11,10 @@
     "preview": "vite preview",
     "codegen": "npx graphql-codegen --config codegen.ts"
   },
+  "//dev:@moneypot/experience-react-sdk": "file:../experience-react-sdk",
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@moneypot/experience-react-sdk": "file:../experience-react-sdk",
+    "@moneypot/experience-react-sdk": "^0.0.5",
     "@moneypot/frontend-utils": "^0.0.3",
     "bootstrap": "^5.3.3",
     "graphql-request": "^7.1.2",
