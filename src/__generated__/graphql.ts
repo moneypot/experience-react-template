@@ -323,6 +323,7 @@ export type HubCasino = {
   /** Reads and enables pagination through a set of `HubWithdrawal`. */
   hubWithdrawalsByCasinoId: HubWithdrawalConnection;
   id: Scalars['UUID']['output'];
+  isPlayground: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
 };
 
@@ -547,6 +548,10 @@ export type HubCasinoSecret = {
 export type HubCreateHashChainPayload = {
   __typename?: 'HubCreateHashChainPayload';
   hashChain: HubHashChain;
+};
+
+export type HubCreatePlaygroundSessionInput = {
+  dummy?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type HubCurrency = {
@@ -1832,6 +1837,7 @@ export type Mutation = {
   hubAddCasino?: Maybe<HubAddCasinoPayload>;
   hubAuthenticate?: Maybe<HubAuthenticatePayload>;
   hubCreateHashChain: HubCreateHashChainPayload;
+  hubCreatePlaygroundSession?: Maybe<HubAuthenticatePayload>;
   hubMakeOutcomeBet?: Maybe<HubMakeOutcomeBetPayload>;
   hubRevealHashChain: HubRevealHashChainPayload;
   /** Updates a single `HubBankroll` using a unique key and a patch. */
@@ -1856,6 +1862,12 @@ export type MutationHubAddCasinoArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationHubAuthenticateArgs = {
   input: HubAuthenticateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubCreatePlaygroundSessionArgs = {
+  input: HubCreatePlaygroundSessionInput;
 };
 
 
@@ -2183,11 +2195,6 @@ export type UpdateHubCasinoPayloadHubCasinoEdgeArgs = {
   orderBy?: Array<HubCasinoOrderBy>;
 };
 
-export type CreateHashChainMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CreateHashChainMutation = { __typename?: 'Mutation', hubCreateHashChain: { __typename?: 'HubCreateHashChainPayload', hashChain: { __typename?: 'HubHashChain', id: string } } };
-
 export type MakeCoinflipBetMutationVariables = Exact<{
   input: HubMakeOutcomeBetInput;
 }>;
@@ -2198,33 +2205,16 @@ export type MakeCoinflipBetMutation = { __typename?: 'Mutation', hubMakeOutcomeB
       | { __typename: 'HubMakeOutcomeBetSuccess', bet: { __typename?: 'HubOutcomeBet', id: string, wager: number, profit: number, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', key: string, displayUnitName: string, displayUnitScale: number } | null } }
      } | null };
 
-export type GetBalancesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetBalancesQuery = { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null };
-
-export type AuthenticateMutationVariables = Exact<{
-  casinoBaseUrl: Scalars['String']['input'];
-  userToken: Scalars['String']['input'];
+export type MakeSlotsBetMutationVariables = Exact<{
+  input: HubMakeOutcomeBetInput;
 }>;
 
 
-export type AuthenticateMutation = { __typename?: 'Mutation', hubAuthenticate?: { __typename?: 'HubAuthenticatePayload', success?: { __typename?: 'HubAuthenticateSuccess', sessionKey: string, uname: string, experienceId: string, userId: string } | null, query?: { __typename?: 'Query', hubCurrentUser?: { __typename?: 'HubUser', activeHashChain?: { __typename?: 'HubHashChain', id: string } | null, hubBalancesByUserId: { __typename?: 'HubBalanceConnection', nodes: Array<{ __typename?: 'HubBalance', amount: number, currencyKey: string, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', displayUnitName: string, displayUnitScale: number } | null } | null> } } | null } | null } | null };
-
-export type PutAlertSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type PutAlertSubscription = { __typename?: 'Subscription', hubPutAlert?: { __typename?: 'HubPutAlertPayload', mpTransferId: string } | null };
-
-export type BalanceChangeAlertSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type MakeSlotsBetMutation = { __typename?: 'Mutation', hubMakeOutcomeBet?: { __typename?: 'HubMakeOutcomeBetPayload', result:
+      | { __typename: 'HubBadHashChainError', message?: string | null }
+      | { __typename: 'HubMakeOutcomeBetSuccess', bet: { __typename?: 'HubOutcomeBet', id: string, wager: number, profit: number, hubCurrencyByCurrencyKeyAndCasinoId?: { __typename?: 'HubCurrency', key: string, displayUnitName: string, displayUnitScale: number } | null } }
+     } | null };
 
 
-export type BalanceChangeAlertSubscription = { __typename?: 'Subscription', hubBalanceAlert?: { __typename?: 'HubBalanceAlertPayload', currencyKey?: string | null } | null };
-
-
-export const CreateHashChainDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateHashChain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCreateHashChain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hashChain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateHashChainMutation, CreateHashChainMutationVariables>;
 export const MakeCoinflipBetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MakeCoinflipBet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"HubMakeOutcomeBetInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubMakeOutcomeBet"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HubBadHashChainError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HubMakeOutcomeBetSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"bet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"wager"}},{"kind":"Field","name":{"kind":"Name","value":"profit"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<MakeCoinflipBetMutation, MakeCoinflipBetMutationVariables>;
-export const GetBalancesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBalances"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBalancesQuery, GetBalancesQueryVariables>;
-export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubAuthenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"casinoBaseUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"casinoBaseUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"userToken"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userToken"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"success"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sessionKey"}},{"kind":"Field","name":{"kind":"Name","value":"uname"}},{"kind":"Field","name":{"kind":"Name","value":"experienceId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"query"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activeHashChain"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hubBalancesByUserId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
-export const PutAlertDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"PutAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubPutAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"mpTransferId"}}]}}]}}]} as unknown as DocumentNode<PutAlertSubscription, PutAlertSubscriptionVariables>;
-export const BalanceChangeAlertDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"BalanceChangeAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubBalanceAlert"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currencyKey"}}]}}]}}]} as unknown as DocumentNode<BalanceChangeAlertSubscription, BalanceChangeAlertSubscriptionVariables>;
+export const MakeSlotsBetDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"MakeSlotsBet"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"HubMakeOutcomeBetInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hubMakeOutcomeBet"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"result"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HubBadHashChainError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"HubMakeOutcomeBetSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"bet"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"wager"}},{"kind":"Field","name":{"kind":"Name","value":"profit"}},{"kind":"Field","name":{"kind":"Name","value":"hubCurrencyByCurrencyKeyAndCasinoId"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitName"}},{"kind":"Field","name":{"kind":"Name","value":"displayUnitScale"}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<MakeSlotsBetMutation, MakeSlotsBetMutationVariables>;
