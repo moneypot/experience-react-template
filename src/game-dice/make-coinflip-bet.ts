@@ -2,10 +2,7 @@
 
 import { gql } from "../__generated__";
 import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
-import {
-  createHashChain,
-  sendGraphQLRequest,
-} from "@moneypot/experience-react-sdk/graphql";
+import { sendGraphQLRequest } from "@moneypot/experience-react-sdk/graphql";
 import { GameStore } from "../GameStore";
 
 const MAKE_COINFLIP_BET = gql(/* GraphQL */ `
@@ -54,12 +51,12 @@ export default async function makeCoinflipBet({
 }) {
   // If we have no active hash chain id, then first create one
   if (input.hashChainId === null) {
-    const hashChainId = await createHashChain(gameStore.baseStore);
+    const hashChain = await gameStore.baseStore.ensureHashChain();
     return makeCoinflipBet({
       gameStore,
       input: {
         ...input,
-        hashChainId,
+        hashChainId: hashChain.id,
       },
       retryOnBadHashChain,
     });
@@ -108,12 +105,12 @@ export default async function makeCoinflipBet({
         throw new Error("Bad hash chain");
       }
 
-      const hashChainId = await createHashChain(gameStore.baseStore);
+      const hashChain = await gameStore.baseStore.ensureHashChain();
       return makeCoinflipBet({
         gameStore,
         input: {
           ...input,
-          hashChainId,
+          hashChainId: hashChain.id,
         },
         // Retry bet with the new hash chain,
         // but if it fails again, don't retry.

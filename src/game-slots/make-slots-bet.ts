@@ -1,10 +1,7 @@
 // /src/game/make-slots-bet.ts
 import { gql } from "../__generated__";
 import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
-import {
-  createHashChain,
-  sendGraphQLRequest,
-} from "@moneypot/experience-react-sdk/graphql";
+import { sendGraphQLRequest } from "@moneypot/experience-react-sdk/graphql";
 import { GameStore } from "../GameStore";
 
 // GraphQL kept the same shape as coinflip
@@ -110,10 +107,10 @@ export default async function makeSlotsBet({
   houseEdge?: number;
 }) {
   if (input.hashChainId === null) {
-    const hashChainId = await createHashChain(gameStore.baseStore);
+    const hashChain = await gameStore.baseStore.ensureHashChain();
     return makeSlotsBet({
       gameStore,
-      input: { ...input, hashChainId },
+      input: { ...input, hashChainId: hashChain.id },
       retryOnBadHashChain,
       houseEdge,
     });
@@ -141,10 +138,10 @@ export default async function makeSlotsBet({
       throw new Error("No result from makeSlotsBet");
     case "HubBadHashChainError": {
       if (!retryOnBadHashChain) throw new Error("Bad hash chain");
-      const hashChainId = await createHashChain(gameStore.baseStore);
+      const hashChain = await gameStore.baseStore.ensureHashChain();
       return makeSlotsBet({
         gameStore,
-        input: { ...input, hashChainId },
+        input: { ...input, hashChainId: hashChain.id },
         retryOnBadHashChain: false,
         houseEdge,
       });
