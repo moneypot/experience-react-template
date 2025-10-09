@@ -91,15 +91,17 @@ const App = observer(() => {
           </Row>
         )}
 
-        <div className="mt-4">
-          <hr />
-          <pre>
-            {
-              // Debug: Show MobX state
-              JSON.stringify(gameStore.loggedIn, null, 2)
-            }
-          </pre>
-        </div>
+        {import.meta.env.DEV && (
+          <div className="mt-4">
+            <hr />
+            <pre>
+              {
+                // Debug: Show MobX state
+                JSON.stringify(gameStore.loggedIn, null, 2)
+              }
+            </pre>
+          </div>
+        )}
       </Container>
     </div>
   );
