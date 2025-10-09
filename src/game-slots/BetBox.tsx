@@ -82,13 +82,15 @@ const BetBox: React.FC = observer(() => {
           gameStore.selectedCurrency.displayUnitScale
       );
 
+      const hashChain = await gameStore.baseStore.ensureHashChain();
+
       try {
         await makeSlotsBet({
           gameStore,
           input: {
             wager: baseWager,
             currency: gameStore.selectedCurrency.currencyKey,
-            hashChainId: gameStore.loggedIn.activeHashChainId,
+            hashChainId: hashChain.id,
             clientSeed: gameStore.loggedIn.clientSeed,
           },
         });

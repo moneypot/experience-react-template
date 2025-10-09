@@ -296,6 +296,12 @@ export type HubCasino = {
   hubBankrollsByCasinoId: HubBankrollConnection;
   /** Reads a single `HubCasinoSecret` that is related to this `HubCasino`. */
   hubCasinoSecretById?: Maybe<HubCasinoSecret>;
+  /** Reads and enables pagination through a set of `HubChatMessage`. */
+  hubChatMessagesByCasinoId: HubChatMessageConnection;
+  /** Reads and enables pagination through a set of `HubChatMod`. */
+  hubChatModsByCasinoId: HubChatModConnection;
+  /** Reads and enables pagination through a set of `HubChatMute`. */
+  hubChatMutesByCasinoId: HubChatMuteConnection;
   /** Reads and enables pagination through a set of `HubCurrency`. */
   hubCurrenciesByCasinoId: HubCurrencyConnection;
   /** Reads and enables pagination through a set of `HubDeposit`. */
@@ -347,6 +353,39 @@ export type HubCasinoHubBankrollsByCasinoIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubBankrollOrderBy>>;
+};
+
+
+export type HubCasinoHubChatMessagesByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMessageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMessageOrderBy>>;
+};
+
+
+export type HubCasinoHubChatModsByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatModCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatModOrderBy>>;
+};
+
+
+export type HubCasinoHubChatMutesByCasinoIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMuteCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMuteOrderBy>>;
 };
 
 
@@ -545,13 +584,321 @@ export type HubCasinoSecret = {
   id: Scalars['UUID']['output'];
 };
 
+export type HubChatAddModInput = {
+  experienceId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+};
+
+export type HubChatAddModPayload = {
+  __typename?: 'HubChatAddModPayload';
+  chatMod: HubChatMod;
+};
+
+export type HubChatCreateSystemMessageInput = {
+  body: Scalars['String']['input'];
+  clientId: Scalars['UUID']['input'];
+  experienceId: Scalars['UUID']['input'];
+};
+
+export type HubChatCreateSystemMessagePayload = {
+  __typename?: 'HubChatCreateSystemMessagePayload';
+  chatMessage: HubChatMessage;
+};
+
+export type HubChatCreateUserMessageInput = {
+  body: Scalars['String']['input'];
+  clientId: Scalars['UUID']['input'];
+};
+
+export type HubChatCreateUserMessagePayload = {
+  __typename?: 'HubChatCreateUserMessagePayload';
+  result: HubChatCreateUserMessageResult;
+};
+
+export type HubChatCreateUserMessageResult = HubChatCreateUserMessageSuccess | HubChatUserMuted | HubChatUserRateLimited;
+
+export type HubChatCreateUserMessageSuccess = {
+  __typename?: 'HubChatCreateUserMessageSuccess';
+  chatMessage: HubChatMessage;
+};
+
+export type HubChatMessage = {
+  __typename?: 'HubChatMessage';
+  body: Scalars['String']['output'];
+  casinoId: Scalars['UUID']['output'];
+  clientId: Scalars['UUID']['output'];
+  experienceId: Scalars['UUID']['output'];
+  hiddenAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `HubCasino` that is related to this `HubChatMessage`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubExperience` that is related to this `HubChatMessage`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubChatMessage`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  type: HubChatMessageType;
+  userId?: Maybe<Scalars['UUID']['output']>;
+};
+
+/**
+ * A condition to be used against `HubChatMessage` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type HubChatMessageCondition = {
+  /** Get chat messages after a given ID */
+  afterId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubChatMessage` values. */
+export type HubChatMessageConnection = {
+  __typename?: 'HubChatMessageConnection';
+  /** A list of edges which contains the `HubChatMessage` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubChatMessageEdge>>;
+  /** A list of `HubChatMessage` objects. */
+  nodes: Array<Maybe<HubChatMessage>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubChatMessage` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubChatMessage` edge in the connection. */
+export type HubChatMessageEdge = {
+  __typename?: 'HubChatMessageEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubChatMessage` at the end of the edge. */
+  node?: Maybe<HubChatMessage>;
+};
+
+/** Methods to use when ordering `HubChatMessage`. */
+export enum HubChatMessageOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+export enum HubChatMessageType {
+  System = 'system',
+  User = 'user'
+}
+
+export type HubChatMod = {
+  __typename?: 'HubChatMod';
+  casinoId: Scalars['UUID']['output'];
+  experienceId: Scalars['UUID']['output'];
+  /** Reads a single `HubCasino` that is related to this `HubChatMod`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubExperience` that is related to this `HubChatMod`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubChatMod`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `HubChatMod` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type HubChatModCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubChatMod` values. */
+export type HubChatModConnection = {
+  __typename?: 'HubChatModConnection';
+  /** A list of edges which contains the `HubChatMod` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubChatModEdge>>;
+  /** A list of `HubChatMod` objects. */
+  nodes: Array<Maybe<HubChatMod>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubChatMod` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubChatMod` edge in the connection. */
+export type HubChatModEdge = {
+  __typename?: 'HubChatModEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubChatMod` at the end of the edge. */
+  node?: Maybe<HubChatMod>;
+};
+
+/** Methods to use when ordering `HubChatMod`. */
+export enum HubChatModOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+export type HubChatMute = {
+  __typename?: 'HubChatMute';
+  casinoId: Scalars['UUID']['output'];
+  experienceId: Scalars['UUID']['output'];
+  expiredAt?: Maybe<Scalars['Datetime']['output']>;
+  /** Reads a single `HubCasino` that is related to this `HubChatMute`. */
+  hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads a single `HubExperience` that is related to this `HubChatMute`. */
+  hubExperienceByExperienceId?: Maybe<HubExperience>;
+  /** Reads a single `HubUser` that is related to this `HubChatMute`. */
+  hubUserByUserId?: Maybe<HubUser>;
+  id: Scalars['UUID']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  revokedAt?: Maybe<Scalars['Datetime']['output']>;
+  userId: Scalars['UUID']['output'];
+};
+
+/**
+ * A condition to be used against `HubChatMute` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type HubChatMuteCondition = {
+  /** Checks for equality with the object’s `casinoId` field. */
+  casinoId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `experienceId` field. */
+  experienceId?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+/** A connection to a list of `HubChatMute` values. */
+export type HubChatMuteConnection = {
+  __typename?: 'HubChatMuteConnection';
+  /** A list of edges which contains the `HubChatMute` and cursor to aid in pagination. */
+  edges: Array<Maybe<HubChatMuteEdge>>;
+  /** A list of `HubChatMute` objects. */
+  nodes: Array<Maybe<HubChatMute>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `HubChatMute` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `HubChatMute` edge in the connection. */
+export type HubChatMuteEdge = {
+  __typename?: 'HubChatMuteEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `HubChatMute` at the end of the edge. */
+  node?: Maybe<HubChatMute>;
+};
+
+/** Methods to use when ordering `HubChatMute`. */
+export enum HubChatMuteOrderBy {
+  CasinoIdAsc = 'CASINO_ID_ASC',
+  CasinoIdDesc = 'CASINO_ID_DESC',
+  ExperienceIdAsc = 'EXPERIENCE_ID_ASC',
+  ExperienceIdDesc = 'EXPERIENCE_ID_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC'
+}
+
+export type HubChatMuteUserInput = {
+  expiredAt?: InputMaybe<Scalars['Datetime']['input']>;
+  reason?: InputMaybe<Scalars['String']['input']>;
+  userId: Scalars['UUID']['input'];
+};
+
+export type HubChatMuteUserPayload = {
+  __typename?: 'HubChatMuteUserPayload';
+  chatMute: HubChatMute;
+};
+
+export type HubChatRemoveModInput = {
+  experienceId: Scalars['UUID']['input'];
+  userId: Scalars['UUID']['input'];
+};
+
+export type HubChatRemoveModPayload = {
+  __typename?: 'HubChatRemoveModPayload';
+  _?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type HubChatSubscriptionMuted = {
+  __typename?: 'HubChatSubscriptionMuted';
+  _?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type HubChatSubscriptionNewMessage = {
+  __typename?: 'HubChatSubscriptionNewMessage';
+  chatMessage: HubChatMessage;
+};
+
+export type HubChatSubscriptionPayload = HubChatSubscriptionMuted | HubChatSubscriptionNewMessage | HubChatSubscriptionUnmuted;
+
+export type HubChatSubscriptionUnmuted = {
+  __typename?: 'HubChatSubscriptionUnmuted';
+  _?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type HubChatUnmuteUserInput = {
+  userId: Scalars['UUID']['input'];
+};
+
+export type HubChatUnmuteUserPayload = {
+  __typename?: 'HubChatUnmuteUserPayload';
+  chatMute: HubChatMute;
+};
+
+export type HubChatUserMuted = {
+  __typename?: 'HubChatUserMuted';
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export type HubChatUserRateLimited = {
+  __typename?: 'HubChatUserRateLimited';
+  message?: Maybe<Scalars['String']['output']>;
+};
+
 export type HubCreateHashChainPayload = {
   __typename?: 'HubCreateHashChainPayload';
   hashChain: HubHashChain;
 };
 
 export type HubCreatePlaygroundSessionInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
+  experienceClientId?: InputMaybe<Scalars['UUID']['input']>;
+  userClientId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 export type HubCurrency = {
@@ -695,10 +1042,17 @@ export enum HubDepositOrderBy {
 export type HubExperience = {
   __typename?: 'HubExperience';
   casinoId: Scalars['UUID']['output'];
+  clientId?: Maybe<Scalars['UUID']['output']>;
   /** Reads and enables pagination through a set of `HubBalance`. */
   hubBalancesByExperienceId: HubBalanceConnection;
   /** Reads a single `HubCasino` that is related to this `HubExperience`. */
   hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads and enables pagination through a set of `HubChatMessage`. */
+  hubChatMessagesByExperienceId: HubChatMessageConnection;
+  /** Reads and enables pagination through a set of `HubChatMod`. */
+  hubChatModsByExperienceId: HubChatModConnection;
+  /** Reads and enables pagination through a set of `HubChatMute`. */
+  hubChatMutesByExperienceId: HubChatMuteConnection;
   /** Reads and enables pagination through a set of `HubDeposit`. */
   hubDepositsByExperienceId: HubDepositConnection;
   /** Reads and enables pagination through a set of `HubFaucetClaim`. */
@@ -711,6 +1065,8 @@ export type HubExperience = {
   hubSessionsByExperienceId: HubSessionConnection;
   /** Reads and enables pagination through a set of `HubTakeRequest`. */
   hubTakeRequestsByExperienceId: HubTakeRequestConnection;
+  /** Reads a single `HubUser` that is related to this `HubExperience`. */
+  hubUserByUserId?: Maybe<HubUser>;
   /** Reads and enables pagination through a set of `HubWithdrawalRequest`. */
   hubWithdrawalRequestsByExperienceId: HubWithdrawalRequestConnection;
   /** Reads and enables pagination through a set of `HubWithdrawal`. */
@@ -718,6 +1074,7 @@ export type HubExperience = {
   id: Scalars['UUID']['output'];
   mpExperienceId: Scalars['UUID']['output'];
   name: Scalars['String']['output'];
+  userId?: Maybe<Scalars['UUID']['output']>;
 };
 
 
@@ -729,6 +1086,39 @@ export type HubExperienceHubBalancesByExperienceIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubBalanceOrderBy>>;
+};
+
+
+export type HubExperienceHubChatMessagesByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMessageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMessageOrderBy>>;
+};
+
+
+export type HubExperienceHubChatModsByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatModCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatModOrderBy>>;
+};
+
+
+export type HubExperienceHubChatMutesByExperienceIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMuteCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMuteOrderBy>>;
 };
 
 
@@ -1495,11 +1885,18 @@ export type HubUser = {
   __typename?: 'HubUser';
   activeHashChain?: Maybe<HubHashChain>;
   casinoId: Scalars['UUID']['output'];
+  clientId?: Maybe<Scalars['UUID']['output']>;
   hubBalanceByCurrency?: Maybe<HubBalance>;
   /** Reads and enables pagination through a set of `HubBalance`. */
   hubBalancesByUserId: HubBalanceConnection;
   /** Reads a single `HubCasino` that is related to this `HubUser`. */
   hubCasinoByCasinoId?: Maybe<HubCasino>;
+  /** Reads and enables pagination through a set of `HubChatMessage`. */
+  hubChatMessagesByUserId: HubChatMessageConnection;
+  /** Reads and enables pagination through a set of `HubChatMod`. */
+  hubChatModsByUserId: HubChatModConnection;
+  /** Reads and enables pagination through a set of `HubChatMute`. */
+  hubChatMutesByUserId: HubChatMuteConnection;
   /** Reads and enables pagination through a set of `HubDeposit`. */
   hubDepositsByUserId: HubDepositConnection;
   /** Reads and enables pagination through a set of `HubFaucetClaim`. */
@@ -1535,6 +1932,39 @@ export type HubUserHubBalancesByUserIdArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<HubBalanceOrderBy>>;
+};
+
+
+export type HubUserHubChatMessagesByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMessageCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMessageOrderBy>>;
+};
+
+
+export type HubUserHubChatModsByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatModCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatModOrderBy>>;
+};
+
+
+export type HubUserHubChatMutesByUserIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<HubChatMuteCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<HubChatMuteOrderBy>>;
 };
 
 
@@ -1836,6 +2266,12 @@ export type Mutation = {
   addFortune?: Maybe<Fortune>;
   hubAddCasino?: Maybe<HubAddCasinoPayload>;
   hubAuthenticate?: Maybe<HubAuthenticatePayload>;
+  hubChatAddMod?: Maybe<HubChatAddModPayload>;
+  hubChatCreateSystemMessage?: Maybe<HubChatCreateSystemMessagePayload>;
+  hubChatCreateUserMessage?: Maybe<HubChatCreateUserMessagePayload>;
+  hubChatMuteUser?: Maybe<HubChatMuteUserPayload>;
+  hubChatRemoveMod?: Maybe<HubChatRemoveModPayload>;
+  hubChatUnmuteUser?: Maybe<HubChatUnmuteUserPayload>;
   hubCreateHashChain: HubCreateHashChainPayload;
   hubCreatePlaygroundSession?: Maybe<HubAuthenticatePayload>;
   hubMakeOutcomeBet?: Maybe<HubMakeOutcomeBetPayload>;
@@ -1862,6 +2298,42 @@ export type MutationHubAddCasinoArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationHubAuthenticateArgs = {
   input: HubAuthenticateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatAddModArgs = {
+  input: HubChatAddModInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatCreateSystemMessageArgs = {
+  input: HubChatCreateSystemMessageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatCreateUserMessageArgs = {
+  input: HubChatCreateUserMessageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatMuteUserArgs = {
+  input: HubChatMuteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatRemoveModArgs = {
+  input: HubChatRemoveModInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationHubChatUnmuteUserArgs = {
+  input: HubChatUnmuteUserInput;
 };
 
 
@@ -1926,6 +2398,12 @@ export type Query = {
   hubCasinoById?: Maybe<HubCasino>;
   /** Get a single `HubCasinoSecret`. */
   hubCasinoSecretById?: Maybe<HubCasinoSecret>;
+  /** Get a single `HubChatMessage`. */
+  hubChatMessageById?: Maybe<HubChatMessage>;
+  /** Get a single `HubChatMod`. */
+  hubChatModById?: Maybe<HubChatMod>;
+  /** Get a single `HubChatMute`. */
+  hubChatMuteById?: Maybe<HubChatMute>;
   /** Get a single `HubCurrency`. */
   hubCurrencyByKeyAndCasinoId?: Maybe<HubCurrency>;
   hubCurrentCasino?: Maybe<HubCasino>;
@@ -2031,6 +2509,24 @@ export type QueryHubCasinoSecretByIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryHubChatMessageByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryHubChatModByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryHubChatMuteByIdArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryHubCurrencyByKeyAndCasinoIdArgs = {
   casinoId: Scalars['UUID']['input'];
   key: Scalars['String']['input'];
@@ -2124,6 +2620,7 @@ export type QueryHubWithdrawalRequestByIdArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   hubBalanceAlert?: Maybe<HubBalanceAlertPayload>;
+  hubChatAlert?: Maybe<HubChatSubscriptionPayload>;
   hubPutAlert?: Maybe<HubPutAlertPayload>;
 };
 
