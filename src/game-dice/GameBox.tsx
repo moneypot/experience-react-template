@@ -12,10 +12,16 @@ const GameBox: React.FC = observer(() => {
   return (
     <div>
       <div className="p-3 text-center position-relative">
-        <div className="position-absolute top-0 start-0 text-muted small">
+        <div
+          className="position-absolute top-0 text-muted small"
+          style={{ left: "0.5rem" }}
+        >
           Heads = Win 1.98x
         </div>
-        <div className="position-absolute top-0 end-0 text-muted small">
+        <div
+          className="position-absolute top-0 text-muted small"
+          style={{ right: "0.5rem" }}
+        >
           99% RTP
         </div>
 
@@ -60,7 +66,7 @@ const BetHistory: React.FC = observer(() => {
         return (
           <div
             key={bet.id}
-            className={`${bet.profit > 0 ? "text-success" : "text-danger"}`}
+            className={`${bet.profit > 0 ? "bg-success" : "bg-danger"}`}
           >
             {bet.profit > 0 ? "Heads" : "Tails"}
           </div>

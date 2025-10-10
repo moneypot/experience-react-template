@@ -76,8 +76,6 @@ const BetBox: React.FC = observer(() => {
         return;
       }
 
-      const hashChain = await gameStore.baseStore.ensureHashChain();
-
       // Convert display units back into base units (floored to integer)
       const baseWager = Math.floor(
         Number.parseFloat(values.displayWager) *
@@ -90,8 +88,6 @@ const BetBox: React.FC = observer(() => {
           input: {
             wager: baseWager,
             currency: gameStore.selectedCurrency.currencyKey,
-            hashChainId: hashChain.id,
-            clientSeed: gameStore.loggedIn.clientSeed,
           },
         });
       } catch (e) {

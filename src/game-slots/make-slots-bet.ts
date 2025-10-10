@@ -1,41 +1,10 @@
-// /src/game/make-slots-bet.ts
-import { gql } from "../__generated__";
+// Slots betting using the SDK's makeOutcomeBet helper
 import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
-import { sendGraphQLRequest } from "@moneypot/experience-react-sdk/graphql";
 import { GameStore } from "../GameStore";
-
-// GraphQL kept the same shape as coinflip
-const MAKE_SLOTS_BET = gql(/* GraphQL */ `
-  mutation MakeSlotsBet($input: HubMakeOutcomeBetInput!) {
-    hubMakeOutcomeBet(input: $input) {
-      result {
-        __typename
-        ... on HubBadHashChainError {
-          message
-        }
-        ... on HubMakeOutcomeBetSuccess {
-          __typename
-          bet {
-            id
-            wager
-            profit
-            hubCurrencyByCurrencyKeyAndCasinoId {
-              key
-              displayUnitName
-              displayUnitScale
-            }
-          }
-        }
-      }
-    }
-  }
-`);
 
 export type BetInput = {
   wager: number;
   currency: string;
-  hashChainId: string | null;
-  clientSeed: string;
 };
 
 // simple 3-reel symbols (uniform). Increase/decrease for different win prob.
@@ -70,7 +39,6 @@ function buildOutcomes(houseEdge: number): {
     { weight: 1, profit: profitOnWin },
     { weight: loseWeight, profit: -1 },
   ];
-  console.log("outcomes", outcomes);
   return { outcomes, pWin };
 }
 
@@ -98,76 +66,35 @@ function genSpinSymbols(won: boolean): [string, string, string] {
 export default async function makeSlotsBet({
   gameStore,
   input,
-  retryOnBadHashChain = true,
   houseEdge = 0.01, // 1% edge
 }: {
   gameStore: GameStore;
   input: BetInput;
-  retryOnBadHashChain?: boolean;
   houseEdge?: number;
 }) {
-  if (input.hashChainId === null) {
-    const hashChain = await gameStore.baseStore.ensureHashChain();
-    return makeSlotsBet({
-      gameStore,
-      input: { ...input, hashChainId: hashChain.id },
-      retryOnBadHashChain,
-      houseEdge,
-    });
-  }
-
   const { outcomes } = buildOutcomes(houseEdge);
 
-  const result = await sendGraphQLRequest(gameStore.baseStore, {
-    document: MAKE_SLOTS_BET,
-    variables: {
-      input: {
-        kind: BetKind.General,
-        wager: input.wager,
-        currency: input.currency,
-        outcomes,
-        hashChainId: input.hashChainId,
-        clientSeed: input.clientSeed,
-      },
-    },
+  // Use the SDK's makeOutcomeBet method which handles:
+  // - Hash chain creation/retrieval
+  // - Retry logic on bad hash chain
+  // - GraphQL request
+  // - Result extraction
+  const result = await gameStore.baseStore.makeOutcomeBet({
+    wager: input.wager,
+    currency: input.currency,
+    kind: BetKind.General,
+    outcomes,
   });
 
-  const __typename = result.hubMakeOutcomeBet?.result?.__typename;
-  switch (__typename) {
-    case undefined:
-      throw new Error("No result from makeSlotsBet");
-    case "HubBadHashChainError": {
-      if (!retryOnBadHashChain) throw new Error("Bad hash chain");
-      const hashChain = await gameStore.baseStore.ensureHashChain();
-      return makeSlotsBet({
-        gameStore,
-        input: { ...input, hashChainId: hashChain.id },
-        retryOnBadHashChain: false,
-        houseEdge,
-      });
-    }
-    case "HubMakeOutcomeBetSuccess": {
-      const bet = result.hubMakeOutcomeBet!.result!.bet!;
-      const won = bet.profit > 0;
-      const symbols = genSpinSymbols(won);
-      gameStore.addSlotsBet({
-        id: bet.id,
-        wager: bet.wager,
-        profit: bet.profit,
-        currency: {
-          key: bet.hubCurrencyByCurrencyKeyAndCasinoId!.key,
-          displayUnitName:
-            bet.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
-          displayUnitScale:
-            bet.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
-        },
-        symbols,
-      });
-      return result.hubMakeOutcomeBet?.result;
-    }
-    default: {
-      const _exhaustiveCheck: never = __typename;
-      throw new Error(`Unhandled result type: ${_exhaustiveCheck}`);
-    }
-  }
+  // Generate visual symbols based on win/loss
+  const won = result.profit > 0;
+  const symbols = genSpinSymbols(won);
+
+  // Add the bet to the game store with symbols
+  gameStore.addSlotsBet({
+    ...result,
+    symbols,
+  });
+
+  return result;
 }

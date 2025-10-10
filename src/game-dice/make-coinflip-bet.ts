@@ -1,141 +1,43 @@
-// Here's an example of how to make a bet
+// Here's an example of how to make a bet using the SDK's makeOutcomeBet helper
 
-import { gql } from "../__generated__";
-import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
-import { sendGraphQLRequest } from "@moneypot/experience-react-sdk/graphql";
+import { BetKind } from "../__generated__/graphql";
 import { GameStore } from "../GameStore";
-
-const MAKE_COINFLIP_BET = gql(/* GraphQL */ `
-  mutation MakeCoinflipBet($input: HubMakeOutcomeBetInput!) {
-    hubMakeOutcomeBet(input: $input) {
-      result {
-        __typename
-        ... on HubBadHashChainError {
-          message
-        }
-        ... on HubMakeOutcomeBetSuccess {
-          __typename
-          bet {
-            id
-            wager
-            profit
-            hubCurrencyByCurrencyKeyAndCasinoId {
-              key
-              displayUnitName
-              displayUnitScale
-            }
-          }
-        }
-      }
-    }
-  }
-`);
 
 export type BetInput = {
   wager: number;
   currency: string;
-  // Let us submit a bet with no hash chain so can create it
-  // lazily on bet submit
-  hashChainId: string | null;
-  clientSeed: string;
 };
 
 export default async function makeCoinflipBet({
   gameStore,
   input,
-  retryOnBadHashChain = true,
 }: {
   gameStore: GameStore;
   input: BetInput;
-  retryOnBadHashChain?: boolean;
 }) {
-  // If we have no active hash chain id, then first create one
-  if (input.hashChainId === null) {
-    const hashChain = await gameStore.baseStore.ensureHashChain();
-    return makeCoinflipBet({
-      gameStore,
-      input: {
-        ...input,
-        hashChainId: hashChain.id,
-      },
-      retryOnBadHashChain,
-    });
-  }
-
   // Generalize our game into a list of outcomes
   const houseEdge = 0.01;
   const profitOnWin = (1 - houseEdge) / 0.5 - 1; // 0.98 when houseEdge = 0.01
-  const outcomes: HubOutcomeInput[] = [
-    // Heads = win
-    {
-      weight: 1,
-      profit: profitOnWin,
-    },
-    // Tails = lose
-    {
-      weight: 1,
-      profit: -1, // Lose 100% of wager
-    },
-  ];
-  console.log("outcomes", outcomes);
 
-  // Send the outcome bet to the hub server
-  const result = await sendGraphQLRequest(gameStore.baseStore, {
-    document: MAKE_COINFLIP_BET,
-    variables: {
-      input: {
-        kind: BetKind.General,
-        wager: input.wager,
-        currency: input.currency,
-        outcomes,
-        hashChainId: input.hashChainId,
-        clientSeed: input.clientSeed,
-      },
-    },
+  // Use the SDK's makeOutcomeBet method which handles:
+  // - Hash chain creation/retrieval
+  // - Retry logic on bad hash chain
+  // - GraphQL request
+  // - Result extraction
+  const result = await gameStore.baseStore.makeOutcomeBet({
+    wager: input.wager,
+    currency: input.currency,
+    kind: BetKind.General,
+    outcomes: [
+      // Heads = win
+      { weight: 1, profit: profitOnWin },
+      // Tails = lose
+      { weight: 1, profit: -1 },
+    ],
   });
 
-  const __typename = result.hubMakeOutcomeBet?.result?.__typename;
-  switch (__typename) {
-    case undefined: {
-      throw new Error("No result from makeCoinflipBet");
-    }
-    case "HubBadHashChainError": {
-      // If the hash chain is bad (e.g. expired), then request a new one and try the bet again
-      if (!retryOnBadHashChain) {
-        throw new Error("Bad hash chain");
-      }
+  // Add the bet to the game store
+  gameStore.addDiceBet(result);
 
-      const hashChain = await gameStore.baseStore.ensureHashChain();
-      return makeCoinflipBet({
-        gameStore,
-        input: {
-          ...input,
-          hashChainId: hashChain.id,
-        },
-        // Retry bet with the new hash chain,
-        // but if it fails again, don't retry.
-        retryOnBadHashChain: false,
-      });
-    }
-    case "HubMakeOutcomeBetSuccess": {
-      const bet = result.hubMakeOutcomeBet!.result!.bet!;
-      gameStore.addDiceBet({
-        id: bet.id,
-        wager: bet.wager,
-        profit: bet.profit,
-        currency: {
-          key: bet.hubCurrencyByCurrencyKeyAndCasinoId!.key,
-          displayUnitName:
-            bet.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitName,
-          displayUnitScale:
-            bet.hubCurrencyByCurrencyKeyAndCasinoId!.displayUnitScale,
-        },
-      });
-      return result.hubMakeOutcomeBet?.result;
-    }
-    default: {
-      const _exhaustiveCheck: never = __typename;
-      throw new Error(`Unhandled result type: ${_exhaustiveCheck}`);
-    }
-  }
+  return result;
 }

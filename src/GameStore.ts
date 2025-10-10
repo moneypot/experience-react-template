@@ -35,8 +35,10 @@ export class GameStore {
   slotsBets: SlotsBetResult[] = [];
 
   constructor({ baseStore }: { baseStore: BaseStore }) {
-    makeAutoObservable(this);
     this.baseStore = baseStore;
+    makeAutoObservable(this, {
+      baseStore: false, // Don't make baseStore observable - it's a stable reference
+    });
   }
 
   // REACTIVE GETTERS
