@@ -1,5 +1,5 @@
 import { BaseStore } from "@moneypot/experience-react-sdk/store";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, observable } from "mobx";
 import { createContext, useContext } from "react";
 
 // /src/GameStore.ts
@@ -36,9 +36,18 @@ export class GameStore {
 
   constructor({ baseStore }: { baseStore: BaseStore }) {
     this.baseStore = baseStore;
-    makeAutoObservable(this, {
-      baseStore: false, // Don't make baseStore observable - it's a stable reference
-    });
+    makeAutoObservable(
+      this,
+      {
+        // don't wrap baseStore in mobx proxy; only track when reference changes
+        baseStore: observable.ref,
+      },
+      {
+        // lets us do stuff like `onClick={store.someMethod}` without
+        // having to do `onClick={() => store.someMethod()}` or `onClick={store.someMethod.bind(store)}`
+        autoBind: true,
+      }
+    );
   }
 
   // REACTIVE GETTERS
