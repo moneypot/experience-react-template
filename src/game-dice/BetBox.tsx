@@ -18,6 +18,7 @@ import {
 import makeCoinflipBet from "./make-coinflip-bet";
 import { useGameStore } from "../GameStore";
 import OptionsDropdown from "../components/OptionsDropdown";
+import { useSoundPlayer } from "../sound";
 
 type FormValues = {
   // Must be converted from display units to base units for submit
@@ -26,6 +27,7 @@ type FormValues = {
 
 const BetBox: React.FC = observer(() => {
   const gameStore = useGameStore();
+  const { playSound } = useSoundPlayer();
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
 
   const validationSchema = useMemo(() => {
@@ -90,12 +92,17 @@ const BetBox: React.FC = observer(() => {
             wager: baseWager,
             currency: gameStore.selectedCurrency.currencyKey,
           },
+        }).then((result) => {
+          if (gameStore.soundEnabled) {
+            const soundKey = result.profit > 0 ? "win" : "lose";
+            playSound(soundKey);
+          }
         });
       } catch (e) {
         setSubmitStatus(formatError(e) || "Unknown error");
       }
     },
-    [gameStore]
+    [gameStore, playSound]
   );
 
   // Force revalidation when selected currency balance changes

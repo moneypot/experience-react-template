@@ -30,6 +30,8 @@ export class GameStore {
   // Hold the SDK's internal BaseStore for easy access
   baseStore: BaseStore;
 
+  soundEnabled = true;
+
   // We can track additional state custom to our game here
   diceBets: DiceBetResult[] = [];
   slotsBets: SlotsBetResult[] = [];
@@ -73,7 +75,11 @@ export class GameStore {
     );
   }
 
-  // ACTIONS
+  // ACTIONS - These are implicitly run inside mobx's runInAction due to makeAutoObservable
+
+  setSoundEnabled(enabled: boolean) {
+    this.soundEnabled = enabled;
+  }
 
   addDiceBet(bet: DiceBetResult) {
     this.diceBets.unshift(bet);

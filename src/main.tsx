@@ -18,6 +18,7 @@ import {
 } from "@moneypot/experience-react-sdk/component";
 import { observer } from "mobx-react-lite";
 import { NotFoundModal } from "./components/NotFoundModal";
+import { SoundPlayerProvider } from "./sound.tsx";
 
 // BaseStore is managed by @moneypot/experience-react-sdk and holds common data
 // like loggedIn state, player balances, and the active hash chain
@@ -86,7 +87,9 @@ const router = createRouter({
 createRoot(document.getElementById("root")!).render(
   <GameStoreProvider value={gameStore}>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <SoundPlayerProvider>
+        <RouterProvider router={router} />
+      </SoundPlayerProvider>
     </QueryClientProvider>
   </GameStoreProvider>
 );
