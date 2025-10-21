@@ -17,6 +17,7 @@ import {
 } from "@moneypot/frontend-utils";
 import { useGameStore } from "../GameStore";
 import makeSlotsBet from "./make-slots-bet";
+import OptionsDropdown from "../components/OptionsDropdown";
 
 type FormValues = {
   // Must be converted from display units to base units for submit
@@ -150,7 +151,10 @@ const BetBox: React.FC = observer(() => {
           </Alert>
         )}
         <Form.Group>
-          <Form.Label>Currency</Form.Label>
+          <div className="d-flex justify-content-between align-content-baseline">
+            <Form.Label>Currency</Form.Label>
+            <OptionsDropdown />
+          </div>
           <Form.Select
             name="currencyKey"
             value={gameStore.selectedCurrency?.currencyKey ?? undefined}
