@@ -26,7 +26,7 @@
     "react-bootstrap-icons": "^1.11.5",
     "react-dom": "19",
     "react-hook-form": "^7.62.0",
-    "react-hook-sound": "^0.0.8",
+    "react-hook-sound": "^0.0.9",
     "zod": "4"
   },
   "devDependencies": {
