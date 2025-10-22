@@ -16,5 +16,7 @@ const soundConfig: Config<SoundKey> = {
   },
 };
 
+// Wrap your React component tree with <SoundPlayerProvider>
+// and use `useSoundPlayer` to get the player instance anywhre in your app
 export const { SoundPlayerProvider, useSoundPlayer } =
   createSoundPlayerContext(soundConfig);
