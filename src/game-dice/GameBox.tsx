@@ -11,35 +11,46 @@ const GameBox: React.FC = observer(() => {
 
   return (
     <div>
-      <div className="p-3 text-center position-relative">
-        <div className="position-absolute top-0 start-0 text-muted small ps-1">
-          Heads = Win 1.98x
-        </div>
-        <div className="position-absolute top-0 end-0 text-muted small pe-1">
-          99% RTP
+      <div
+        className="p-3 text-center position-relative d-flex flex-column justify-content-center align-items-center"
+        style={{ minHeight: "200px" }}
+      >
+        <div>
+          <div className="position-absolute top-0 start-0 text-muted small ps-1">
+            Heads = Win 1.98x
+          </div>
+          <div className="position-absolute top-0 end-0 text-muted small pe-1">
+            99% RTP
+          </div>
         </div>
 
-        {!store.latestDiceBet && <div>No last bet</div>}
-        {store.latestDiceBet && (
-          <>
-            <p
-              className={`${
-                store.latestDiceBet.profit > 0 ? "text-success" : "text-danger"
-              } display-3 text-uppercase`}
-            >
-              {store.latestDiceBet.profit > 0 ? "Heads" : "Tails"}
-            </p>
-            <p
-              className={`${
-                store.latestDiceBet.profit > 0 ? "text-success" : "text-danger"
-              }`}
-            >
-              {store.latestDiceBet.profit > 0 ? "You won" : "You lost"}{" "}
-              {deltaWager(store.latestDiceBet).toFixed(2)}{" "}
-              {store.latestDiceBet.currency.displayUnitName}
-            </p>
-          </>
-        )}
+        <div>
+          {!store.latestDiceBet && <div>No last bet</div>}
+          {store.latestDiceBet && (
+            <>
+              <p
+                className={`${
+                  store.latestDiceBet.profit > 0
+                    ? "text-success"
+                    : "text-danger"
+                } display-3 text-uppercase`}
+              >
+                {store.latestDiceBet.profit > 0 ? "Heads" : "Tails"}
+              </p>
+              <p
+                className={`${
+                  store.latestDiceBet.profit > 0
+                    ? "text-success"
+                    : "text-danger"
+                }`}
+              >
+                {store.latestDiceBet.profit > 0 ? "You won" : "You lost"}{" "}
+                {deltaWager(store.latestDiceBet).toFixed(2)}{" "}
+                {store.latestDiceBet.currency.displayUnitName}
+              </p>
+            </>
+          )}
+        </div>
       </div>
       <BetHistory />
     </div>
