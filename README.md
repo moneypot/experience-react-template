@@ -16,7 +16,7 @@ Batteries included:
 
 ## Quick start (online code editor)
 
-You can import this repository into CodeSandbox and run it in an online code editor: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/main
+You can import this repository into CodeSandbox and run it in an online code editor: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/master
 
 ## Quick start (local development)
 
