@@ -18,6 +18,7 @@ import {
 import { useGameStore } from "../GameStore";
 import makeSlotsBet from "./make-slots-bet";
 import OptionsDropdown from "../components/OptionsDropdown";
+import RiskLimit from "../components/RiskLimit";
 import { useSoundPlayer } from "../sound";
 
 type FormValues = {
@@ -221,6 +222,11 @@ const BetBox: React.FC = observer(() => {
                 gameStore.selectedCurrency,
               )}
           </Button>
+          <RiskLimit
+            wager={displayWager}
+            maxBetProfit={34.64}
+            gameKind="GENERAL"
+          />
         </Form.Group>
       </Form>
     </>
