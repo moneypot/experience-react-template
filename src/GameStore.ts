@@ -48,7 +48,7 @@ export class GameStore {
         // lets us do stuff like `onClick={store.someMethod}` without
         // having to do `onClick={() => store.someMethod()}` or `onClick={store.someMethod.bind(store)}`
         autoBind: true,
-      }
+      },
     );
   }
 
@@ -71,7 +71,7 @@ export class GameStore {
   get selectedCurrency() {
     return this.baseStore.loggedIn?.balances.find(
       (balance) =>
-        balance.currencyKey === this.baseStore.loggedIn?.selectedCurrencyKey
+        balance.currencyKey === this.baseStore.loggedIn?.selectedCurrencyKey,
     );
   }
 

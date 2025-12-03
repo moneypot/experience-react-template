@@ -8,7 +8,7 @@ if (!import.meta.env.VITE_GRAPHQL_URL) {
 
 if (new URL(import.meta.env.VITE_GRAPHQL_URL).pathname !== "/graphql") {
   console.warn(
-    "codegen expects VITE_GRAPHQL_URL didn't end with '/graphql', are you sure it's a graphql endpoint?"
+    "codegen expects VITE_GRAPHQL_URL didn't end with '/graphql', are you sure it's a graphql endpoint?",
   );
 }
 

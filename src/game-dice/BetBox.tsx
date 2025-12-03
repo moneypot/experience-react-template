@@ -82,7 +82,7 @@ const BetBox: React.FC = observer(() => {
       // Convert display units back into base units (floored to integer)
       const baseWager = Math.floor(
         Number.parseFloat(values.displayWager) *
-          gameStore.selectedCurrency.displayUnitScale
+          gameStore.selectedCurrency.displayUnitScale,
       );
 
       try {
@@ -102,7 +102,7 @@ const BetBox: React.FC = observer(() => {
         setSubmitStatus(formatError(e) || "Unknown error");
       }
     },
-    [gameStore, playSound]
+    [gameStore, playSound],
   );
 
   // Force revalidation when selected currency balance changes
@@ -113,7 +113,7 @@ const BetBox: React.FC = observer(() => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [gameStore.selectedCurrency, displayWager]
+    [gameStore.selectedCurrency, displayWager],
   );
 
   const handleCurrencyChange = useCallback(
@@ -121,7 +121,7 @@ const BetBox: React.FC = observer(() => {
       const currency = e.currentTarget.value;
       gameStore.baseStore.setSelectedCurrencyKey(currency);
     },
-    [gameStore]
+    [gameStore],
   );
 
   const handleWagerChange = useCallback(
@@ -132,14 +132,14 @@ const BetBox: React.FC = observer(() => {
       }
       const truncated = truncateToDisplayScale(
         wager,
-        gameStore.selectedCurrency
+        gameStore.selectedCurrency,
       );
       console.log("truncated", typeof truncated);
       if (truncated !== null) {
         setValue("displayWager", truncated, { shouldValidate: true });
       }
     },
-    [gameStore.selectedCurrency, setValue]
+    [gameStore.selectedCurrency, setValue],
   );
 
   const inputsDisabled = !gameStore.loggedIn || isSubmitting;
@@ -219,7 +219,7 @@ const BetBox: React.FC = observer(() => {
               gameStore.selectedCurrency &&
               formatCurrency(
                 Number.parseFloat(displayWager),
-                gameStore.selectedCurrency
+                gameStore.selectedCurrency,
               )}
           </Button>
         </Form.Group>
