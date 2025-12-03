@@ -22,7 +22,12 @@ import { SoundPlayerProvider } from "./sound.tsx";
 
 // BaseStore is managed by @moneypot/experience-react-sdk and holds common data
 // like loggedIn state, player balances, and the active hash chain
-const baseStore = new BaseStore();
+const baseStore = new BaseStore({
+  // We must enumerate the kinds of bets (as defined by the hub server) that we will bet against
+  // hub1.moneypot.com offers the "GENERAL" bet that will take any bet as long as
+  // the outcomes favor the house. We'll submit GENERAL bets in this template.
+  gameKinds: ["GENERAL"],
+});
 
 // GameStore is managed by us; it's where we keep our own state
 const gameStore = new GameStore({ baseStore });
