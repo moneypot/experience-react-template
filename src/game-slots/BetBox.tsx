@@ -68,24 +68,26 @@ const BetBox: React.FC = observer(() => {
 
   const displayWager = watch("displayWager");
 
+  // Derived base units wager for passing to other components
+  const baseWager: number | null = useMemo(() => {
+    if (!gameStore.selectedCurrency) return null;
+    const parsed = Number.parseFloat(displayWager);
+    if (Number.isNaN(parsed)) return null;
+    return Math.floor(parsed * gameStore.selectedCurrency.displayUnitScale);
+  }, [displayWager, gameStore.selectedCurrency]);
+
   const onSubmit = useCallback(
-    (values: FormValues) => {
+    (_values: FormValues) => {
       if (betMutation.isPending) return;
       if (!gameStore.loggedIn) return;
-      if (!gameStore.selectedCurrency) return;
-
-      // Convert display units back into base units (floored to integer)
-      const baseWager = Math.floor(
-        Number.parseFloat(values.displayWager) *
-          gameStore.selectedCurrency.displayUnitScale,
-      );
+      if (!gameStore.selectedCurrency || baseWager === null) return;
 
       betMutation.mutate({
         wager: baseWager,
         currency: gameStore.selectedCurrency.currencyKey,
       });
     },
-    [gameStore, betMutation],
+    [gameStore, betMutation, baseWager],
   );
 
   // Force revalidation when selected currency balance changes
@@ -205,7 +207,7 @@ const BetBox: React.FC = observer(() => {
               )}
           </Button>
           <RiskLimit
-            wager={displayWager}
+            baseWager={baseWager}
             maxBetProfit={34.64}
             gameKind="GENERAL"
           />

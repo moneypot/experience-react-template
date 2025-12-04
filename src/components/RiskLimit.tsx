@@ -3,14 +3,14 @@ import { formatCurrency } from "@moneypot/frontend-utils";
 import { useGameStore } from "../GameStore";
 
 type Props = {
-  wager: string;
+  baseWager: number | null;
   maxBetProfit: number;
   gameKind: string;
 };
 
 // TODO: Take outcome list as an argument instead of maxBetProfit
 const RiskLimit: React.FC<Props> = observer(
-  ({ wager, maxBetProfit, gameKind }) => {
+  ({ baseWager, maxBetProfit, gameKind }) => {
     const gameStore = useGameStore();
     const currency = gameStore.selectedCurrency;
 
@@ -22,15 +22,12 @@ const RiskLimit: React.FC<Props> = observer(
     );
     if (!riskLimit) return null;
 
-    const wagerBaseUnits = Math.floor(
-      Number.parseFloat(wager) * currency.displayUnitScale,
-    );
-    const validWager = !Number.isNaN(wagerBaseUnits) && wagerBaseUnits > 0;
+    const validWager = baseWager !== null && baseWager > 0;
     // At least show 1 instead of 0 if max profit is e.g. 0.98
     const potentialPayout = validWager
-      ? Math.max(1, wagerBaseUnits * maxBetProfit)
+      ? Math.max(1, baseWager * maxBetProfit)
       : null;
-    const totalReturn = wagerBaseUnits * (maxBetProfit + 1);
+    const totalReturn = validWager ? baseWager * (maxBetProfit + 1) : 0;
     const isDanger = validWager && totalReturn > riskLimit.maxPayout;
 
     return (
