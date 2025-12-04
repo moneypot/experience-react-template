@@ -1,21 +1,16 @@
 import { observer } from "mobx-react-lite";
-import React, {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { FormEvent, useCallback, useEffect, useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import {
   formatCurrency,
   formatError,
   truncateToDisplayScale,
 } from "@moneypot/frontend-utils";
-import makeCoinflipBet from "./make-coinflip-bet";
+import makeCoinflipBet, { BetInput } from "./make-coinflip-bet";
 import { useGameStore } from "../GameStore";
 import OptionsDropdown from "../components/OptionsDropdown";
 import RiskLimit from "../components/RiskLimit";
@@ -29,7 +24,15 @@ type FormValues = {
 const BetBox: React.FC = observer(() => {
   const gameStore = useGameStore();
   const { playSound } = useSoundPlayer();
-  const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+
+  const betMutation = useMutation({
+    mutationFn: (input: BetInput) => makeCoinflipBet({ gameStore, input }),
+    onSuccess: (result) => {
+      if (gameStore.soundEnabled) {
+        playSound(result.profit > 0 ? "win" : "lose");
+      }
+    },
+  });
 
   const validationSchema = useMemo(() => {
     return z.object({
@@ -51,7 +54,7 @@ const BetBox: React.FC = observer(() => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
     setValue,
     watch,
     trigger,
@@ -66,19 +69,10 @@ const BetBox: React.FC = observer(() => {
   const displayWager = watch("displayWager");
 
   const onSubmit = useCallback(
-    async (values: FormValues) => {
-      if (!gameStore.loggedIn) {
-        // No-op if player is not logged in
-        return;
-      }
-
-      // Reset errors
-      setSubmitStatus(null);
-
-      if (!gameStore.selectedCurrency) {
-        setSubmitStatus("Select a currency");
-        return;
-      }
+    (values: FormValues) => {
+      if (betMutation.isPending) return;
+      if (!gameStore.loggedIn) return;
+      if (!gameStore.selectedCurrency) return;
 
       // Convert display units back into base units (floored to integer)
       const baseWager = Math.floor(
@@ -86,24 +80,12 @@ const BetBox: React.FC = observer(() => {
           gameStore.selectedCurrency.displayUnitScale,
       );
 
-      try {
-        await makeCoinflipBet({
-          gameStore,
-          input: {
-            wager: baseWager,
-            currency: gameStore.selectedCurrency.currencyKey,
-          },
-        }).then((result) => {
-          if (gameStore.soundEnabled) {
-            const soundKey = result.profit > 0 ? "win" : "lose";
-            playSound(soundKey);
-          }
-        });
-      } catch (e) {
-        setSubmitStatus(formatError(e) || "Unknown error");
-      }
+      betMutation.mutate({
+        wager: baseWager,
+        currency: gameStore.selectedCurrency.currencyKey,
+      });
     },
-    [gameStore, playSound],
+    [gameStore, betMutation],
   );
 
   // Force revalidation when selected currency balance changes
@@ -143,19 +125,20 @@ const BetBox: React.FC = observer(() => {
     [gameStore.selectedCurrency, setValue],
   );
 
-  const inputsDisabled = !gameStore.loggedIn || isSubmitting;
-  const submitDisabled = !gameStore.loggedIn || isSubmitting || !isValid;
+  const inputsDisabled = !gameStore.loggedIn || betMutation.isPending;
+  const submitDisabled =
+    !gameStore.loggedIn || betMutation.isPending || !isValid;
 
   return (
     <>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        {submitStatus && (
+        {betMutation.error && (
           <Alert
             variant="danger"
-            onClose={() => setSubmitStatus(null)}
+            onClose={() => betMutation.reset()}
             dismissible
           >
-            {submitStatus}
+            {formatError(betMutation.error)}
           </Alert>
         )}
         <Form.Group>
@@ -212,8 +195,7 @@ const BetBox: React.FC = observer(() => {
           <Button
             type="submit"
             variant="primary"
-            className="w-100"
-            disabled={submitDisabled}
+            className={`w-100 ${submitDisabled ? "disabled" : ""}`}
           >
             Bet{" "}
             {displayWager &&
