@@ -10,23 +10,32 @@ import {
   formatError,
   truncateToDisplayScale,
 } from "@moneypot/frontend-utils";
-import makeCoinflipBet, { BetInput } from "./make-coinflip-bet";
+import makeCoinflipBet, {
+  BetInput,
+  computeCoinflipOutcomes,
+} from "./make-coinflip-bet";
 import { useGameStore } from "../GameStore";
 import OptionsDropdown from "../components/OptionsDropdown";
 import RiskLimit from "../components/RiskLimit";
 import { useSoundPlayer } from "../sound";
+
+// The hub1 api only accepts bets with an edge at least 1% in its favor
+const HOUSE_EDGE = 0.01; // 1% edge
 
 type FormValues = {
   // Must be converted from display units to base units for submit
   displayWager: string;
 };
 
+const outcomes = computeCoinflipOutcomes(HOUSE_EDGE);
+
 const BetBox: React.FC = observer(() => {
   const gameStore = useGameStore();
   const { playSound } = useSoundPlayer();
 
   const betMutation = useMutation({
-    mutationFn: (input: BetInput) => makeCoinflipBet({ gameStore, input }),
+    mutationFn: (input: BetInput) =>
+      makeCoinflipBet({ gameStore, input, houseEdge: HOUSE_EDGE }),
     onSuccess: (result) => {
       if (gameStore.soundEnabled) {
         playSound(result.profit > 0 ? "win" : "lose");
@@ -119,7 +128,6 @@ const BetBox: React.FC = observer(() => {
         wager,
         gameStore.selectedCurrency,
       );
-      console.log("truncated", typeof truncated);
       if (truncated !== null) {
         setValue("displayWager", truncated, { shouldValidate: true });
       }
@@ -209,7 +217,7 @@ const BetBox: React.FC = observer(() => {
           </Button>
           <RiskLimit
             baseWager={baseWager}
-            maxBetProfit={0.98}
+            outcomes={outcomes}
             gameKind="GENERAL"
           />
         </Form.Group>

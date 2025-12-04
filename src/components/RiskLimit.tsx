@@ -1,18 +1,21 @@
 import { observer } from "mobx-react-lite";
 import { formatCurrency } from "@moneypot/frontend-utils";
 import { useGameStore } from "../GameStore";
+import { HubOutcomeInput } from "../__generated__/graphql";
 
 type Props = {
   baseWager: number | null;
-  maxBetProfit: number;
+  outcomes: HubOutcomeInput[];
   gameKind: string;
 };
 
-// TODO: Take outcome list as an argument instead of maxBetProfit
 const RiskLimit: React.FC<Props> = observer(
-  ({ baseWager, maxBetProfit, gameKind }) => {
+  ({ baseWager, outcomes, gameKind }) => {
     const gameStore = useGameStore();
     const currency = gameStore.selectedCurrency;
+    const maxBetProfit = outcomes.reduce((max, outcome) => {
+      return Math.max(max, outcome.profit);
+    }, 0);
 
     if (!currency) return null;
 

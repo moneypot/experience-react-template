@@ -24,10 +24,7 @@ function computeProfitOnWin({
 
 // We must create outcomes that give the house the desired edge
 // or better (for the house). Else the house will reject our bet.
-function buildOutcomes(houseEdge: number): {
-  outcomes: HubOutcomeInput[];
-  pWin: number;
-} {
+export function computeSlotsOutcomes(houseEdge: number): HubOutcomeInput[] {
   const n = SYMBOLS.length;
   const pWin = 1 / (n * n); // both reel2 and reel3 must match reel1
   const profitOnWin = computeProfitOnWin({ pWin, houseEdge }); // ~34.28 with n=6, h=0.02
@@ -39,7 +36,7 @@ function buildOutcomes(houseEdge: number): {
     { weight: 1, profit: profitOnWin },
     { weight: loseWeight, profit: -1 },
   ];
-  return { outcomes, pWin };
+  return outcomes;
 }
 
 function randomChoice<T>(arr: T[]) {
@@ -66,13 +63,13 @@ function genSpinSymbols(won: boolean): [string, string, string] {
 export default async function makeSlotsBet({
   gameStore,
   input,
-  houseEdge = 0.01, // 1% edge
+  houseEdge,
 }: {
   gameStore: GameStore;
   input: BetInput;
-  houseEdge?: number;
+  houseEdge: number;
 }) {
-  const { outcomes } = buildOutcomes(houseEdge);
+  const outcomes = computeSlotsOutcomes(houseEdge);
 
   // Use the SDK's makeOutcomeBet method which handles:
   // - Hash chain creation/retrieval
