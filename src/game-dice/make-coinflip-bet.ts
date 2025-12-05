@@ -1,6 +1,6 @@
 // Here's an example of how to make a bet using the SDK's makeOutcomeBet helper
 
-import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
+import { OutcomeBetKind, HubOutcomeInput } from "../__generated__/graphql";
 import { GameStore } from "../GameStore";
 
 export type BetInput = {
@@ -36,7 +36,7 @@ export default async function makeCoinflipBet({
   const result = await gameStore.baseStore.makeOutcomeBet({
     wager: input.wager,
     currency: input.currency,
-    kind: BetKind.General,
+    kind: OutcomeBetKind.General,
     outcomes,
   });
 

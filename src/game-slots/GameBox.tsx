@@ -1,21 +1,49 @@
 // /src/game/GameBox.tsx
 import { observer } from "mobx-react-lite";
 import { SlotsBetResult, useGameStore } from "../GameStore";
+import { computeSlotsOutcomes } from "./make-slots-bet";
+import { pluralize } from "@moneypot/frontend-utils";
 
-const Drum: React.FC<{ symbol?: string; dim?: boolean }> = ({
-  symbol,
-  dim,
-}) => {
+const HOUSE_EDGE = 0.01;
+const outcomes = computeSlotsOutcomes(HOUSE_EDGE);
+const match3Multiplier = (1 + outcomes[0].profit).toFixed(2);
+const match2Multiplier = (1 + outcomes[1].profit).toFixed(2);
+
+// Returns indices of drums that should be highlighted (the matching ones)
+function getWinningDrumIndices(
+  symbols: [string, string, string] | undefined,
+  outcomeIdx: number | undefined,
+): number[] {
+  if (!symbols || outcomeIdx === undefined || outcomeIdx === 2) return [];
+
+  if (outcomeIdx === 0) {
+    // Triple: all drums match
+    return [0, 1, 2];
+  }
+
+  // Pair: find which two match
+  if (symbols[0] === symbols[1]) return [0, 1];
+  if (symbols[1] === symbols[2]) return [1, 2];
+  if (symbols[0] === symbols[2]) return [0, 2];
+  return [];
+}
+
+const Drum: React.FC<{
+  symbol?: string;
+  dim?: boolean;
+  highlight?: boolean;
+}> = ({ symbol, dim, highlight }) => {
   return (
     <div
-      className={`border rounded px-4 py-3 display-3 ${
+      className={`border rounded d-flex align-items-center justify-content-center display-3 ${
         dim ? "opacity-50" : ""
       }`}
       style={{
-        minWidth: "3ch",
+        width: "80px",
+        height: "80px",
         lineHeight: 1,
-        background: "#11161a",
-        borderColor: "var(--bs-border-color)",
+        background: highlight ? "#198754" : "#11161a",
+        borderColor: highlight ? "#198754" : "var(--bs-border-color)",
       }}
     >
       {symbol ?? "❔"}
@@ -28,6 +56,7 @@ const GameBox: React.FC = observer(() => {
 
   const last = store.latestSlotsBet;
   const won = last ? last.profit > 0 : undefined;
+  const winningIndices = getWinningDrumIndices(last?.symbols, last?.outcomeIdx);
 
   function deltaWager(bet: SlotsBetResult) {
     return bet.profit * bet.wager;
@@ -36,16 +65,25 @@ const GameBox: React.FC = observer(() => {
   return (
     <div className="p-3 text-center position-relative">
       <div className="position-absolute top-0 start-0 text-muted small ps-1">
-        Match three = Win 35.64x
+        Match 3 = {match3Multiplier}x | 2 = {match2Multiplier}x
       </div>
       <div className="position-absolute top-0 end-0 text-muted small pe-1">
         99% RTP
       </div>
 
       <div className="d-flex justify-content-center gap-3 my-3">
-        <Drum symbol={last?.symbols?.[0]} />
-        <Drum symbol={last?.symbols?.[1]} />
-        <Drum symbol={last?.symbols?.[2]} />
+        <Drum
+          symbol={last?.symbols?.[0]}
+          highlight={winningIndices.includes(0)}
+        />
+        <Drum
+          symbol={last?.symbols?.[1]}
+          highlight={winningIndices.includes(1)}
+        />
+        <Drum
+          symbol={last?.symbols?.[2]}
+          highlight={winningIndices.includes(2)}
+        />
       </div>
 
       {!last && <div>No last spin</div>}
@@ -61,7 +99,7 @@ const GameBox: React.FC = observer(() => {
           </p>
           <p className={`${won ? "text-success" : "text-danger"} mb-0`}>
             {won ? "You won" : "You lost"} {deltaWager(last).toFixed(2)}{" "}
-            {last.currency.displayUnitName}
+            {pluralize(last.currency.displayUnitName, deltaWager(last))}
           </p>
         </>
       )}
@@ -81,18 +119,26 @@ const BetHistory: React.FC = observer(() => {
       style={{ overflowX: "hidden" }}
     >
       {store.slotsBets.map((bet) => {
-        const won = bet.profit > 0;
         const s = bet.symbols ?? ["?", "?", "?"];
+        const winningIndices = getWinningDrumIndices(
+          bet.symbols,
+          bet.outcomeIdx,
+        );
         return (
-          <div
-            key={bet.id}
-            className={`small ${
-              won ? "bg-success" : "bg-danger"
-            } flex-shrink-0`}
-          >
-            {s[0]}
-            {s[1]}
-            {s[2]}
+          <div key={bet.id} className="d-flex flex-shrink-0">
+            {s.map((symbol, idx) => (
+              <span
+                key={idx}
+                className="small"
+                style={{
+                  background: winningIndices.includes(idx)
+                    ? "#198754"
+                    : "#dc3545",
+                }}
+              >
+                {symbol}
+              </span>
+            ))}
           </div>
         );
       })}

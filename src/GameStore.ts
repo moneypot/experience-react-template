@@ -18,6 +18,7 @@ export type SlotsBetResult = {
   id: string;
   wager: number;
   profit: number;
+  outcomeIdx: number;
   currency: {
     key: string;
     displayUnitName: string;

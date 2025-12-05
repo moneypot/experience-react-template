@@ -1,5 +1,5 @@
 // Slots betting using the SDK's makeOutcomeBet helper
-import { BetKind, HubOutcomeInput } from "../__generated__/graphql";
+import { OutcomeBetKind, HubOutcomeInput } from "../__generated__/graphql";
 import { GameStore } from "../GameStore";
 
 export type BetInput = {
@@ -7,57 +7,76 @@ export type BetInput = {
   currency: string;
 };
 
-// simple 3-reel symbols (uniform). Increase/decrease for different win prob.
-const SYMBOLS = ["🍒", "🍋", "🍇", "🔔", "🍀", "7️⃣"]; // n = 6 => p(win)=1/n^2 = 1/36
+// Configuration for the slots game
+const CONFIG = {
+  symbols: ["🍒", "🍋", "🍇", "🔔", "🍀", "7️⃣"],
+  match2Profit: 0.5, // pair wins 0.5x wager
+};
 
-// Given p(win) and a house edge h, solve profit_on_win so EV = -h:
-// p*profitWin + (1-p)*(-1) = -h  => profitWin = (1 - p - h)/p
-function computeProfitOnWin({
-  pWin,
-  houseEdge,
-}: {
-  pWin: number;
-  houseEdge: number;
-}) {
-  return (1 - pWin - houseEdge) / pWin;
+// Derive match3Profit from match2Profit and houseEdge to maintain the desired edge
+// EV equation: (tripleP * match3Profit) + (pairP * match2Profit) + (loseP * -1) = -houseEdge
+function computeMatch3Profit(houseEdge: number): number {
+  const n = CONFIG.symbols.length;
+  const total = n * n * n;
+  const tripleWeight = n;
+  const pairWeight = n * 3 * (n - 1);
+  const loseWeight = n * (n - 1) * (n - 2);
+
+  const tripleP = tripleWeight / total;
+  const pairP = pairWeight / total;
+  const loseP = loseWeight / total;
+
+  // tripleP * match3Profit + pairP * match2Profit + loseP * (-1) = -houseEdge
+  // tripleP * match3Profit = -houseEdge - pairP * match2Profit + loseP
+  // match3Profit = (-houseEdge - pairP * match2Profit + loseP) / tripleP
+  return (-houseEdge - pairP * CONFIG.match2Profit + loseP) / tripleP;
 }
 
 // We must create outcomes that give the house the desired edge
 // or better (for the house). Else the house will reject our bet.
 export function computeSlotsOutcomes(houseEdge: number): HubOutcomeInput[] {
-  const n = SYMBOLS.length;
-  const pWin = 1 / (n * n); // both reel2 and reel3 must match reel1
-  const profitOnWin = computeProfitOnWin({ pWin, houseEdge }); // ~34.28 with n=6, h=0.02
-  // Compress to two weighted outcomes to match these probabilities:
-  // weights: win=1, lose=(1-p)/p = n^2 - 1
-  const loseWeight = n * n - 1;
+  const n = CONFIG.symbols.length;
+  const tripleWeight = n;
+  const pairWeight = n * 3 * (n - 1);
+  const loseWeight = n * (n - 1) * (n - 2);
+  const match3Profit = computeMatch3Profit(houseEdge);
 
   const outcomes: HubOutcomeInput[] = [
-    { weight: 1, profit: profitOnWin },
-    { weight: loseWeight, profit: -1 },
+    { weight: tripleWeight, profit: match3Profit }, // index 0: triple
+    { weight: pairWeight, profit: CONFIG.match2Profit }, // index 1: pair
+    { weight: loseWeight, profit: -1 }, // index 2: lose
   ];
   return outcomes;
 }
 
-function randomChoice<T>(arr: T[]) {
+function randomChoice<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function genSpinSymbols(won: boolean): [string, string, string] {
-  if (won) {
-    const s = randomChoice(SYMBOLS);
+// Generate symbols based on outcome index: 0=triple, 1=pair, 2=lose
+function genSpinSymbols(outcomeIdx: number): [string, string, string] {
+  const symbols = CONFIG.symbols;
+
+  if (outcomeIdx === 0) {
+    // Triple: all three match
+    const s = randomChoice(symbols);
     return [s, s, s];
   }
-  // Force a non-triple
-  const a = randomChoice(SYMBOLS);
-  const b = randomChoice(SYMBOLS);
-  let c = randomChoice(SYMBOLS);
-  // Ensure not all equal; allow pairs, just not triple
-  if (b === a && c === a) {
-    // n>=3 here; bump c to a different symbol
-    c = randomChoice(SYMBOLS.filter((x) => x !== a));
+
+  if (outcomeIdx === 1) {
+    // Pair: exactly two match (random positions)
+    const pairSymbol = randomChoice(symbols);
+    const oddSymbol = randomChoice(symbols.filter((x) => x !== pairSymbol));
+    const oddPosition = Math.floor(Math.random() * 3); // 0, 1, or 2
+
+    if (oddPosition === 0) return [oddSymbol, pairSymbol, pairSymbol];
+    if (oddPosition === 1) return [pairSymbol, oddSymbol, pairSymbol];
+    return [pairSymbol, pairSymbol, oddSymbol];
   }
-  return [a, b, c];
+
+  // Lose: all different
+  const shuffled = [...symbols].sort(() => Math.random() - 0.5);
+  return [shuffled[0], shuffled[1], shuffled[2]];
 }
 
 export default async function makeSlotsBet({
@@ -79,17 +98,17 @@ export default async function makeSlotsBet({
   const result = await gameStore.baseStore.makeOutcomeBet({
     wager: input.wager,
     currency: input.currency,
-    kind: BetKind.General,
+    kind: OutcomeBetKind.General,
     outcomes,
   });
 
-  // Generate visual symbols based on win/loss
-  const won = result.profit > 0;
-  const symbols = genSpinSymbols(won);
+  // Generate visual symbols based on outcome index (0=triple, 1=pair, 2=lose)
+  const symbols = genSpinSymbols(result.outcomeIdx!);
 
   // Add the bet to the game store with symbols
   gameStore.addSlotsBet({
     ...result,
+    outcomeIdx: result.outcomeIdx!,
     symbols,
   });
 
