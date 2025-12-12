@@ -18,6 +18,7 @@ Batteries included:
 
 Try it instantly in your browser:
 
+- **StackBlitz**: https://stackblitz.com/github/moneypot/experience-react-template
 - **CodeSandbox**: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/master
 
 ## Quick start (local development)
