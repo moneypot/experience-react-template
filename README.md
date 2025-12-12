@@ -1,18 +1,17 @@
-# Moneypot experience template (React)
+# MoneyPot experience template (React)
 
-(This is a version of experience-react-template that uses @moneypot/experience-react-sdk in an attempt to extract all boilerplate and leave only unique game logic. Will replace moneypot/experience-react-template which could be moved to moneypot/experience-react-template-boilerplate since inline boilerplate can also be useful.)
+> [!NOTE]
+> This template makes real bets (with worthless "HOUSE" currency) against a real game server.
+>
+> If you can get your game working from this template, it will work in production with minimal change.
 
-A React template for building a Moneypot experience optimized for becoming instantly productive.
+A React template for building a Moneypot experience optimized for immediate productivity.
 
-Batteries included:
+## Vibe coding a game
 
-- React + Typescript
-- Twitter Bootstrap (feel free to swap it for something else)
-- MobX for state management
-- Authenticates with userToken on app load
-- Subscribes to user balance updates
-- Generates GraphQL types
-- Ready to be iframed on [MoneyPot.com][mpcom].
+This template comes with LLM instructions in [AGENTS.md](./AGENTS.md) and two working game examples.
+
+See if you can get an LLM agent to implement a basic version of your game idea!
 
 ## Quick start (online code editor)
 
@@ -20,6 +19,17 @@ Try it instantly in your browser:
 
 - **StackBlitz**: https://stackblitz.com/github/moneypot/experience-react-template
 - **CodeSandbox**: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/master
+
+## Batteries included
+
+- Two working game examples for reference
+- React + Typescript
+- [Twitter Bootstrap](https://getbootstrap.com/)
+- [MobX](https://mobx.js.org/) for state management
+- Authenticates with userToken on app load
+- Subscribes to user balance updates
+- Generates GraphQL types
+- Ready to be iframed on [MoneyPot.com][mpcom].
 
 ## Quick start (local development)
 

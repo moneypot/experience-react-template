@@ -7,12 +7,12 @@ Two example games (Dice and Slots) are included for reference. Delete one and mo
 ## Quick Start
 
 ```bash
-npm install
+pnpm install
 cp .env.template .env
-npm run dev
+pnpm dev
 ```
 
-Type checking: `npm run check`
+Type checking: `pnpm check`
 
 ## Project Structure
 
