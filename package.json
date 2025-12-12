@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "check": "tsc --noEmit",
     "lint": "eslint --fix .",
     "format": "prettier --write \"**/*.{ts,tsx}\" --ignore-path .prettierignore",

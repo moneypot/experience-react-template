@@ -1,38 +1,36 @@
 {
-  // These tasks will run in order when initializing your CodeSandbox project.
+  "$schema": "https://codesandbox.io/schemas/tasks.json",
   "setupTasks": [
     {
-      "name": "Installing Dependencies",
-      "command": "npm install"
+      "name": "Install Dependencies",
+      "command": "pnpm install --prefer-offline"
     }
   ],
-
-  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
   "tasks": {
     "dev": {
-      // The only reason I added this file is to avoid CodeSandbox's popup asking if it should
-      // indeed use this port every time.
-      "name": "dev",
-      "command": "npm run dev",
+      // This avoids CodeSandbox's popup asking if it should indeed use this port every time.
+      "name": "Dev Server",
+      "command": "pnpm dev",
       "runAtStart": true,
       "preview": {
         "port": 5173
       }
     },
     "check": {
-      "name": "check",
-      "command": "npm run check",
-      "runAtStart": false
+      "name": "Type Check",
+      "command": "pnpm check"
     },
     "lint": {
-      "name": "lint",
-      "command": "npm run lint",
-      "runAtStart": false
+      "name": "Lint",
+      "command": "pnpm lint"
     },
     "codegen": {
-      "name": "codegen",
-      "command": "npm run codegen",
-      "runAtStart": false
+      "name": "GraphQL Codegen",
+      "command": "pnpm codegen"
+    },
+    "build": {
+      "name": "Build",
+      "command": "pnpm build"
     }
   }
 }

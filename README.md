@@ -16,14 +16,16 @@ Batteries included:
 
 ## Quick start (online code editor)
 
-You can import this repository into CodeSandbox and run it in an online code editor: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/master
+Try it instantly in your browser:
+
+- **CodeSandbox**: https://codesandbox.io/p/sandbox/github/moneypot/experience-react-template/tree/master
 
 ## Quick start (local development)
 
 - `git clone https://github.com/moneypot/experience-react-template.git`
 - `cd experience-react-template`
-- `npm install`
-- `npm run dev`
+- `pnpm install`
+- `pnpm dev`
 - Open `http://localhost:5173` in your browser
 
 By default, it makes bets against our `https://hub1.moneypot.com/graphql` hub server which is configured in the `.env` file.
@@ -42,7 +44,7 @@ TODO: Not sure if we want to allow/encourage this, but it is possible at the mom
 
 You can test your experience running in an iframe on MoneyPot.com by following these steps:
 
-1. Run `npm run dev` to host the frontend locally. Take note of the port it's running on or customize it in package.json.
+1. Run `pnpm dev` to host the frontend locally. Take note of the port it's running on or customize it in package.json.
 2. Create an experience: <https://moneypot.com/me/experiences>
 3. Set the iframe url to `http://localhost:<port>`
 4. In the experiences list, click "Test" next to your experience iframe url
