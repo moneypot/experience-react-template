@@ -76,7 +76,7 @@ formatCurrency(baseAmount, currency);
 
 ## Tech Stack
 
-React 19, Vite 7, MobX, React Bootstrap (dark theme), TanStack Router + Query, react-hook-form + Zod, GraphQL
+React, Vite, MobX, React Bootstrap, TanStack Router + Query, react-hook-form + Zod, GraphQL
 
 ## SDK Reference
 
