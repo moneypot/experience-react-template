@@ -21,7 +21,7 @@ const OptionsDropdown = observer(() => {
         <label className="d-flex" style={{ margin: "0 0.5rem" }}>
           <div className="form-check form-switch d-inline-block">
             <input
-              className={`form-check-input`}
+              className="form-check-input"
               type="checkbox"
               role="switch"
               style={notReallyDisabled}

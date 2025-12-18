@@ -44,7 +44,10 @@ const App = observer(() => {
       <div className="mx-3 mt-4">
         <Container>
           {authResult.status === "error" && (
-            <Alert variant="danger">Auth error: {authResult.error}</Alert>
+            <Alert variant="danger">
+              Auth error:
+              {authResult.error}
+            </Alert>
           )}
           {authResult.status === "loading" && (
             <Alert variant="info">Authenticating...</Alert>
