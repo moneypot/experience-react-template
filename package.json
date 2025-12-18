@@ -10,7 +10,8 @@
     "lint": "eslint --fix .",
     "format": "prettier --write \"**/*.{ts,tsx}\" --ignore-path .prettierignore",
     "preview": "vite preview",
-    "codegen": "npx graphql-codegen --config codegen.ts"
+    "codegen": "npx graphql-codegen --config codegen.ts",
+    "postinstall": "cp -r src/__generated__ node_modules/@moneypot/experience-react-sdk/src/"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
