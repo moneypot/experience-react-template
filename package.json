@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@moneypot/experience-react-sdk": "0.1.30",
+    "@moneypot/experience-react-sdk": "0.1.32",
     "@moneypot/frontend-utils": "^0.0.5",
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-router": "^1.141.6",

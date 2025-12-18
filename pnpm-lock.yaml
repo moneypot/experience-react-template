@@ -12,8 +12,8 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.68.0(react@19.2.3))
       '@moneypot/experience-react-sdk':
-        specifier: 0.1.30
-        version: 0.1.30(bootstrap@5.3.8(@popperjs/core@2.11.8))(graphql@16.12.0)(react-bootstrap-icons@1.11.6(react@19.2.3))(react-bootstrap@2.10.10(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
+        specifier: 0.1.32
+        version: 0.1.32(bootstrap@5.3.8(@popperjs/core@2.11.8))(graphql@16.12.0)(react-bootstrap-icons@1.11.6(react@19.2.3))(react-bootstrap@2.10.10(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
       '@moneypot/frontend-utils':
         specifier: ^0.0.5
         version: 0.0.5(typescript@5.9.3)
@@ -868,8 +868,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@moneypot/experience-react-sdk@0.1.30':
-    resolution: {integrity: sha512-giHySZZhe9okhWf42etQH1/V5hy8KgBS2YzLKNc1kfJoDy693zsl8o5EPtH5wvsl/YqXAE3q2f1bPbi4oLTI3Q==}
+  '@moneypot/experience-react-sdk@0.1.32':
+    resolution: {integrity: sha512-a7s+dYt2Kb+EjpP5MOgs7bY8YSiL++R6Ao7zd1ClH0oViSywq5YNE8xmJFnvM88NZ3liJny6qoAQO0mP1rnUEQ==}
     peerDependencies:
       bootstrap: ^5.3.3
       graphql: ^16.0.0
@@ -3455,7 +3455,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@moneypot/experience-react-sdk@0.1.30(bootstrap@5.3.8(@popperjs/core@2.11.8))(graphql@16.12.0)(react-bootstrap-icons@1.11.6(react@19.2.3))(react-bootstrap@2.10.10(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)':
+  '@moneypot/experience-react-sdk@0.1.32(bootstrap@5.3.8(@popperjs/core@2.11.8))(graphql@16.12.0)(react-bootstrap-icons@1.11.6(react@19.2.3))(react-bootstrap@2.10.10(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)':
     dependencies:
       '@moneypot/frontend-utils': 0.0.5(typescript@5.9.3)
       '@tanstack/react-query': 5.90.12(react@19.2.3)
