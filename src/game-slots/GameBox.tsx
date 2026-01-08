@@ -28,11 +28,15 @@ function getWinningDrumIndices(
   return [];
 }
 
-const Drum: React.FC<{
+const Drum = ({
+  symbol,
+  dim,
+  highlight,
+}: {
   symbol?: string;
   dim?: boolean;
   highlight?: boolean;
-}> = ({ symbol, dim, highlight }) => {
+}) => {
   return (
     <div
       className={`border rounded d-flex align-items-center justify-content-center display-3 ${
@@ -51,7 +55,7 @@ const Drum: React.FC<{
   );
 };
 
-const GameBox: React.FC = observer(() => {
+const GameBox = observer(() => {
   const store = useGameStore();
 
   const last = store.latestSlotsBet;
@@ -111,7 +115,7 @@ const GameBox: React.FC = observer(() => {
 
 export default GameBox;
 
-const BetHistory: React.FC = observer(() => {
+const BetHistory = observer(() => {
   const store = useGameStore();
   return (
     <div

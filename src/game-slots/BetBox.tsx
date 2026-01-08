@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FormEvent, useCallback, useEffect, useMemo } from "react";
+import { FormEvent, useCallback, useEffect, useMemo } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +26,7 @@ type FormValues = {
 
 const outcomes = computeSlotsOutcomes(HOUSE_EDGE);
 
-const BetBox: React.FC = observer(() => {
+const BetBox = observer(() => {
   const gameStore = useGameStore();
   const { playSound } = useSoundPlayer();
 
@@ -40,22 +40,27 @@ const BetBox: React.FC = observer(() => {
     },
   });
 
-  const validationSchema = useMemo(() => {
-    return z.object({
-      displayWager: z
-        .string()
-        .regex(/^\d*\.?\d*$/, "Wager must be a number")
-        .refine((value) => {
-          if (value === "") return false;
-          return Number.parseFloat(value) > 0;
-        }, "Wager must be greater than 0")
-        .refine((value) => {
-          if (value === "") return false;
-          if (!gameStore.selectedCurrency) return false;
-          return Number.parseFloat(value) <= gameStore.selectedCurrency.amount;
-        }, "You cannot afford this wager"),
-    });
-  }, [gameStore.selectedCurrency]);
+  const validationSchema = useMemo(
+    () =>
+      z.object({
+        displayWager: z
+          .string()
+          .regex(/^\d*\.?\d*$/, "Wager must be a number")
+          .refine((value) => {
+            if (value === "") return false;
+            return Number.parseFloat(value) > 0;
+          }, "Wager must be greater than 0")
+          .refine((value) => {
+            if (value === "") return false;
+            if (!gameStore.selectedCurrency) return false;
+            return (
+              Number.parseFloat(value) <= gameStore.selectedCurrency.amount
+            );
+          }, "You cannot afford this wager"),
+      }),
+    // Create schema once on mount instead of every rerender
+    [],
+  );
 
   const {
     register,

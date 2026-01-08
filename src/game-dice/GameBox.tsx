@@ -2,7 +2,7 @@
 import { observer } from "mobx-react-lite";
 import { DiceBetResult, useGameStore } from "../GameStore";
 
-const GameBox: React.FC = observer(() => {
+const GameBox = observer(() => {
   const store = useGameStore();
 
   function deltaWager(bet: DiceBetResult) {
@@ -59,7 +59,7 @@ const GameBox: React.FC = observer(() => {
 
 export default GameBox;
 
-const BetHistory: React.FC = observer(() => {
+const BetHistory = observer(() => {
   const store = useGameStore();
 
   return (
